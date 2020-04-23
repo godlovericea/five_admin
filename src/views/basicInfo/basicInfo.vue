@@ -4,10 +4,10 @@
         <div class="formBox">
             <el-form :model="form" class="demo-form-inline" label-width="200px">
                     <el-form-item label="公司名称">
-                        <el-input size="small" v-model="form.comName" placeholder="请输入单位名称" style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.comName" placeholder="请输入公司名称" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="公司简称">
-                        <el-input size="small" v-model="form.litComName" placeholder="请输入运营公司名称" style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.litComName" placeholder="请输入公司简称" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="企业资质">
                         <el-radio-group v-model="form.econkind">
@@ -18,7 +18,7 @@
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="通讯地址">
-                        <el-input size="small" v-model="form.adressInfo" placeholder="请输入共建高校院所" style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.adressInfo" placeholder="请输入通讯地址" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="法人">
                         <el-input size="small" v-model="form.operName" placeholder="请输入法人" style="width:400px"></el-input>
@@ -33,7 +33,7 @@
                         <el-input size="small" v-model="form.address" placeholder="请输入地址" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="公司简介">
-                        <el-input size="small" v-model="form.info" placeholder="请输入地址" style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.info" placeholder="请输入公司简介" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="是否上市">
                         <el-radio-group v-model="form.isOnline">
@@ -42,40 +42,40 @@
                         </el-radio-group>
                     </el-form-item>
                     <el-form-item label="员工人数">
-                        <el-input size="small" v-model="form.staffNum" placeholder="请输入企业简介" style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.staffNum" placeholder="请输入员工人数" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="所属行业">
                         <el-cascader v-model="industry" :options="industyList" @change="handleChange" style="width:400px"></el-cascader>
                     </el-form-item>
                     <el-form-item label="主要项目">
-                        <el-input size="small" type="textarea" :rows="4" v-model="form.mainProject" placeholder="请填写5G相关项目" style="width:400px"></el-input>
+                        <el-input size="small" type="textarea" :rows="4" v-model="form.mainProject" placeholder="请填写5G主要项目" style="width:400px"></el-input>
                     </el-form-item>
-                    <el-form-item label="上游合作单位">
-                        <el-input size="small" v-model="form.upCoroper" placeholder="请输入联系方式" style="width:400px"></el-input>
+                    <el-form-item label="合作单位">
+                        <el-input size="small" v-model="form.upCoroper" placeholder="请输入合作单位,多个以顿号分割" style="width:400px"></el-input>
                     </el-form-item>
-                    <el-form-item label="中游合作单位">
+                    <!-- <el-form-item label="中游合作单位">
                         <el-input size="small" v-model="form.midCoroper" placeholder="请输入联系方式" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="下游合作单位">
                         <el-input size="small" v-model="form.lowCoroper" placeholder="请输入联系方式" style="width:400px"></el-input>
-                    </el-form-item>
+                    </el-form-item> -->
                     <el-form-item label="5G领域能力">
-                        <el-input size="small" type="textarea" :rows="4" v-model="form.shortInfo" placeholder="请输入应用能力/技术能力/专利情况"  oninput = "value=value.replace(/[^\d.]/g,'')" style="width:400px"></el-input>
+                        <el-input size="small" type="textarea" :rows="4" v-model="form.shortInfo" placeholder="请简述在5G领域的应用能力/技术能力/专利情况"  oninput = "value=value.replace(/[^\d.]/g,'')" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="2019年收入总额（万元）">
-                        <el-input size="small" v-model="form.lastIncome" placeholder="请输入主营业务" style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.lastIncome" placeholder="请输入2019年收入总额" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="2018年收入总额（万元）">
-                        <el-input size="small" v-model="form.oldIncome" placeholder="请输入AI业务方向" style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.oldIncome" placeholder="请输入2018年收入总额" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="企业联系人姓名">
-                        <el-input size="small" v-model="form.concatPerson" onkeyup="value=value.replace(/^(0+)|[^\d]+/g,'')" placeholder="请输入专利总数" style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.concatPerson"  placeholder="请输入企业联系人姓名" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="联系人电话">
-                        <el-input size="small" v-model="form.phone" placeholder="请输入主要专利名称（以顿号分割）" style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.phone" placeholder="请输入联系人电话" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="联系人邮件">
-                        <el-input size="small" v-model="form.email" placeholder="请输入主要项目内容" style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.email" placeholder="请输入联系人邮件" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item>
                         <el-button size="small" type="primary" style="width:100px" @click="postData">提交</el-button>
@@ -334,7 +334,6 @@ export default {
     },
     methods:{
         getInfo(){
-            
             let id = null;
             this.comType = parseInt(JSON.parse(sessionStorage.getItem("user")).comType)
             if(this.$route.query.id){
@@ -369,43 +368,7 @@ export default {
            let id = parseInt(JSON.parse(sessionStorage.getItem("user")).companyId)
            let comName = parseInt(JSON.parse(sessionStorage.getItem("user")).comName)
            let myData={
-               comName:comName,
-                "id": this.id,
-                "address": this.form.address,
-                "aiBusiness": this.form.aiBusiness,
-                "aiPercent": this.form.aiPercent,
-                "area": this.form.area,
-                "business": this.form.business,
-                "classification": this.classification,
-                "companyUserId": id,
-                "contact": this.form.contact,
-                "countIncome": this.form.countIncome,
-                "countproFits": this.form.countproFits,
-                "developmentCount": this.form.developmentCount,
-                "developmentPercent": this.form.developmentPercent,
-                econkind:this.form.econkind,
-                "elements": this.elements,
-                "field": this.form.field,
-                "incomesPercent": this.form.incomesPercent,
-                "incomingBatches": this.form.incomingBatches,
-                "investment": this.form.investment,
-                "isRecord": this.form.isRecord,
-                "operName": this.form.operName,
-                "operateCom":this.form.operateCom,
-                "area": this.form.area,
-                "patent": this.form.patent,
-                "patentName": this.form.patentName,
-                "phone": this.form.phone,
-                "profits": this.form.profits,
-                "project": this.form.project,
-                "projectContents": this.form.projectContents,
-                "registCapi": this.form.registCapi,
-                "school": this.form.school,
-                "shortInfo": this.form.shortInfo,
-                "startDate": this.form.startDate,
-                "tax": this.form.tax,
-                "tecLayer": this.form.tecLayer,
-                "workerCount": this.form.workerCount
+               
            }
            addInfo(myData)
            .then(res=>{
@@ -429,6 +392,5 @@ export default {
 .warnWrapper{
     width: 100%;
     padding: 20px;
- 
 }
 </style>
