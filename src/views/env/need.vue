@@ -3,56 +3,56 @@
         <div class="divider"></div>
         <div class="formBox">
             <el-form :model="form" class="demo-form-inline" label-width="200px">
-                    <el-form-item label="所属行业">
-                        <el-cascader v-model="industry" :options="industyList" style="width:400px"></el-cascader>
-                    </el-form-item>
-                    <el-form-item label="产品名称">
-                        <el-input size="small" v-model="form.scene" placeholder="如：以人找房" style="width:400px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="产品介绍">
-                        <el-input size="small" v-model="form.scenarioDefined" type="textarea" placeholder="如：人口，法人与房屋进行关联，实现以人找房，以房查人。举例，以一栋楼为例，这栋楼里有131个居民，居民的个人信息上面我们可以查看到，但是有一些个人隐私问题，我们做了脱敏的处理，同时这里面有21个法人，法人的基本信息，他的姓名，联系方式，经营范围，经营方式和成立日期等信息，在上面我们都可以查看到" :rows="6" maxlength="300" style="width:400px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="产品关键字">
-                        <el-input size="small" v-model="form.scenarioKeyword" placeholder="如:人、房、以人找房、人房管理（必填、以顿号分割）" style="width:400px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="产品图片" prop="photos">
-                        <el-upload
-                            class="upload-demo"
-                            list-type="picture-card"
-                            action="http://120.55.161.93:6011/qiniu/upload"
-                            name="file"
-                            :file-list="fileList"
-                            :before-upload="beforeAvatarUpload"
-                            :on-success="handleAvatarSuccess"
-                            :on-remove="handleRemove"
-                            :limit="8">
-                            <div style="height:148px;display:flex;align-items:center;justify-content:center">
-                                <i class="el-icon-plus"></i>
-                            </div>
-                        </el-upload>
-                        <p>可上传8张图片，每张图片大小不超过4m（支持格式为：png、jpeg）。</p>
-                    </el-form-item>
-                    <el-form-item label="产品视频">
-                        <el-upload
-                            class="upload-demo"
-                            list-type="picture"
-                            action="http://120.55.161.93:6011/qiniu/upload"
-                            name="file"
-                            :file-list="videofileList"
-                            :before-upload="beforeVideoUpload"
-                            :on-success="handleVideoSuccess"
-                            :limit="8">
-                            <el-button size="small" type="primary">点击上传</el-button>
-                        </el-upload>
-                        <p>可上传1个视频，视频大小不超过100M（支持格式为：mp4）。</p>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button size="small" type="primary" style="width:100px" @click="postData">提交</el-button>
-                        <el-button size="small" type="info" @click="resetData">重置</el-button>
-                    </el-form-item>
-                </el-form>
+                <el-form-item label="所属行业">
+                    <el-cascader v-model="industry" :options="industyList" style="width:400px"></el-cascader>
+                </el-form-item>
+                <el-form-item label="需求分类">
+                    <el-checkbox-group v-model="form.sceneClassification" @change="handleChangeCheckBox">
+                        <el-checkbox :label="1">资金支持</el-checkbox>
+                        <el-checkbox :label="2">人才支持</el-checkbox>
+                        <el-checkbox :label="3">技术支持</el-checkbox>
+                        <el-checkbox :label="4">市场支持</el-checkbox>
+                        <el-checkbox :label="5">其他</el-checkbox>
+                    </el-checkbox-group>
+                </el-form-item>
+                <el-form-item label="所需资金" v-if="flag.moneyFlag">
+                    <el-input size="small" v-model="form.money" placeholder="以万元单位" style="width:400px"></el-input>
+                </el-form-item>
+                <el-form-item label="所需人才专业以及数量" v-if="flag.personFlag">
+                    <el-input size="small" v-model="form.person" placeholder="请输入产品名称或者项目名称" style="width:400px"></el-input>
+                </el-form-item>
+                <el-form-item label="所需技术支持" v-if="flag.techFlag">
+                    <el-input size="small" v-model="form.tech" placeholder="请输入产品名称或者项目名称" style="width:400px"></el-input>
+                </el-form-item>
+                <el-form-item label="所需市场支持" v-if="flag.marketFlag">
+                    <el-input size="small" v-model="form.market" placeholder="请输入产品名称或者项目名称" style="width:400px"></el-input>
+                </el-form-item>
+                <el-form-item label="需求简述">
+                    <el-input size="small" v-model="form.scenarioDefined" type="textarea" placeholder="如：在研****课题，需要模式识别专业博士2名，硕士5名，市场推广专员20名等，资金***万元" :rows="6" maxlength="300" style="width:400px"></el-input>
+                </el-form-item>
+                <el-form-item label="上传详细说明附件" prop="photos">
+                    <el-upload
+                        class="upload-demo"
+                        list-type="picture-card"
+                        action="http://120.55.161.93:6011/qiniu/upload"
+                        name="file"
+                        :file-list="fileList"
+                        :before-upload="beforeAvatarUpload"
+                        :on-success="handleAvatarSuccess"
+                        :on-remove="handleRemove"
+                        :limit="8">
+                        <div style="height:148px;display:flex;align-items:center;justify-content:center">
+                            <i class="el-icon-plus"></i>
+                        </div>
+                    </el-upload>
+                    <p>请上传具体需求文档</p>
+                </el-form-item>
+                <el-form-item>
+                    <el-button size="small" type="primary" style="width:100px" @click="postData">提交</el-button>
+                    <el-button size="small" type="info" @click="resetData">重置</el-button>
+                </el-form-item>
+            </el-form>
         </div>
-        
     </div>    
 </template>
 
@@ -290,7 +290,8 @@ export default {
             form:{
                 isRecord:1,
                 operateCom:'',
-                video:''
+                video:'',
+                sceneClassification:[]
             },
             photos:[],
             checkedCities:[],
@@ -301,6 +302,13 @@ export default {
             fileList:[],
             videofileList:[],
             editFileList:[],
+            flag:{
+                moneyFlag:false,
+                personFlag:false,
+                techFlag:false,
+                marketFlag:false,
+                otherFlag:false
+            }
         }
     },
     mounted(){
@@ -421,6 +429,30 @@ export default {
             }
             return  isLt2M && isJPEG
         },
+        handleChangeCheckBox(value){
+            console.log(value)
+            value.forEach(l=>{
+                if(l===1){
+                    this.flag.moneyFlag = true
+                }
+                if(l===2){
+                    this.flag.personFlag = true
+                }
+                if(l===3){
+                    this.flag.techFlag = true
+                }
+                if(l===4){
+                    this.flag.marketFlag = true
+                }
+                if(l===5){
+                    this.form.sceneClassification = [5]
+                    this.flag.moneyFlag = false
+                    this.flag.personFlag = false
+                    this.flag.techFlag = false
+                    this.flag.marketFlag = false
+                }
+            })
+        }
 
     }
 }

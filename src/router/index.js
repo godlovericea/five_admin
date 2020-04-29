@@ -92,20 +92,31 @@ export const constantRoutes = [
         path: '/local/signManage',
         component: () => import('@/views/env/display'),
         name: '签到管理',
-        meta: { title: '场景信息', icon: 'dashboard', affix: true }
+        meta: { title: '新增产品', icon: 'dashboard', affix: true }
       }
     ]
   },
   {
     path: '/manage',
     component: Layout,
-    hidden: true,
     children: [
       {
         path: '/manage/sceanManage',
-        component: () => import('@/views/env/sceanManage'),
+        component: () => import('@/views/env/project'),
         name: 'sceanManage',
-        meta: { title: '信息管理', icon: 'dashboard', affix: true }
+        meta: { title: '新增项目', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/market',
+    component: Layout,
+    children: [
+      {
+        path: '/market/need',
+        component: () => import('@/views/env/need'),
+        name: 'market',
+        meta: { title: '需求调研', icon: 'dashboard', affix: true }
       }
     ]
   },
@@ -117,7 +128,7 @@ export const constantRoutes = [
       {
         path: '/logs/logs',
         component: () => import('@/views/env/logs'),
-        name: 'sceanManage',
+        name: 'logs',
         meta: { title: '信息管理', icon: 'dashboard', affix: true }
       }
     ]

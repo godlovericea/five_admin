@@ -17,6 +17,9 @@
                             <el-radio :label="4">瞪羚羊</el-radio>
                         </el-radio-group>
                     </el-form-item>
+                    <el-form-item label="注册地址">
+                        <el-input size="small" v-model="form.address" placeholder="请输入地址" style="width:400px"></el-input>
+                    </el-form-item>
                     <el-form-item label="通讯地址">
                         <el-input size="small" v-model="form.adressInfo" placeholder="请输入通讯地址" style="width:400px"></el-input>
                     </el-form-item>
@@ -28,9 +31,6 @@
                     </el-form-item>
                     <el-form-item label="成立时间">
                         <el-date-picker v-model="form.startDate"  type="date" placeholder="选择日期" style="width:400px" :picker-options="picOptions"></el-date-picker>
-                    </el-form-item>
-                    <el-form-item label="注册地址">
-                        <el-input size="small" v-model="form.address" placeholder="请输入地址" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="公司简介">
                         <el-input size="small" v-model="form.info" placeholder="请输入公司简介" style="width:400px"></el-input>
@@ -47,12 +47,7 @@
                     <el-form-item label="所属行业">
                         <el-cascader v-model="industry" :options="industyList" @change="handleChange" style="width:400px"></el-cascader>
                     </el-form-item>
-                    <el-form-item label="主要项目">
-                        <el-input size="small" type="textarea" :rows="4" v-model="form.mainProject" placeholder="请填写5G主要项目" style="width:400px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="合作单位">
-                        <el-input size="small" v-model="form.upCoroper" placeholder="请输入合作单位,多个以顿号分割" style="width:400px"></el-input>
-                    </el-form-item>
+                    
                     <!-- <el-form-item label="中游合作单位">
                         <el-input size="small" v-model="form.midCoroper" placeholder="请输入联系方式" style="width:400px"></el-input>
                     </el-form-item>
@@ -82,7 +77,7 @@
                     </el-form-item>
                 </el-form>
         </div>
-    </div>    
+    </div>
 </template>
 
 <script>

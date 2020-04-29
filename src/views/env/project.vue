@@ -6,16 +6,29 @@
                     <el-form-item label="所属行业">
                         <el-cascader v-model="industry" :options="industyList" style="width:400px"></el-cascader>
                     </el-form-item>
-                    <el-form-item label="产品名称">
+                    <el-form-item label="项目名称">
                         <el-input size="small" v-model="form.scene" placeholder="如：以人找房" style="width:400px"></el-input>
                     </el-form-item>
-                    <el-form-item label="产品介绍">
+                    <el-form-item label="项目介绍">
                         <el-input size="small" v-model="form.scenarioDefined" type="textarea" placeholder="如：人口，法人与房屋进行关联，实现以人找房，以房查人。举例，以一栋楼为例，这栋楼里有131个居民，居民的个人信息上面我们可以查看到，但是有一些个人隐私问题，我们做了脱敏的处理，同时这里面有21个法人，法人的基本信息，他的姓名，联系方式，经营范围，经营方式和成立日期等信息，在上面我们都可以查看到" :rows="6" maxlength="300" style="width:400px"></el-input>
                     </el-form-item>
-                    <el-form-item label="产品关键字">
+                    <el-form-item label="项目关键字">
                         <el-input size="small" v-model="form.scenarioKeyword" placeholder="如:人、房、以人找房、人房管理（必填、以顿号分割）" style="width:400px"></el-input>
                     </el-form-item>
-                    <el-form-item label="产品图片" prop="photos">
+                    <el-form-item label="项目是否落地">
+                        <el-radio-group v-model="form.isactualmake">
+                            <el-radio :label="1">已落地</el-radio>
+                            <el-radio :label="2">未落地</el-radio>
+                            <el-radio :label="3">落地准备中</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item label="落地时间" v-if="form.isactualmake === 1">
+                        <el-input size="small" v-model="form.scenarioKeyword" placeholder="如:人、房、以人找房、人房管理（必填、以顿号分割）" style="width:400px"></el-input>
+                    </el-form-item>
+                    <el-form-item label="预计落地时间" v-if="form.isactualmake === 3">
+                        <el-input size="small" v-model="form.scenarioKeyword" placeholder="如:人、房、以人找房、人房管理（必填、以顿号分割）" style="width:400px"></el-input>
+                    </el-form-item>
+                    <el-form-item label="项目图片" prop="photos">
                         <el-upload
                             class="upload-demo"
                             list-type="picture-card"
@@ -31,20 +44,6 @@
                             </div>
                         </el-upload>
                         <p>可上传8张图片，每张图片大小不超过4m（支持格式为：png、jpeg）。</p>
-                    </el-form-item>
-                    <el-form-item label="产品视频">
-                        <el-upload
-                            class="upload-demo"
-                            list-type="picture"
-                            action="http://120.55.161.93:6011/qiniu/upload"
-                            name="file"
-                            :file-list="videofileList"
-                            :before-upload="beforeVideoUpload"
-                            :on-success="handleVideoSuccess"
-                            :limit="8">
-                            <el-button size="small" type="primary">点击上传</el-button>
-                        </el-upload>
-                        <p>可上传1个视频，视频大小不超过100M（支持格式为：mp4）。</p>
                     </el-form-item>
                     <el-form-item>
                         <el-button size="small" type="primary" style="width:100px" @click="postData">提交</el-button>
