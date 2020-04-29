@@ -74,7 +74,7 @@ export default {
     goAdmin(){
       console.log("123")
       this.$router.push({
-        path:'/manage/sceanManage'
+        path:'/admin/com'
       })
     },
     gologs(){

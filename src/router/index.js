@@ -57,19 +57,6 @@ export const constantRoutes = [
     hidden: true
   },
 
-  // {
-  //   path: '/admin',
-  //   component: Layout,
-  //   children: [
-  //       {
-  //         path: 'basicInfo',
-  //         component: () => import('@/views/basicInfo/basicInfo'),
-  //         name: 'basicInfo',
-  //         meta: { title: '基本信息', icon: 'dashboard', affix: true }
-  //       }
-  //   ]
-  // },
-
   {
     path: '/home',
     component: Layout,
@@ -83,38 +70,40 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/local',
+    path: '/product',
     component: Layout,
-    redirect: '/local/signManage',
+    redirect: '/product/newProduct',
     name: '施工现场管理',
     children: [
       {
-        path: '/local/signManage',
-        component: () => import('@/views/env/display'),
+        path: 'newProduct',
+        component: () => import('@/views/product/product'),
         name: '签到管理',
         meta: { title: '新增产品', icon: 'dashboard', affix: true }
       }
     ]
   },
   {
-    path: '/manage',
+    path: '/project',
     component: Layout,
+    redirect: '/project/newProject',
     children: [
       {
-        path: '/manage/sceanManage',
-        component: () => import('@/views/env/project'),
+        path: 'newProject',
+        component: () => import('@/views/project/project'),
         name: 'sceanManage',
         meta: { title: '新增项目', icon: 'dashboard', affix: true }
       }
     ]
   },
   {
-    path: '/market',
+    path: '/need',
     component: Layout,
+    redirect: '/need/needWaire',
     children: [
       {
-        path: '/market/need',
-        component: () => import('@/views/env/need'),
+        path: 'needWaire',
+        component: () => import('@/views/need/need'),
         name: 'market',
         meta: { title: '需求调研', icon: 'dashboard', affix: true }
       }
@@ -126,23 +115,23 @@ export const constantRoutes = [
     hidden: true,
     children: [
       {
-        path: '/logs/logs',
-        component: () => import('@/views/env/logs'),
+        path: 'logs',
+        component: () => import('@/views/logs/logs'),
         name: 'logs',
         meta: { title: '信息管理', icon: 'dashboard', affix: true }
       }
     ]
   },
   {
-    path: '/scean',
+    path: '/admin',
     component: Layout,
     hidden: true,
     children: [
       {
-        path: '/scean/myScean',
-        component: () => import('@/views/env/myScean'),
+        path: 'com',
+        component: () => import('@/views/admin/companyList'),
         name: 'myScean',
-        meta: { title: '场景管理', icon: 'dashboard', affix: true }
+        meta: { title: '概览', icon: 'dashboard', affix: true }
       }
     ]
   },

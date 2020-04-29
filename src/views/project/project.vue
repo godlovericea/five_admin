@@ -3,97 +3,63 @@
         <div class="divider"></div>
         <div class="formBox">
             <el-form :model="form" class="demo-form-inline" label-width="200px">
-                    <el-form-item label="公司名称">
-                        <el-input size="small" v-model="form.comName" placeholder="请输入公司名称" style="width:400px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="公司简称">
-                        <el-input size="small" v-model="form.litComName" placeholder="请输入公司简称" style="width:400px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="企业资质">
-                        <el-radio-group v-model="form.econkind">
-                            <el-radio :label="1">规上</el-radio>
-                            <el-radio :label="2">高企</el-radio>
-                            <el-radio :label="3">独角兽</el-radio>
-                            <el-radio :label="4">瞪羚羊</el-radio>
-                        </el-radio-group>
-                    </el-form-item>
-                    <el-form-item label="所属市区">
-                        <el-select v-model="form.city">
-                            <el-option label="南京市" value="1"></el-option>
-                            <el-option label="无锡市" value="2"></el-option>
-                            <el-option label="徐州市" value="3"></el-option>
-                            <el-option label="常州市" value="4"></el-option>
-                            <el-option label="苏州市" value="5"></el-option>
-                            <el-option label="南通市" value="6"></el-option>
-                            <el-option label="连云港市" value="7"></el-option>
-                            <el-option label="淮安市" value="8"></el-option>
-                            <el-option label="盐城市" value="9"></el-option>
-                            <el-option label="扬州市" value="10"></el-option>
-                            <el-option label="镇江市" value="11"></el-option>
-                            <el-option label="泰州市" value="12"></el-option>
-                            <el-option label="宿迁市" value="13"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="注册地址">
-                        <el-input size="small" v-model="form.address" placeholder="请输入地址" style="width:400px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="法人">
-                        <el-input size="small" v-model="form.operName" placeholder="请输入法人" style="width:400px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="注册资金（万元）">
-                        <el-input size="small" v-model="form.registCapi" placeholder="请输入注册资金（万元）" style="width:400px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="成立时间">
-                        <el-date-picker v-model="form.startDate"  type="date" placeholder="选择日期" style="width:400px" :picker-options="picOptions"></el-date-picker>
-                    </el-form-item>
-                    <el-form-item label="公司简介">
-                        <el-input size="small" v-model="form.info" placeholder="请输入公司简介" style="width:400px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="是否上市">
-                        <el-radio-group v-model="form.isOnline">
-                            <el-radio :label="1">已上市</el-radio>
-                            <el-radio :label="0">未上市</el-radio>
-                        </el-radio-group>
-                    </el-form-item>
-                    <el-form-item label="股票代码" v-if="form.isOnline === 1">
-                        <el-input size="small" v-model="form.staffNum" placeholder="请输入股票代码" style="width:400px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="员工人数">
-                        <el-input size="small" v-model="form.staffNum" placeholder="请输入员工人数" style="width:400px"></el-input>
-                    </el-form-item>
                     <el-form-item label="所属行业">
-                        <el-cascader v-model="industry" :options="industyList" @change="handleChange" style="width:400px"></el-cascader>
+                        <el-cascader v-model="industry" :options="industyList" style="width:400px"></el-cascader>
                     </el-form-item>
-                    <el-form-item label="2019年收入总额（万元）">
-                        <el-input size="small" v-model="form.lastIncome" placeholder="请输入2019年收入总额" style="width:400px"></el-input>
+                    <el-form-item label="项目名称">
+                        <el-input size="small" v-model="form.scene" placeholder="" style="width:400px"></el-input>
                     </el-form-item>
-                    <el-form-item label="2018年收入总额（万元）">
-                        <el-input size="small" v-model="form.oldIncome" placeholder="请输入2018年收入总额" style="width:400px"></el-input>
+                    <el-form-item label="项目介绍">
+                        <el-input size="small" v-model="form.scenarioDefined" type="textarea" :rows="6" maxlength="300" style="width:400px"></el-input>
                     </el-form-item>
-                    <el-form-item label="企业联系人姓名">
-                        <el-input size="small" v-model="form.concatPerson"  placeholder="请输入企业联系人姓名" style="width:400px"></el-input>
+                    <el-form-item label="项目关键字">
+                        <el-input size="small" v-model="form.scenarioKeyword"  style="width:400px"></el-input>
                     </el-form-item>
-                    <el-form-item label="联系人电话">
-                        <el-input size="small" v-model="form.phone" placeholder="请输入联系人电话" style="width:400px"></el-input>
+                    <el-form-item label="项目是否落地">
+                        <el-radio-group v-model="form.isactualmake">
+                            <el-radio :label="1">已落地</el-radio>
+                            <el-radio :label="2">未落地</el-radio>
+                            <el-radio :label="3">落地准备中</el-radio>
+                        </el-radio-group>
                     </el-form-item>
-                    <el-form-item label="联系人邮件">
-                        <el-input size="small" v-model="form.email" placeholder="请输入联系人邮件" style="width:400px"></el-input>
+                    <el-form-item label="落地时间" v-if="form.isactualmake === 1">
+                        <el-date-picker v-model="form.date" type="date" placeholder="选择日期"></el-date-picker>
+                    </el-form-item>
+                    <el-form-item label="预计落地时间" v-if="form.isactualmake === 3">
+                        <el-date-picker v-model="form.date" type="date" placeholder="选择日期"></el-date-picker>
+                    </el-form-item>
+                    <el-form-item label="项目图片" prop="photos">
+                        <el-upload
+                            class="upload-demo"
+                            list-type="picture-card"
+                            action="http://120.55.161.93:6011/qiniu/upload"
+                            name="file"
+                            :file-list="fileList"
+                            :before-upload="beforeAvatarUpload"
+                            :on-success="handleAvatarSuccess"
+                            :on-remove="handleRemove"
+                            :limit="8">
+                            <div style="height:148px;display:flex;align-items:center;justify-content:center">
+                                <i class="el-icon-plus"></i>
+                            </div>
+                        </el-upload>
+                        <p>可上传8张图片，每张图片大小不超过4m（支持格式为：png、jpeg）。</p>
                     </el-form-item>
                     <el-form-item>
                         <el-button size="small" type="primary" style="width:100px" @click="postData">提交</el-button>
                     </el-form-item>
                 </el-form>
         </div>
-    </div>
+        
+    </div>    
 </template>
 
 <script>
-import {addInfo,getCompanyInfo,checkCompany} from '../../api/collect'
+import {addCompanyScene,getCompanyScene} from '../../api/collect'
 export default {
     data(){
         return{
-            form:{},
-            industry:[],
+            industry:'',
             industyList:[
                 {
                     value: 1,
@@ -319,73 +285,141 @@ export default {
                     ]
                 },
             ],
-            elements:[],
-            classification:[],
-            adminFlag:false,
-            picOptions:{
-                disabledDate(time) {
-                    return time.getTime() > Date.now();
-                }
+            form:{
+                isRecord:1,
+                operateCom:'',
+                video:''
             },
-            comType:1,
-            id:null
+            photos:[],
+            checkedCities:[],
+            uploadData:{
+                token:'',
+                key:''
+            },
+            fileList:[],
+            videofileList:[],
+            editFileList:[],
         }
     },
     mounted(){
-        this.getInfo()
+        if(this.$route.query.sceanId){
+            this.getInfo()
+        }
     },
     methods:{
         getInfo(){
-            let id = null;
-            this.comType = parseInt(JSON.parse(sessionStorage.getItem("user")).comType)
-            if(this.$route.query.id){
-                id = this.$route.query.id
-                if(id == 1){
-                    this.adminFlag = true
-                }else{
-                    this.adminFlag = false
-                }
-            }else{
-                // id = parseInt(sessionStorage.getItem("userid"))
-                id = parseInt(JSON.parse(sessionStorage.getItem("user")).companyId)
-            }
+            let id = parseInt(this.$route.query.sceanId)
             let myData={
-                companyId:id
+                companySceneId:id
             }
-            getCompanyInfo(myData)
+            getCompanyScene(myData)
             .then(res=>{
-                if(res.code === 200){
-                    this.industry = [2,21,212]
-                    this.form = res.result
-                    this.form.econkind = parseInt(res.result.econkind)
-                    this.form.tecLayer = parseInt(res.result.tecLayer)
-                    this.classification = JSON.parse(res.result.classification)
-                    this.id = this.form.id
-                }else{
-                    this.id = null
+                this.form = res.result
+                this.form.sceneClassification = parseInt(res.result.sceneClassification)
+                res.result.companySceneImgDTOList.forEach(l=>{
+                    this.fileList.push({
+                        name:l.companySceneId,
+                        url:'http://qiniu.iwooke'+ l.scenarioImg.substring(21)
+                    })
+                })
+                if(this.form.video){
+                    this.videofileList.push({
+                        name:this.form.scene,
+                        // url:'http://'+ this.form.video
+                        url:'http://qiniu.iwooke'+ this.form.video.substring(21)
+                    })
                 }
             })
         },
        postData(){
            let id = parseInt(JSON.parse(sessionStorage.getItem("user")).companyId)
-           let comName = parseInt(JSON.parse(sessionStorage.getItem("user")).comName)
-           let myData={
-               
+           let comName = JSON.parse(sessionStorage.getItem("user")).comName
+           let myData={}
+           if(this.$route.query.sceanId){
+               myData={
+                    comName:comName,
+                    companyId:this.$route.query.comId,
+                    sceneId:this.$route.query.sceanId,
+                    sceneClassification:this.form.sceneClassification,
+                    scene:this.form.scene,
+                    scenarioDefined:this.form.scenarioDefined,
+                    scenarioKeyword:this.form.scenarioKeyword,
+                    video:this.form.video,
+                    scenarioImgList:this.editFileList.concat(this.photos)
+                }
+           }else{
+               myData={
+                    comName:comName,
+                    companyId:id,
+                    sceneClassification:this.form.sceneClassification,
+                    scene:this.form.scene,
+                    scenarioDefined:this.form.scenarioDefined,
+                    scenarioKeyword:this.form.scenarioKeyword,
+                    video:this.form.video,
+                    scenarioImgList:this.photos
+                }
            }
-           addInfo(myData)
+           addCompanyScene(myData)
            .then(res=>{
-               if(res.code === 200){
-                    this.$message({
-                        message: '提交成功',
-                        type: 'success'
-                    });
-                    this.getInfo()
-               }
+               console.log(res)
+               this.fileList = []
+                this.videoUrl = ''
+                this.form.sceneClassification = ''
+                this.form.scene = ''
+                this.form.scenarioDefined = ''
+                this.form.scenarioKeyword = ''
+                this.photos = []
+                this.form.video = ''
            })
        },
-       handleChange(value){
-           console.log(value)
-       }
+        resetData(){
+
+        },
+        handleRemove(file, fileList) {
+            // console.log(file)
+            // console.log(fileList)
+            this.editFileList = []
+            fileList.forEach(l=>{
+                this.editFileList.push('q3vbt7rr5.bkt.clouddn.com'+ l.url.substring(23))
+            })
+            // console.log(this.editFileList)
+        },
+        handleAvatarSuccess(res,file,fileList){
+            // console.log(res)
+            this.photos.push(res[0])
+        },
+        beforeAvatarUpload(file) {
+            const isJPEG = file.type === 'image/jpeg';
+            const isJPG = file.type === 'image/jpg';
+            const isPNG = file.type === 'image/png';
+            const isLt2M = file.size / 1024 / 1024 < 4
+            if (!isLt2M) {
+                this.$message.error('上传图片大小不能超过 4MB!')
+                return false
+            }
+            if(!isJPG && !isPNG && !isJPEG){
+                this.$message.error('上传图片只能是 JPG 或者 PNG 格式!')
+                return false
+            }
+            return isLt2M && (!isJPG || !isPNG || !isJPEG)
+        },
+        handleVideoSuccess(res,file,fileList){
+            this.form.video = res[0]
+        },
+        beforeVideoUpload(file) {
+            const isJPEG = file.type === 'video/mp4';
+            const isLt2M = file.size / 1024 / 1024 < 100
+            if (!isLt2M) {
+                this.$message.error('上传视频大小不能超过 100MB!')
+                return false
+            }
+            if(!isJPEG){
+                this.$message.error('上传视频只能是MP4格式!')
+                return false
+            }
+            return  isLt2M && isJPEG
+        },
+
     }
 }
 </script>
@@ -394,5 +428,6 @@ export default {
 .warnWrapper{
     width: 100%;
     padding: 20px;
+ 
 }
 </style>
