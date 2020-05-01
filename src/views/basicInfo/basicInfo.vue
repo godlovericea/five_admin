@@ -7,7 +7,7 @@
                         <el-input size="small" v-model="form.comName" placeholder="请输入公司名称" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="公司简称">
-                        <el-input size="small" v-model="form.litComName" placeholder="请输入公司简称" style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.litcomname" placeholder="请输入公司简称" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="企业资质">
                         <el-radio-group v-model="form.econkind">
@@ -38,40 +38,40 @@
                         <el-input size="small" v-model="form.address" placeholder="请输入地址" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="法人">
-                        <el-input size="small" v-model="form.operName" placeholder="请输入法人" style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.opername" placeholder="请输入法人" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="注册资金（万元）">
-                        <el-input size="small" v-model="form.registCapi" placeholder="请输入注册资金（万元）" style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.registcapi" placeholder="请输入注册资金（万元）" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="成立时间">
-                        <el-date-picker v-model="form.startDate"  type="date" placeholder="选择日期" style="width:400px" :picker-options="picOptions"></el-date-picker>
+                        <el-date-picker v-model="form.startdate"  type="date" placeholder="选择日期" style="width:400px" :picker-options="picOptions"></el-date-picker>
                     </el-form-item>
                     <el-form-item label="公司简介">
-                        <el-input size="small" v-model="form.info" placeholder="请输入公司简介" style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.info" type="textarea" :rows="4" placeholder="请输入公司简介" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="是否上市">
-                        <el-radio-group v-model="form.isOnline">
+                        <el-radio-group v-model="form.isonline">
                             <el-radio :label="1">已上市</el-radio>
                             <el-radio :label="0">未上市</el-radio>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item label="股票代码" v-if="form.isOnline === 1">
-                        <el-input size="small" v-model="form.staffNum" placeholder="请输入股票代码" style="width:400px"></el-input>
+                    <el-form-item label="股票代码" v-if="form.isonline === 1">
+                        <el-input size="small" v-model="form.stockCode" placeholder="请输入股票代码" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="员工人数">
-                        <el-input size="small" v-model="form.staffNum" placeholder="请输入员工人数" style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.staffnum" oninput = "value=value.replace(/[^\d.]/g,'')" placeholder="请输入员工人数" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="所属行业">
                         <el-cascader v-model="industry" :options="industyList" @change="handleChange" style="width:400px"></el-cascader>
                     </el-form-item>
                     <el-form-item label="2019年收入总额（万元）">
-                        <el-input size="small" v-model="form.lastIncome" placeholder="请输入2019年收入总额" style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.lastincome" placeholder="请输入2019年收入总额" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="2018年收入总额（万元）">
-                        <el-input size="small" v-model="form.oldIncome" placeholder="请输入2018年收入总额" style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.oldincome" placeholder="请输入2018年收入总额" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="企业联系人姓名">
-                        <el-input size="small" v-model="form.concatPerson"  placeholder="请输入企业联系人姓名" style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.concatperson"  placeholder="请输入企业联系人姓名" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="联系人电话">
                         <el-input size="small" v-model="form.phone" placeholder="请输入联系人电话" style="width:400px"></el-input>
@@ -80,7 +80,8 @@
                         <el-input size="small" v-model="form.email" placeholder="请输入联系人邮件" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button size="small" type="primary" style="width:100px" @click="postData">提交</el-button>
+                        <el-button v-if="companyBaseInfoId === 0" size="small" type="primary" round style="width:200px" @click="addPostData">提交</el-button>
+                        <el-button v-else size="small" type="primary" style="width:200px" round @click="updatePostData">修改</el-button>
                     </el-form-item>
                 </el-form>
         </div>
@@ -88,7 +89,7 @@
 </template>
 
 <script>
-import {addInfo,getCompanyInfo,checkCompany} from '../../api/collect'
+import {addBaseInfo,getBaseInfo,updateBaseInfo} from '@/api/collect'
 export default {
     data(){
         return{
@@ -328,7 +329,7 @@ export default {
                 }
             },
             comType:1,
-            id:null
+            companyBaseInfoId:0
         }
     },
     mounted(){
@@ -336,53 +337,103 @@ export default {
     },
     methods:{
         getInfo(){
-            let id = null;
-            this.comType = parseInt(JSON.parse(sessionStorage.getItem("user")).comType)
-            if(this.$route.query.id){
-                id = this.$route.query.id
-                if(id == 1){
-                    this.adminFlag = true
-                }else{
-                    this.adminFlag = false
-                }
-            }else{
-                // id = parseInt(sessionStorage.getItem("userid"))
-                id = parseInt(JSON.parse(sessionStorage.getItem("user")).companyId)
-            }
+            let companyId = JSON.parse(sessionStorage.getItem("user")).companyId
             let myData={
-                companyId:id
+                companyId:companyId
             }
-            getCompanyInfo(myData)
+            getBaseInfo(myData)
             .then(res=>{
                 if(res.code === 200){
-                    this.industry = [2,21,212]
                     this.form = res.result
-                    this.form.econkind = parseInt(res.result.econkind)
-                    this.form.tecLayer = parseInt(res.result.tecLayer)
-                    this.classification = JSON.parse(res.result.classification)
-                    this.id = this.form.id
+                    this.companyBaseInfoId = this.form.companyBaseInfoId
+                    this.industry = this.form.industry
                 }else{
-                    this.id = null
+                    this.companyBaseInfoId = null
                 }
             })
         },
-       postData(){
-           let id = parseInt(JSON.parse(sessionStorage.getItem("user")).companyId)
-           let comName = parseInt(JSON.parse(sessionStorage.getItem("user")).comName)
-           let myData={
-               
-           }
-           addInfo(myData)
-           .then(res=>{
-               if(res.code === 200){
+        addPostData(){
+            let companyId = JSON.parse(sessionStorage.getItem("user")).companyId
+            let myData={
+                    address: this.form.address,
+                    adressinfo: this.form.adressinfo,
+                    comName: this.form.comName,
+                    companyId: companyId,
+                    concatperson: this.form.concatperson,
+                    econkind: this.form.econkind,
+                    email: this.form.email,
+                    industry: this.industry,
+                    info: this.form.info,
+                    isonline: this.form.isonline,
+                    lastincome: this.form.lastincome,
+                    litcomname: this.form.litcomname,
+                    mainproject: this.form.mainproject,
+                    oldincome: this.form.oldincome,
+                    opername: this.form.opername,
+                    phone: this.form.phone,
+                    registcapi: this.form.registcapi,
+                    shortinfo: this.form.shortinfo,
+                    staffnum: parseInt(this.form.staffnum),
+                    startdate: this.form.startdate,
+                    stockCode: this.form.stockCode,
+                    upcoroper: this.form.upcoroper,
+                    city: this.form.city
+            }
+            addBaseInfo(myData)
+            .then(res=>{
+                if(res.code === 200){
                     this.$message({
                         message: '提交成功',
                         type: 'success'
                     });
                     this.getInfo()
-               }
-           })
-       },
+                }else{
+                    this.$message.error(res.message);
+                }
+            })
+        },
+        updatePostData(){
+            let companyId = JSON.parse(sessionStorage.getItem("user")).companyId
+            let myData={
+                address: this.form.address,
+                adressinfo: this.form.adressinfo,
+                comName: this.form.comName,
+                companyId: companyId,
+                concatperson: this.form.concatperson,
+                econkind: this.form.econkind,
+                email: this.form.email,
+                industry: this.industry,
+                info: this.form.info,
+                isonline: this.form.isonline,
+                lastincome: this.form.lastincome,
+                litcomname: this.form.litcomname,
+                mainproject: this.form.mainproject,
+                oldincome: this.form.oldincome,
+                opername: this.form.opername,
+                phone: this.form.phone,
+                registcapi: this.form.registcapi,
+                shortinfo: this.form.shortinfo,
+                staffnum: parseInt(this.form.staffnum),
+                startdate: this.form.startdate,
+                stockCode: this.form.stockCode,
+                upcoroper: this.form.upcoroper,
+                city: this.form.city,
+                companyBaseInfoId:this.companyBaseInfoId
+            }
+            updateBaseInfo(myData)
+            .then(res=>{
+                if(res.code === 200){
+                    this.$message({
+                        message: '修改成功',
+                        type: 'success'
+                    });
+                    this.getInfo()
+                }else{
+                    this.$message.error(res.message);
+                }
+            })
+
+        },
        handleChange(value){
            console.log(value)
        }

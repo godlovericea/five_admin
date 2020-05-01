@@ -27,26 +27,26 @@ export function reset(data) {
     })
 }
 // 增加公司信息
-export function addInfo(data) {
+export function addBaseInfo(data) {
   return request({
-    url: '/companyInfo/addInfo',
+    url: '/companyBaseInfo/addBaseInfo',
     method: 'post',
     data
   })
 }
 // 获取公司信息
-export function getCompanyInfo(data) {
+export function getBaseInfo(data) {
   return request({
-    url: '/companyInfo/getCompanyInfo',
+    url: '/companyBaseInfo/getBaseInfo',
     method: 'post',
     data: qs.stringify(data)
   })
 }
 
-// 增加公司场景
-export function addCompanyScene(data) {
+// 修改公司基本信息
+export function updateBaseInfo(data) {
   return request({
-    url: '/companyInfo/addCompanyScene',
+    url: '/companyBaseInfo/updateBaseInfo',
     method: 'post',
     data
   })
