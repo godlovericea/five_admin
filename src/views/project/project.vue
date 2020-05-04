@@ -7,13 +7,13 @@
                         <el-cascader v-model="industry" :options="industyList" style="width:400px"></el-cascader>
                     </el-form-item>
                     <el-form-item label="项目名称">
-                        <el-input size="small" v-model="form.scene" placeholder="" style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.projectName" placeholder="" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="项目介绍">
-                        <el-input size="small" v-model="form.scenarioDefined" type="textarea" :rows="6" maxlength="300" style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.projectIntroduce" type="textarea" :rows="6" maxlength="300" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="项目关键字">
-                        <el-input size="small" v-model="form.scenarioKeyword"  style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.projectKeyword"  style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="项目是否落地">
                         <el-radio-group v-model="form.isactualmake">
@@ -55,11 +55,11 @@
 </template>
 
 <script>
-import {addCompanyScene,getCompanyScene} from '../../api/collect'
+import {addProject,getCompanyProject} from '../../api/collect'
 export default {
     data(){
         return{
-            industry:'',
+            industry:[],
             industyList:[
                 {
                     value: 1,
@@ -302,74 +302,44 @@ export default {
         }
     },
     mounted(){
-        if(this.$route.query.sceanId){
+        if(this.$route.query.id){
             this.getInfo()
         }
     },
     methods:{
         getInfo(){
-            let id = parseInt(this.$route.query.sceanId)
+            let id = parseInt(this.$route.query.id)
             let myData={
-                companySceneId:id
+                companyProjectId:id
             }
-            getCompanyScene(myData)
+            getCompanyProject(myData)
             .then(res=>{
                 this.form = res.result
-                this.form.sceneClassification = parseInt(res.result.sceneClassification)
-                res.result.companySceneImgDTOList.forEach(l=>{
+                this.industry = this.form.industry
+                res.result.imgList.forEach(l=>{
                     this.fileList.push({
-                        name:l.companySceneId,
-                        url:'http://qiniu.iwooke'+ l.scenarioImg.substring(21)
+                        name:l.companyProjectImgId,
+                        url:'http://qiniu.iwooke'+ l.imgUrl.substring(21)
                     })
                 })
-                if(this.form.video){
-                    this.videofileList.push({
-                        name:this.form.scene,
-                        // url:'http://'+ this.form.video
-                        url:'http://qiniu.iwooke'+ this.form.video.substring(21)
-                    })
-                }
             })
         },
        postData(){
            let id = parseInt(JSON.parse(sessionStorage.getItem("user")).companyId)
            let comName = JSON.parse(sessionStorage.getItem("user")).comName
-           let myData={}
-           if(this.$route.query.sceanId){
-               myData={
-                    comName:comName,
-                    companyId:this.$route.query.comId,
-                    sceneId:this.$route.query.sceanId,
-                    sceneClassification:this.form.sceneClassification,
-                    scene:this.form.scene,
-                    scenarioDefined:this.form.scenarioDefined,
-                    scenarioKeyword:this.form.scenarioKeyword,
-                    video:this.form.video,
-                    scenarioImgList:this.editFileList.concat(this.photos)
-                }
-           }else{
-               myData={
-                    comName:comName,
-                    companyId:id,
-                    sceneClassification:this.form.sceneClassification,
-                    scene:this.form.scene,
-                    scenarioDefined:this.form.scenarioDefined,
-                    scenarioKeyword:this.form.scenarioKeyword,
-                    video:this.form.video,
-                    scenarioImgList:this.photos
-                }
-           }
-           addCompanyScene(myData)
+           let myData={
+                comName:comName,
+                companyId:id,
+                industry:this.industry,
+                isactualmake:this.form.isactualmake,
+                projectIntroduce:this.form.projectIntroduce,
+                projectKeyword:this.form.projectKeyword,
+                projectName:this.form.projectName,
+                imgList:this.photos
+            }
+           addProject(myData)
            .then(res=>{
-               console.log(res)
-               this.fileList = []
-                this.videoUrl = ''
-                this.form.sceneClassification = ''
-                this.form.scene = ''
-                this.form.scenarioDefined = ''
-                this.form.scenarioKeyword = ''
-                this.photos = []
-                this.form.video = ''
+               
            })
        },
         resetData(){

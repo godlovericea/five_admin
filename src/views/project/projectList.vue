@@ -1,66 +1,35 @@
 <template>
     <div class="warnWrapper">
-        <div class="divider"></div>
-        <div class="formBox">
-            <el-form :model="form" class="demo-form-inline" label-width="200px">
-                <el-form-item label="所属行业">
-                    <el-cascader v-model="industry" :options="industyList" style="width:400px"></el-cascader>
-                </el-form-item>
-                <el-form-item label="需求分类">
-                    <el-checkbox-group v-model="form.demandClass" @change="handleChangeCheckBox">
-                        <el-checkbox :label="1">资金支持</el-checkbox>
-                        <el-checkbox :label="2">人才支持</el-checkbox>
-                        <el-checkbox :label="3">技术支持</el-checkbox>
-                        <el-checkbox :label="4">市场支持</el-checkbox>
-                        <el-checkbox :label="5">其他</el-checkbox>
-                    </el-checkbox-group>
-                </el-form-item>
-                <el-form-item label="所需资金" v-if="flag.moneyFlag">
-                    <el-input size="small" v-model="form.money" placeholder="以万元单位" style="width:400px"></el-input>
-                </el-form-item>
-                <el-form-item label="所需人才专业以及数量" v-if="flag.personFlag">
-                    <el-input size="small" v-model="form.person" placeholder="请输入产品名称或者项目名称" style="width:400px"></el-input>
-                </el-form-item>
-                <el-form-item label="所需技术支持" v-if="flag.techFlag">
-                    <el-input size="small" v-model="form.tech" placeholder="请输入产品名称或者项目名称" style="width:400px"></el-input>
-                </el-form-item>
-                <el-form-item label="所需市场支持" v-if="flag.marketFlag">
-                    <el-input size="small" v-model="form.market" placeholder="请输入产品名称或者项目名称" style="width:400px"></el-input>
-                </el-form-item>
-                <el-form-item label="需求简述">
-                    <el-input size="small" v-model="form.scenarioDefined" type="textarea" placeholder="如：在研****课题，需要模式识别专业博士2名，硕士5名，市场推广专员20名等，资金***万元" :rows="6" maxlength="300" style="width:400px"></el-input>
-                </el-form-item>
-                <el-form-item label="上传详细说明附件" prop="photos">
-                    <el-upload
-                        class="upload-demo"
-                        list-type="picture-card"
-                        action="http://120.55.161.93:6011/qiniu/upload"
-                        name="file"
-                        :file-list="fileList"
-                        :before-upload="beforeAvatarUpload"
-                        :on-success="handleAvatarSuccess"
-                        :on-remove="handleRemove"
-                        :limit="8">
-                        <div style="height:148px;display:flex;align-items:center;justify-content:center">
-                            <i class="el-icon-plus"></i>
-                        </div>
-                    </el-upload>
-                    <p>请上传具体需求文档</p>
-                </el-form-item>
-                <el-form-item>
-                    <el-button size="small" type="primary" style="width:100px" @click="postData">提交</el-button>
-                    <el-button size="small" type="info" @click="resetData">重置</el-button>
-                </el-form-item>
-            </el-form>
-        </div>
+        <el-table :data="tableData" style="width: 100%">
+            <el-table-column  prop="projectName" label="项目名称" width="180"></el-table-column>
+            <el-table-column  prop="projectIntroduce" label="项目介绍" width="180"></el-table-column>
+            <el-table-column  prop="projectKeyword" label="项目关键字" width="180"></el-table-column>
+            <el-table-column  prop="state" label="审核状态" width="180"></el-table-column>
+            <el-table-column  prop="createDate" label="日期" width="180"></el-table-column>
+            <el-table-column  label="操作" width="180">
+                <template slot-scope="scope">
+                    <el-button type="text" @click="goDetail(scope.row.companyProjectId)">详情</el-button>
+                    <el-button type="text" @click="handleDel(scope.row.companyProjectId)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+        <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page.sync="pageNum"
+            :page-size="pageSize"
+            layout="total, prev, pager, next"
+            :total="total">
+        </el-pagination>
     </div>    
 </template>
 
 <script>
-import {addCompanyScene,getCompanyScene} from '../../api/collect'
+import {listCompanyProject,deleteProject} from '@/api/collect'
 export default {
     data(){
         return{
+            tableData:[],
             industry:[],
             industyList:[
                 {
@@ -290,8 +259,7 @@ export default {
             form:{
                 isRecord:1,
                 operateCom:'',
-                video:'',
-                sceneClassification:[]
+                video:''
             },
             photos:[],
             checkedCities:[],
@@ -302,158 +270,54 @@ export default {
             fileList:[],
             videofileList:[],
             editFileList:[],
-            flag:{
-                moneyFlag:false,
-                personFlag:false,
-                techFlag:false,
-                marketFlag:false,
-                otherFlag:false
-            }
+            pageNum:1,
+            pageSize:20,
+            total:0
         }
     },
     mounted(){
-        if(this.$route.query.id){
-            this.getInfo()
-        }
+        this.getData()
     },
     methods:{
-        getInfo(){
-            let id = parseInt(this.$route.query.sceanId)
+        getData(){
+            let id = parseInt(JSON.parse(sessionStorage.getItem("user")).companyId)
             let myData={
-                companySceneId:id
+                companyId:id,
+                pageNum:this.pageNum,
+                pageSize:this.pageSize
             }
-            getCompanyScene(myData)
+            listCompanyProject(myData)
             .then(res=>{
-                this.form = res.result
-                this.form.sceneClassification = parseInt(res.result.sceneClassification)
-                res.result.companySceneImgDTOList.forEach(l=>{
-                    this.fileList.push({
-                        name:l.companySceneId,
-                        url:'http://qiniu.iwooke'+ l.scenarioImg.substring(21)
-                    })
-                })
-                if(this.form.video){
-                    this.videofileList.push({
-                        name:this.form.scene,
-                        // url:'http://'+ this.form.video
-                        url:'http://qiniu.iwooke'+ this.form.video.substring(21)
-                    })
+                this.tableData = res.result.list
+            })
+        },
+        goDetail(id){
+            this.$router.push({
+                path:'/project/newProject',
+                query:{
+                    id:id
                 }
             })
         },
-       postData(){
-           let id = parseInt(JSON.parse(sessionStorage.getItem("user")).companyId)
-           let comName = JSON.parse(sessionStorage.getItem("user")).comName
-           let myData={}
-           if(this.$route.query.sceanId){
-               myData={
-                    comName:comName,
-                    companyId:this.$route.query.comId,
-                    sceneId:this.$route.query.sceanId,
-                    sceneClassification:this.form.sceneClassification,
-                    scene:this.form.scene,
-                    scenarioDefined:this.form.scenarioDefined,
-                    scenarioKeyword:this.form.scenarioKeyword,
-                    video:this.form.video,
-                    scenarioImgList:this.editFileList.concat(this.photos)
-                }
-           }else{
-               myData={
-                    comName:comName,
-                    companyId:id,
-                    sceneClassification:this.form.sceneClassification,
-                    scene:this.form.scene,
-                    scenarioDefined:this.form.scenarioDefined,
-                    scenarioKeyword:this.form.scenarioKeyword,
-                    video:this.form.video,
-                    scenarioImgList:this.photos
-                }
-           }
-           addCompanyScene(myData)
-           .then(res=>{
-               console.log(res)
-               this.fileList = []
-                this.videoUrl = ''
-                this.form.sceneClassification = ''
-                this.form.scene = ''
-                this.form.scenarioDefined = ''
-                this.form.scenarioKeyword = ''
-                this.photos = []
-                this.form.video = ''
-           })
-       },
-        resetData(){
-
-        },
-        handleRemove(file, fileList) {
-            // console.log(file)
-            // console.log(fileList)
-            this.editFileList = []
-            fileList.forEach(l=>{
-                this.editFileList.push('q3vbt7rr5.bkt.clouddn.com'+ l.url.substring(23))
+        handleDel(id){
+            let comName = JSON.parse(sessionStorage.getItem("user")).comName
+            let myData = {
+                companyProjectId:id,
+                comName:comName
+            }
+            deleteProject(myData)
+            .then(res => {
+                this.getData()
             })
-            // console.log(this.editFileList)
         },
-        handleAvatarSuccess(res,file,fileList){
-            // console.log(res)
-            this.photos.push(res[0])
+        handleSizeChange(val){
+            this.pageSize = val
+            this.getData()
         },
-        beforeAvatarUpload(file) {
-            const isJPEG = file.type === 'image/jpeg';
-            const isJPG = file.type === 'image/jpg';
-            const isPNG = file.type === 'image/png';
-            const isLt2M = file.size / 1024 / 1024 < 4
-            if (!isLt2M) {
-                this.$message.error('上传图片大小不能超过 4MB!')
-                return false
-            }
-            if(!isJPG && !isPNG && !isJPEG){
-                this.$message.error('上传图片只能是 JPG 或者 PNG 格式!')
-                return false
-            }
-            return isLt2M && (!isJPG || !isPNG || !isJPEG)
-        },
-        handleVideoSuccess(res,file,fileList){
-            this.form.video = res[0]
-        },
-        beforeVideoUpload(file) {
-            const isJPEG = file.type === 'video/mp4';
-            const isLt2M = file.size / 1024 / 1024 < 100
-            if (!isLt2M) {
-                this.$message.error('上传视频大小不能超过 100MB!')
-                return false
-            }
-            if(!isJPEG){
-                this.$message.error('上传视频只能是MP4格式!')
-                return false
-            }
-            return  isLt2M && isJPEG
-        },
-        handleChangeCheckBox(value){
-            console.log(value)
-            value.forEach(l=>{
-                if(l===1){
-                    this.flag.moneyFlag = true
-                }
-                if(l===2){
-                    this.flag.personFlag = true
-                }
-                if(l===3){
-                    this.flag.techFlag = true
-                }
-                if(l===4){
-                    this.flag.marketFlag = true
-                }
-                if(l===5){
-                    this.form.sceneClassification = [5]
-                    this.flag.moneyFlag = false
-                    this.flag.personFlag = false
-                    this.flag.techFlag = false
-                    this.flag.marketFlag = false
-                }
-            })
+        handleCurrentChange(val){
+            this.pageNum = val
+            this.getData()
         }
-
     }
 }
 </script>

@@ -52,46 +52,107 @@ export function updateBaseInfo(data) {
   })
 }
 
-//场景列表
-export function listCompanyScene(data) {
+//增加公司产品
+export function addProduct(data) {
   return request({
-    url: '/companyInfo/listCompanyScene',
-    method: 'post',
-    data: qs.stringify(data)
-  })
-}
-
-//场景详情
-export function getCompanyScene(data) {
-  return request({
-    url: '/companyInfo/getCompanyScene',
-    method: 'post',
-    data: qs.stringify(data)
-  })
-}
-
-
-//审核公司
-export function checkCompany(data) {
-  return request({
-    url: '/companyInfo/checkCompany',
+    url: '/companyProduct/addProduct',
     method: 'post',
     data
   })
 }
 
-//公司列表
-export function listCompany(data) {
+//删除产品
+export function deleteProduct(data) {
   return request({
-    url: '/companyInfo/listCompany',
+    url: '/companyProduct/deleteProduct',
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
+
+//获取产品详情
+export function getProduct(data) {
+  return request({
+    url: '/companyProduct/getProduct',
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
+//获取公司产品列表
+export function listProduct(data) {
+  return request({
+    url: '/companyProduct/listProduct',
     method: 'post',
     data
   })
 }
-//公司列表
-export function listLog(data) {
+// 增加公司项目
+export function addProject(data) {
   return request({
-    url: '/log/listLog',
+    url: '/companyProject/addProject',
+    method: 'post',
+    data
+  })
+}
+
+//删除公司项目
+export function deleteProject(data) {
+  return request({
+    url: '/companyProject/deleteProject',
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
+//获取公司项目详情
+export function getCompanyProject(data) {
+  return request({
+    url: '/companyProject/getCompanyProject',
+    method: 'post',
+    data:qs.stringify(data)
+  })
+}
+// 获取公司项目列表
+export function listCompanyProject(data) {
+  return request({
+    url: '/companyProject/listCompanyProject',
+    method: 'post',
+    data
+  })
+}
+
+// 增加公司项目
+export function addDemand(data) {
+  return request({
+    url: '/companyDemand/addDemand',
+    method: 'post',
+    data
+  })
+}
+
+//删除公司项目
+export function deleteDemand(data) {
+  return request({
+    url: '/companyDemand/deleteDemand',
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
+//获取公司项目详情
+export function getCompanyDemand(data) {
+  return request({
+    url: '/companyDemand/getCompanyDemand',
+    method: 'post',
+    data:qs.stringify(data)
+  })
+}
+// 获取公司项目列表
+export function listCompanyDemand(data) {
+  return request({
+    url: '/companyDemand/listCompanyDemand',
     method: 'post',
     data
   })

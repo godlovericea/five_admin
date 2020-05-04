@@ -3,65 +3,67 @@
         <div class="divider"></div>
         <div class="formBox">
             <el-form :model="form" class="demo-form-inline" label-width="200px">
-                    <el-form-item label="所属行业">
-                        <el-cascader v-model="industry" :options="industyList" style="width:400px"></el-cascader>
-                    </el-form-item>
-                    <el-form-item label="产品名称">
-                        <el-input size="small" v-model="form.scene" placeholder="产品名称" style="width:400px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="产品介绍">
-                        <el-input size="small" v-model="form.scenarioDefined" type="textarea" placeholder="" :rows="6" maxlength="300" style="width:400px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="产品搜索关键字">
-                        <el-input size="small" v-model="form.scenarioKeyword" placeholder="如：光纤、电缆、无人驾驶，多个以顿号分割" style="width:400px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="产品图片" prop="photos">
-                        <el-upload
-                            class="upload-demo"
-                            list-type="picture-card"
-                            action="http://120.55.161.93:6011/qiniu/upload"
-                            name="file"
-                            :file-list="fileList"
-                            :before-upload="beforeAvatarUpload"
-                            :on-success="handleAvatarSuccess"
-                            :on-remove="handleRemove"
-                            :limit="8">
-                            <div style="height:148px;display:flex;align-items:center;justify-content:center">
-                                <i class="el-icon-plus"></i>
-                            </div>
-                        </el-upload>
-                        <p>可上传8张图片，每张图片大小不超过4m（支持格式为：png、jpeg）。</p>
-                    </el-form-item>
-                    <el-form-item label="产品宣传视频">
-                        <el-upload
-                            class="upload-demo"
-                            list-type="picture"
-                            action="http://120.55.161.93:6011/qiniu/upload"
-                            name="file"
-                            :file-list="videofileList"
-                            :before-upload="beforeVideoUpload"
-                            :on-success="handleVideoSuccess"
-                            :limit="8">
-                            <el-button size="small" type="primary">点击上传</el-button>
-                        </el-upload>
-                        <p>可上传1个视频，视频大小不超过100M（支持格式为：mp4）。</p>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button size="small" type="primary" style="width:100px" @click="postData">提交</el-button>
-                        <el-button size="small" type="info" @click="resetData">重置</el-button>
-                    </el-form-item>
-                </el-form>
+                <el-form-item label="所属行业">
+                    <el-cascader v-model="industry" :options="industyList" style="width:400px"></el-cascader>
+                </el-form-item>
+                <el-form-item label="产品名称">
+                    <el-input size="small" v-model="form.productName" placeholder="产品名称" style="width:400px"></el-input>
+                </el-form-item>
+                <el-form-item label="产品介绍">
+                    <el-input size="small" v-model="form.productIntroduce" type="textarea" placeholder="" :rows="6" maxlength="300" style="width:400px"></el-input>
+                </el-form-item>
+                <el-form-item label="产品搜索关键字">
+                    <el-input size="small" v-model="form.productKeyword" placeholder="如：光纤、电缆、无人驾驶，多个以顿号分割" style="width:400px"></el-input>
+                </el-form-item>
+                <el-form-item label="产品图片" prop="photos">
+                    <el-upload
+                        class="upload-demo"
+                        list-type="picture-card"
+                        action="http://120.55.161.93:6011/qiniu/upload"
+                        name="file"
+                        :file-list="fileList"
+                        :before-upload="beforeAvatarUpload"
+                        :on-success="handleAvatarSuccess"
+                        :on-remove="handleRemove"
+                        :limit="8">
+                        <div style="height:148px;display:flex;align-items:center;justify-content:center">
+                            <i class="el-icon-plus"></i>
+                        </div>
+                    </el-upload>
+                    <p>可上传8张图片，每张图片大小不超过4m（支持格式为：png、jpeg）。</p>
+                </el-form-item>
+                <el-form-item label="产品宣传视频">
+                    <el-upload
+                        class="upload-demo"
+                        list-type="picture"
+                        action="http://120.55.161.93:6011/qiniu/upload"
+                        name="file"
+                        :file-list="videofileList"
+                        :before-upload="beforeVideoUpload"
+                        :on-success="handleVideoSuccess"
+                        :limit="8">
+                        <el-button size="small" type="primary">点击上传</el-button>
+                    </el-upload>
+                    <p>可上传1个视频，视频大小不超过100M（支持格式为：mp4）。</p>
+                </el-form-item>
+                <el-form-item label="视频预览" v-if="form.productVideo">
+                    <video :src="form.myVideo" controls class="myVideo"></video>
+                </el-form-item>
+                <el-form-item>
+                    <el-button size="small" type="primary" style="width:100px" @click="postData">提交</el-button>
+                    <el-button size="small" type="info" @click="resetData">重置</el-button>
+                </el-form-item>
+            </el-form>
         </div>
-        
     </div>    
 </template>
 
 <script>
-import {addCompanyScene,getCompanyScene} from '../../api/collect'
+import {addProduct,getProduct} from '@/api/collect'
 export default {
     data(){
         return{
-            industry:'',
+            industry:[],
             industyList:[
                 {
                     value: 1,
@@ -304,76 +306,55 @@ export default {
         }
     },
     mounted(){
-        if(this.$route.query.sceanId){
+        if(this.$route.query.id){
             this.getInfo()
         }
     },
     methods:{
         getInfo(){
-            let id = parseInt(this.$route.query.sceanId)
+            let id = parseInt(this.$route.query.id)
             let myData={
-                companySceneId:id
+                companyProductId:id
             }
-            getCompanyScene(myData)
+            getProduct(myData)
             .then(res=>{
                 this.form = res.result
-                this.form.sceneClassification = parseInt(res.result.sceneClassification)
-                res.result.companySceneImgDTOList.forEach(l=>{
+                this.industry = this.form.industry
+                res.result.imgList.forEach(l=>{
                     this.fileList.push({
-                        name:l.companySceneId,
-                        url:'http://qiniu.iwooke'+ l.scenarioImg.substring(21)
+                        name:l.companyProductImgId,
+                        url:'http://qiniu.iwooke'+ l.imgUrl.substring(21)
                     })
                 })
-                if(this.form.video){
+                if(this.form.productVideo){
                     this.videofileList.push({
-                        name:this.form.scene,
+                        name:this.form.productName,
                         // url:'http://'+ this.form.video
-                        url:'http://qiniu.iwooke'+ this.form.video.substring(21)
+                        url:'http://qiniu.iwooke'+ this.form.productVideo.substring(21)
                     })
+                    this.form.myVideo = 'http://qiniu.iwooke'+ this.form.productVideo.substring(21)
                 }
             })
         },
-       postData(){
-           let id = parseInt(JSON.parse(sessionStorage.getItem("user")).companyId)
-           let comName = JSON.parse(sessionStorage.getItem("user")).comName
-           let myData={}
-           if(this.$route.query.sceanId){
-               myData={
-                    comName:comName,
-                    companyId:this.$route.query.comId,
-                    sceneId:this.$route.query.sceanId,
-                    sceneClassification:this.form.sceneClassification,
-                    scene:this.form.scene,
-                    scenarioDefined:this.form.scenarioDefined,
-                    scenarioKeyword:this.form.scenarioKeyword,
-                    video:this.form.video,
-                    scenarioImgList:this.editFileList.concat(this.photos)
-                }
-           }else{
-               myData={
+        postData(){
+            let id = parseInt(JSON.parse(sessionStorage.getItem("user")).companyId)
+            let comName = JSON.parse(sessionStorage.getItem("user")).comName
+            let myData={
                     comName:comName,
                     companyId:id,
-                    sceneClassification:this.form.sceneClassification,
-                    scene:this.form.scene,
+                    productName:this.form.productName,
+                    productIntroduce:this.form.productIntroduce,
+                    industry:this.industry,
                     scenarioDefined:this.form.scenarioDefined,
-                    scenarioKeyword:this.form.scenarioKeyword,
-                    video:this.form.video,
-                    scenarioImgList:this.photos
+                    productKeyword:this.form.productKeyword,
+                    productVideo:this.form.productVideo,
+                    imgList:this.photos
                 }
-           }
-           addCompanyScene(myData)
-           .then(res=>{
-               console.log(res)
-               this.fileList = []
-                this.videoUrl = ''
-                this.form.sceneClassification = ''
-                this.form.scene = ''
-                this.form.scenarioDefined = ''
-                this.form.scenarioKeyword = ''
-                this.photos = []
-                this.form.video = ''
-           })
-       },
+            addProduct(myData)
+            .then(res=>{
+                console.log(res)
+            })
+        },
         resetData(){
 
         },
@@ -430,6 +411,9 @@ export default {
 .warnWrapper{
     width: 100%;
     padding: 20px;
- 
+    .myVideo{
+        max-width: 300px;
+        max-height: 150px;
+    }
 }
 </style>

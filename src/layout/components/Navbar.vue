@@ -7,9 +7,14 @@
     <div class="right-menu">
       <span class="welcome">欢迎！</span>
       <span class="username">{{userName}}</span>
-      <el-button type="text" @click="goManage" v-if="!adminFlag">我的场景</el-button>
-      <el-button type="text" @click="goAdmin" v-if="adminFlag">管理员入口</el-button>
-      <el-button type="text" @click="gologs" v-if="adminFlag">日志</el-button>
+      <el-button type="text" @click="goproductsList">我的产品</el-button>
+      <el-button type="text" @click="goprojectList" >我的项目</el-button>
+      <el-button type="text" @click="goneedList">我的需求</el-button>
+      <!-- <el-button type="text" @click="goproductsList" v-if="!adminFlag">我的产品</el-button>
+      <el-button type="text" @click="goprojectList" v-if="!adminFlag">我的项目</el-button>
+      <el-button type="text" @click="goproductsList" v-if="!adminFlag">我的需求</el-button> -->
+      <!-- <el-button type="text" @click="goAdmin" v-if="adminFlag">管理员入口</el-button>
+      <el-button type="text" @click="gologs" v-if="adminFlag">日志</el-button> -->
       <el-button type="text" @click="goHelp">帮助</el-button>
       <el-button type="text" @click="logout">退出</el-button>
     </div>
@@ -62,10 +67,28 @@ export default {
         this.$router.push(`/`)
       }
     },
-    goManage(){
+    goproductsList(){
       let user =JSON.parse(sessionStorage.getItem("user")) 
       this.$router.push({
-        path:'/scean/myScean',
+        path:'/product/productList',
+        query:{
+          id:user.companyId
+        }
+      })
+    },
+    goprojectList(){
+      let user =JSON.parse(sessionStorage.getItem("user")) 
+      this.$router.push({
+        path:'/project/projectList',
+        query:{
+          id:user.companyId
+        }
+      })
+    },
+    goneedList(){
+      let user =JSON.parse(sessionStorage.getItem("user")) 
+      this.$router.push({
+        path:'/need/needList',
         query:{
           id:user.companyId
         }
