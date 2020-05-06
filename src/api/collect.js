@@ -70,7 +70,6 @@ export function deleteProduct(data) {
   })
 }
 
-
 //获取产品详情
 export function getProduct(data) {
   return request({

@@ -1,11 +1,17 @@
 <template>
     <div class="warnWrapper">
         <el-table :data="tableData" style="width: 100%">
-            <el-table-column  prop="projectName" label="项目名称" width="180"></el-table-column>
-            <el-table-column  prop="projectIntroduce" label="项目介绍" width="180"></el-table-column>
-            <el-table-column  prop="projectKeyword" label="项目关键字" width="180"></el-table-column>
-            <el-table-column  prop="state" label="审核状态" width="180"></el-table-column>
-            <el-table-column  prop="createDate" label="日期" width="180"></el-table-column>
+            <el-table-column  prop="projectName" label="项目名称"></el-table-column>
+            <el-table-column  prop="projectIntroduce" label="项目介绍"></el-table-column>
+            <el-table-column  prop="projectKeyword" label="项目关键字"></el-table-column>
+            <el-table-column label="审核状态" width="180" class-name="checkState">
+                <template slot-scope="scope">
+                    <span class="over" v-if="scope.row.state == 'N'">通过</span>
+                    <span class="fail" v-if="scope.row.state == 'F'">未通过</span>
+                    <span class="wait" v-if="scope.row.state == 'W'">待审核</span>
+                </template>
+            </el-table-column>
+            <el-table-column  prop="createDate" label="日期"></el-table-column>
             <el-table-column  label="操作" width="180">
                 <template slot-scope="scope">
                     <el-button type="text" @click="goDetail(scope.row.companyDemandId)">详情</el-button>

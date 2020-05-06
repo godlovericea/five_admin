@@ -15,7 +15,7 @@
                         <el-checkbox :label="5">其他</el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
-                <el-form-item label="所需资金" v-if="flag.moneyFlag">
+                <!-- <el-form-item label="所需资金" v-if="flag.moneyFlag">
                     <el-input size="small" v-model="form.money" placeholder="以万元单位" style="width:400px"></el-input>
                 </el-form-item>
                 <el-form-item label="所需人才专业以及数量" v-if="flag.personFlag">
@@ -26,15 +26,14 @@
                 </el-form-item>
                 <el-form-item label="所需市场支持" v-if="flag.marketFlag">
                     <el-input size="small" v-model="form.market" placeholder="请输入产品名称或者项目名称" style="width:400px"></el-input>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item label="需求简述">
-                    <el-input size="small" v-model="form.scenarioDefined" type="textarea" placeholder="如：在研****课题，需要模式识别专业博士2名，硕士5名，市场推广专员20名等，资金***万元" :rows="6" maxlength="300" style="width:400px"></el-input>
+                    <el-input size="small" v-model="form.demandIndo" type="textarea" placeholder="如：在研****课题，需要模式识别专业博士2名，硕士5名，市场推广专员20名等，资金***万元" :rows="6" maxlength="300" style="width:400px"></el-input>
                 </el-form-item>
                 <el-form-item label="上传详细说明附件" prop="photos">
-                    <el-upload
+                    <!-- <el-upload
                         class="upload-demo"
-                        list-type="picture-card"
-                        action="http://120.55.161.93:6011/qiniu/upload"
+                        action="http://120.55.161.93:6012/file/upload"
                         name="file"
                         :file-list="fileList"
                         :before-upload="beforeAvatarUpload"
@@ -44,12 +43,19 @@
                         <div style="height:148px;display:flex;align-items:center;justify-content:center">
                             <i class="el-icon-plus"></i>
                         </div>
+                    </el-upload> -->
+                    <el-upload
+                        class="upload-demo"
+                        action="http://120.55.161.93:6012/file/upload"
+                        :on-change="handleChange"
+                        :on-success="handleAvatarSuccess"
+                        :file-list="fileList">
+                        <el-button size="small" type="primary">点击上传</el-button>
                     </el-upload>
                     <p>请上传具体需求文档</p>
                 </el-form-item>
                 <el-form-item>
                     <el-button size="small" type="primary" style="width:100px" @click="postData">提交</el-button>
-                    <el-button size="small" type="info" @click="resetData">重置</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -57,7 +63,7 @@
 </template>
 
 <script>
-import {addCompanyScene,getCompanyScene} from '../../api/collect'
+import {addDemand,getCompanyDemand} from '../../api/collect'
 export default {
     data(){
         return{
@@ -291,7 +297,7 @@ export default {
                 isRecord:1,
                 operateCom:'',
                 video:'',
-                sceneClassification:[]
+                demandClass:[]
             },
             photos:[],
             checkedCities:[],
@@ -308,7 +314,8 @@ export default {
                 techFlag:false,
                 marketFlag:false,
                 otherFlag:false
-            }
+            },
+            checkBoxList:[]
         }
     },
     mounted(){
@@ -318,119 +325,48 @@ export default {
     },
     methods:{
         getInfo(){
-            let id = parseInt(this.$route.query.sceanId)
+            let id = parseInt(this.$route.query.id)
             let myData={
                 companySceneId:id
             }
-            getCompanyScene(myData)
+            getCompanyDemand(myData)
             .then(res=>{
                 this.form = res.result
-                this.form.sceneClassification = parseInt(res.result.sceneClassification)
-                res.result.companySceneImgDTOList.forEach(l=>{
-                    this.fileList.push({
-                        name:l.companySceneId,
-                        url:'http://qiniu.iwooke'+ l.scenarioImg.substring(21)
-                    })
-                })
-                if(this.form.video){
-                    this.videofileList.push({
-                        name:this.form.scene,
-                        // url:'http://'+ this.form.video
-                        url:'http://qiniu.iwooke'+ this.form.video.substring(21)
-                    })
-                }
+                this.industry = this.form.industry
             })
         },
-       postData(){
-           let id = parseInt(JSON.parse(sessionStorage.getItem("user")).companyId)
-           let comName = JSON.parse(sessionStorage.getItem("user")).comName
-           let myData={}
-           if(this.$route.query.sceanId){
-               myData={
-                    comName:comName,
-                    companyId:this.$route.query.comId,
-                    sceneId:this.$route.query.sceanId,
-                    sceneClassification:this.form.sceneClassification,
-                    scene:this.form.scene,
-                    scenarioDefined:this.form.scenarioDefined,
-                    scenarioKeyword:this.form.scenarioKeyword,
-                    video:this.form.video,
-                    scenarioImgList:this.editFileList.concat(this.photos)
-                }
-           }else{
-               myData={
-                    comName:comName,
-                    companyId:id,
-                    sceneClassification:this.form.sceneClassification,
-                    scene:this.form.scene,
-                    scenarioDefined:this.form.scenarioDefined,
-                    scenarioKeyword:this.form.scenarioKeyword,
-                    video:this.form.video,
-                    scenarioImgList:this.photos
-                }
-           }
-           addCompanyScene(myData)
-           .then(res=>{
-               console.log(res)
-               this.fileList = []
-                this.videoUrl = ''
-                this.form.sceneClassification = ''
-                this.form.scene = ''
-                this.form.scenarioDefined = ''
-                this.form.scenarioKeyword = ''
-                this.photos = []
-                this.form.video = ''
-           })
-       },
+        postData(){
+            let id = parseInt(JSON.parse(sessionStorage.getItem("user")).companyId)
+            let comName = JSON.parse(sessionStorage.getItem("user")).comName
+            let myData={
+                comName:comName,
+                companyId:id,
+                attachmentUrl:this.form.attachmentUrl,
+                demandClass:this.form.demandClass,
+                demandIndo:this.form.demandIndo,
+                industry:this.industry
+            }
+            addDemand(myData)
+            .then(res=>{
+                this.$message({
+                    type:'success',
+                    message:'提交成功'
+                })
+            })
+        },
         resetData(){
 
         },
-        handleRemove(file, fileList) {
-            // console.log(file)
-            // console.log(fileList)
-            this.editFileList = []
-            fileList.forEach(l=>{
-                this.editFileList.push('q3vbt7rr5.bkt.clouddn.com'+ l.url.substring(23))
-            })
-            // console.log(this.editFileList)
+        handleChange(file){
+            
         },
-        handleAvatarSuccess(res,file,fileList){
-            // console.log(res)
-            this.photos.push(res[0])
-        },
-        beforeAvatarUpload(file) {
-            const isJPEG = file.type === 'image/jpeg';
-            const isJPG = file.type === 'image/jpg';
-            const isPNG = file.type === 'image/png';
-            const isLt2M = file.size / 1024 / 1024 < 4
-            if (!isLt2M) {
-                this.$message.error('上传图片大小不能超过 4MB!')
-                return false
-            }
-            if(!isJPG && !isPNG && !isJPEG){
-                this.$message.error('上传图片只能是 JPG 或者 PNG 格式!')
-                return false
-            }
-            return isLt2M && (!isJPG || !isPNG || !isJPEG)
-        },
-        handleVideoSuccess(res,file,fileList){
-            this.form.video = res[0]
-        },
-        beforeVideoUpload(file) {
-            const isJPEG = file.type === 'video/mp4';
-            const isLt2M = file.size / 1024 / 1024 < 100
-            if (!isLt2M) {
-                this.$message.error('上传视频大小不能超过 100MB!')
-                return false
-            }
-            if(!isJPEG){
-                this.$message.error('上传视频只能是MP4格式!')
-                return false
-            }
-            return  isLt2M && isJPEG
+        handleAvatarSuccess(file){
+            console.log(file.result.url)
+            this.form.attachmentUrl = file.result.url
         },
         handleChangeCheckBox(value){
             console.log(value)
+            this.demandClass = value
             value.forEach(l=>{
                 if(l===1){
                     this.flag.moneyFlag = true

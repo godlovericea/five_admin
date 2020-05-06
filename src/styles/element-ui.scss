@@ -57,3 +57,14 @@
 .paginationBox{
   margin: 20px 0;
 }
+.checkState{
+  .over{
+    color: #00CD66;
+  }
+  .fail{
+    color: #4F4F4F;
+  }
+  .wait{
+    color: #EE4000;
+  }
+}

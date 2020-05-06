@@ -1,11 +1,17 @@
 <template>
     <div class="warnWrapper">
         <el-table :data="tableData" style="width: 100%">
-            <el-table-column  prop="productName" label="产品名称" width="180"></el-table-column>
-            <el-table-column  prop="productIntroduce" label="产品介绍" width="180"></el-table-column>
-            <el-table-column  prop="date" label="productKeyword" width="产品关键字"></el-table-column>
-            <el-table-column  prop="state" label="审核状态" width="180"></el-table-column>
-            <el-table-column  prop="createData" label="日期" width="180"></el-table-column>
+            <el-table-column  prop="productName" label="产品名称"></el-table-column>
+            <el-table-column  prop="productIntroduce" label="产品介绍"></el-table-column>
+            <el-table-column  prop="date" label="产品关键字"></el-table-column>
+            <el-table-column label="审核状态" width="180" class-name="checkState">
+                <template slot-scope="scope">
+                    <span class="over" v-if="scope.row.state == 'N'">通过</span>
+                    <span class="fail" v-if="scope.row.state == 'F'">未通过</span>
+                    <span class="wait" v-if="scope.row.state == 'W'">待审核</span>
+                </template>
+            </el-table-column>
+            <el-table-column  prop="createData" label="日期"></el-table-column>
             <el-table-column  label="操作" width="180">
                 <template slot-scope="scope">
                     <el-button type="text" @click="goDetail(scope.row.companyProductId)">详情</el-button>
@@ -288,6 +294,7 @@ export default {
             }
             listProduct(myData)
             .then(res=>{
+                this.total = res.result.total
                 this.tableData = res.result.list
             })
         },

@@ -85,7 +85,7 @@ export const constantRoutes = [
         path: 'productList',
         component: () => import('@/views/product/productList'),
         name: 'sceanManage',
-        meta: { title: '新增项目', icon: 'dashboard', affix: true },
+        meta: { title: '产品列表', icon: 'dashboard', affix: true },
         hidden:true
       }
     ]
@@ -105,7 +105,7 @@ export const constantRoutes = [
         path: 'projectList',
         component: () => import('@/views/project/projectList'),
         name: 'sceanManage',
-        meta: { title: '新增项目', icon: 'dashboard', affix: true },
+        meta: { title: '项目列表', icon: 'dashboard', affix: true },
         hidden:true
       }
     ]
@@ -125,7 +125,7 @@ export const constantRoutes = [
         path: 'needList',
         component: () => import('@/views/need/needList'),
         name: 'sceanManage',
-        meta: { title: '新增项目', icon: 'dashboard', affix: true },
+        meta: { title: '需求列表', icon: 'dashboard', affix: true },
         hidden:true
       }
     ]
