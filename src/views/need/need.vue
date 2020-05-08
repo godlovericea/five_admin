@@ -2,7 +2,7 @@
     <div class="warnWrapper">
         <div class="divider"></div>
         <div class="formBox">
-            <el-form :model="form" class="demo-form-inline" label-width="200px">
+            <el-form :model="form" class="demo-form-inline" label-width="120px">
                 <el-form-item label="所属行业">
                     <el-cascader v-model="industry" :options="industyList" style="width:400px"></el-cascader>
                 </el-form-item>
@@ -27,23 +27,13 @@
                 <el-form-item label="所需市场支持" v-if="flag.marketFlag">
                     <el-input size="small" v-model="form.market" placeholder="请输入产品名称或者项目名称" style="width:400px"></el-input>
                 </el-form-item> -->
+                <el-form-item label="项目/课题">
+                    <el-input size="small" v-model="form.money" placeholder="请输入需要合作的项目或者课题" style="width:400px"></el-input>
+                </el-form-item>
                 <el-form-item label="需求简述">
                     <el-input size="small" v-model="form.demandIndo" type="textarea" placeholder="如：在研****课题，需要模式识别专业博士2名，硕士5名，市场推广专员20名等，资金***万元" :rows="6" maxlength="300" style="width:400px"></el-input>
                 </el-form-item>
-                <el-form-item label="上传详细说明附件" prop="photos">
-                    <!-- <el-upload
-                        class="upload-demo"
-                        action="http://120.55.161.93:6012/file/upload"
-                        name="file"
-                        :file-list="fileList"
-                        :before-upload="beforeAvatarUpload"
-                        :on-success="handleAvatarSuccess"
-                        :on-remove="handleRemove"
-                        :limit="8">
-                        <div style="height:148px;display:flex;align-items:center;justify-content:center">
-                            <i class="el-icon-plus"></i>
-                        </div>
-                    </el-upload> -->
+                <el-form-item label="上传附件" prop="photos">
                     <el-upload
                         class="upload-demo"
                         action="http://120.55.161.93:6012/file/upload"

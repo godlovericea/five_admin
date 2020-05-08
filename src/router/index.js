@@ -84,7 +84,7 @@ export const constantRoutes = [
       {
         path: 'productList',
         component: () => import('@/views/product/productList'),
-        name: 'sceanManage',
+        name: 'productList',
         meta: { title: '产品列表', icon: 'dashboard', affix: true },
         hidden:true
       }
@@ -98,13 +98,13 @@ export const constantRoutes = [
       {
         path: 'newProject',
         component: () => import('@/views/project/project'),
-        name: 'sceanManage',
+        name: 'newProject',
         meta: { title: '新增项目', icon: 'dashboard', affix: true }
       },
       {
         path: 'projectList',
         component: () => import('@/views/project/projectList'),
-        name: 'sceanManage',
+        name: 'projectList',
         meta: { title: '项目列表', icon: 'dashboard', affix: true },
         hidden:true
       }
@@ -119,12 +119,12 @@ export const constantRoutes = [
         path: 'needWaire',
         component: () => import('@/views/need/need'),
         name: 'market',
-        meta: { title: '需求调研', icon: 'dashboard', affix: true }
+        meta: { title: '合作需求', icon: 'dashboard', affix: true }
       },
       {
         path: 'needList',
         component: () => import('@/views/need/needList'),
-        name: 'sceanManage',
+        name: 'needList',
         meta: { title: '需求列表', icon: 'dashboard', affix: true },
         hidden:true
       }

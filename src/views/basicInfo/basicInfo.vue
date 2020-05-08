@@ -2,7 +2,7 @@
     <div class="warnWrapper">
         <div class="divider"></div>
         <div class="formBox">
-            <el-form :model="form" class="demo-form-inline" label-width="200px">
+            <el-form :model="form" class="demo-form-inline" label-width="120px">
                     <el-form-item label="公司名称">
                         <el-input size="small" v-model="form.comName" placeholder="请输入公司名称" style="width:400px"></el-input>
                     </el-form-item>
@@ -17,8 +17,11 @@
                             <el-radio :label="4">瞪羚羊</el-radio>
                         </el-radio-group>
                     </el-form-item>
+                    <el-form-item label="所属行业">
+                        <el-cascader v-model="industry" :options="industyList" @change="handleChange" style="width:400px"></el-cascader>
+                    </el-form-item>
                     <el-form-item label="所属市区">
-                        <el-select v-model="form.city">
+                        <el-select v-model="form.city" style="width:400px">
                             <el-option label="南京市" value="1"></el-option>
                             <el-option label="无锡市" value="2"></el-option>
                             <el-option label="徐州市" value="3"></el-option>
@@ -34,20 +37,23 @@
                             <el-option label="宿迁市" value="13"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="注册地址">
-                        <el-input size="small" v-model="form.address" placeholder="请输入地址" style="width:400px"></el-input>
-                    </el-form-item>
                     <el-form-item label="法人">
                         <el-input size="small" v-model="form.opername" placeholder="请输入法人" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="注册资金（万元）">
                         <el-input size="small" v-model="form.registcapi" placeholder="请输入注册资金（万元）" style="width:400px"></el-input>
                     </el-form-item>
+                    <el-form-item label="注册地址">
+                        <el-input size="small" v-model="form.address" placeholder="请输入地址" style="width:400px"></el-input>
+                    </el-form-item>
                     <el-form-item label="成立时间">
                         <el-date-picker v-model="form.startdate"  type="date" placeholder="选择日期" style="width:400px" :picker-options="picOptions"></el-date-picker>
                     </el-form-item>
                     <el-form-item label="公司简介">
                         <el-input size="small" v-model="form.info" type="textarea" :rows="4" placeholder="请输入公司简介" style="width:400px"></el-input>
+                    </el-form-item>
+                    <el-form-item label="官网地址">
+                        <el-input size="small" v-model="form.network" placeholder="请输入公司官网地址" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="是否上市">
                         <el-radio-group v-model="form.isonline">
@@ -60,9 +66,6 @@
                     </el-form-item>
                     <el-form-item label="员工人数">
                         <el-input size="small" v-model="form.staffnum" oninput = "value=value.replace(/[^\d.]/g,'')" placeholder="请输入员工人数" style="width:400px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="所属行业">
-                        <el-cascader v-model="industry" :options="industyList" @change="handleChange" style="width:400px"></el-cascader>
                     </el-form-item>
                     <el-form-item label="2019年收入总额（万元）">
                         <el-input size="small" v-model="form.lastincome" placeholder="请输入2019年收入总额" style="width:400px"></el-input>
