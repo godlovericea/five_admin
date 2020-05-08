@@ -1,8 +1,8 @@
 <template>
     <div class="warnWrapper">
         <el-table :data="tableData" style="width: 100%">
-            <el-table-column  prop="projectName" label="项目名称"></el-table-column>
-            <el-table-column  prop="projectIntroduce" label="项目介绍"></el-table-column>
+            <el-table-column  prop="demandIndo" label="项目名称"></el-table-column>
+            <el-table-column  prop="demandIndo" label="项目介绍"></el-table-column>
             <el-table-column  prop="projectKeyword" label="项目关键字"></el-table-column>
             <el-table-column label="审核状态" width="180" class-name="checkState">
                 <template slot-scope="scope">
