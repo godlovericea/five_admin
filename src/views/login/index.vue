@@ -127,6 +127,7 @@ export default {
       this.$router.push({
         path:'/register'
       })
+      
     },
     handleReset(){
       this.$router.push({

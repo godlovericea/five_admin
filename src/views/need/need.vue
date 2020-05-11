@@ -3,8 +3,8 @@
         <div class="divider"></div>
         <div class="formBox">
             <el-form :model="form" class="demo-form-inline" label-width="120px">
-                <el-form-item label="所属行业">
-                    <el-cascader v-model="industry" :options="industyList" style="width:400px"></el-cascader>
+                <el-form-item label="需求名称">
+                    <el-input size="small" v-model="form.money" placeholder="以万元单位" style="width:400px"></el-input>
                 </el-form-item>
                 <el-form-item label="需求分类">
                     <el-checkbox-group v-model="form.demandClass" @change="handleChangeCheckBox">
@@ -15,18 +15,6 @@
                         <el-checkbox :label="5">其他</el-checkbox>
                     </el-checkbox-group>
                 </el-form-item>
-                <!-- <el-form-item label="所需资金" v-if="flag.moneyFlag">
-                    <el-input size="small" v-model="form.money" placeholder="以万元单位" style="width:400px"></el-input>
-                </el-form-item>
-                <el-form-item label="所需人才专业以及数量" v-if="flag.personFlag">
-                    <el-input size="small" v-model="form.person" placeholder="请输入产品名称或者项目名称" style="width:400px"></el-input>
-                </el-form-item>
-                <el-form-item label="所需技术支持" v-if="flag.techFlag">
-                    <el-input size="small" v-model="form.tech" placeholder="请输入产品名称或者项目名称" style="width:400px"></el-input>
-                </el-form-item>
-                <el-form-item label="所需市场支持" v-if="flag.marketFlag">
-                    <el-input size="small" v-model="form.market" placeholder="请输入产品名称或者项目名称" style="width:400px"></el-input>
-                </el-form-item> -->
                 <el-form-item label="项目/课题">
                     <el-input size="small" v-model="form.money" placeholder="请输入需要合作的项目或者课题" style="width:400px"></el-input>
                 </el-form-item>

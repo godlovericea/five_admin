@@ -3,9 +3,9 @@
         <div class="divider"></div>
         <div class="formBox">
             <el-form :model="form" class="demo-form-inline" label-width="200px">
-                    <el-form-item label="所属行业">
+                    <!-- <el-form-item label="所属行业">
                         <el-cascader v-model="industry" :options="industyList" style="width:400px"></el-cascader>
-                    </el-form-item>
+                    </el-form-item> -->
                     <el-form-item label="项目名称">
                         <el-input size="small" v-model="form.projectName" placeholder="" style="width:400px"></el-input>
                     </el-form-item>
