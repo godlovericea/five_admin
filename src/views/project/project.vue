@@ -2,53 +2,46 @@
     <div class="warnWrapper">
         <div class="divider"></div>
         <div class="formBox">
-            <el-form :model="form" class="demo-form-inline" label-width="200px">
-                    <!-- <el-form-item label="所属行业">
-                        <el-cascader v-model="industry" :options="industyList" style="width:400px"></el-cascader>
-                    </el-form-item> -->
-                    <el-form-item label="项目名称">
-                        <el-input size="small" v-model="form.projectName" placeholder="" style="width:400px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="项目介绍">
-                        <el-input size="small" v-model="form.projectIntroduce" type="textarea" :rows="6" maxlength="300" style="width:400px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="项目关键字">
-                        <el-input size="small" v-model="form.projectKeyword"  style="width:400px"></el-input>
-                    </el-form-item>
-                    <el-form-item label="项目是否落地">
-                        <el-radio-group v-model="form.isactualmake">
-                            <el-radio :label="1">已落地</el-radio>
-                            <el-radio :label="2">未落地</el-radio>
-                            <el-radio :label="3">落地准备中</el-radio>
-                        </el-radio-group>
-                    </el-form-item>
-                    <el-form-item label="落地时间" v-if="form.isactualmake === 1">
-                        <el-date-picker v-model="form.date" type="date" placeholder="选择日期"></el-date-picker>
-                    </el-form-item>
-                    <el-form-item label="预计落地时间" v-if="form.isactualmake === 3">
-                        <el-date-picker v-model="form.date" type="date" placeholder="选择日期"></el-date-picker>
-                    </el-form-item>
-                    <el-form-item label="项目图片" prop="photos">
-                        <el-upload
-                            class="upload-demo"
-                            list-type="picture-card"
-                            action="http://120.55.161.93:6011/qiniu/upload"
-                            name="file"
-                            :file-list="fileList"
-                            :before-upload="beforeAvatarUpload"
-                            :on-success="handleAvatarSuccess"
-                            :on-remove="handleRemove"
-                            :limit="8">
-                            <div style="height:148px;display:flex;align-items:center;justify-content:center">
-                                <i class="el-icon-plus"></i>
-                            </div>
-                        </el-upload>
-                        <p>可上传8张图片，每张图片大小不超过4m（支持格式为：png、jpeg）。</p>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button size="small" type="primary" style="width:100px" @click="postData">提交</el-button>
-                    </el-form-item>
-                </el-form>
+            <el-form :model="form" class="demo-form-inline" label-width="120px">
+                <el-form-item label="项目名称">
+                    <el-input size="small" v-model="form.projectName" placeholder="请输入项目名称" style="width:400px"></el-input>
+                </el-form-item>
+                <el-form-item label="项目介绍">
+                    <el-input size="small" v-model="form.projectIntroduce" placeholder="请输入项目介绍，不超过500字" type="textarea" :rows="6" maxlength="500" style="width:400px"></el-input>
+                </el-form-item>
+                <el-form-item label="项目投资总额">
+                    <el-input size="small" v-model="form.projectKeyword" placeholder="请输入项目投资总额，单位：万元" style="width:400px"></el-input>
+                </el-form-item>
+                <el-form-item label="项目关键字">
+                    <el-input size="small" v-model="form.projectKeyword" placeholder="便于检索、项目对接，多个以顿号隔开" style="width:400px"></el-input>
+                </el-form-item>
+                <el-form-item label="项目启动时间">
+                    <el-date-picker v-model="form.startdate" type="date" placeholder="选择日期"></el-date-picker>
+                </el-form-item>
+                <el-form-item label="项目拟完成时间">
+                    <el-date-picker v-model="form.date" type="date" placeholder="选择日期"></el-date-picker>
+                </el-form-item>
+                <el-form-item label="项目图片">
+                    <el-upload
+                        class="upload-demo"
+                        list-type="picture-card"
+                        action="http://120.55.161.93:6011/qiniu/upload"
+                        name="file"
+                        :file-list="fileList"
+                        :before-upload="beforeAvatarUpload"
+                        :on-success="handleAvatarSuccess"
+                        :on-remove="handleRemove"
+                        :limit="8">
+                        <div style="height:148px;display:flex;align-items:center;justify-content:center">
+                            <i class="el-icon-plus"></i>
+                        </div>
+                    </el-upload>
+                    <p>可上传8张图片，每张图片大小不超过4m（支持格式为：png、jpeg）。</p>
+                </el-form-item>
+                <el-form-item>
+                    <el-button size="small" type="primary" style="width:100px" @click="postData">提交</el-button>
+                </el-form-item>
+            </el-form>
         </div>
         
     </div>    

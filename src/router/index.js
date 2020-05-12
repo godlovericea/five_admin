@@ -79,7 +79,7 @@ export const constantRoutes = [
         path: 'newProduct',
         component: () => import('@/views/product/product'),
         name: '签到管理',
-        meta: { title: '新增产品', icon: 'dashboard', affix: true }
+        meta: { title: '主营产品', icon: 'dashboard', affix: true }
       },
       {
         path: 'productList',
@@ -99,7 +99,7 @@ export const constantRoutes = [
         path: 'newProject',
         component: () => import('@/views/project/project'),
         name: 'newProject',
-        meta: { title: '新增项目', icon: 'dashboard', affix: true }
+        meta: { title: '在研项目', icon: 'dashboard', affix: true }
       },
       {
         path: 'projectList',

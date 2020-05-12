@@ -2,18 +2,21 @@
     <div class="warnWrapper">
         <div class="divider"></div>
         <div class="formBox">
-            <el-form :model="form" class="demo-form-inline" label-width="200px">
-                <!-- <el-form-item label="所属行业">
-                    <el-cascader v-model="industry" :options="industyList" style="width:400px"></el-cascader>
-                </el-form-item> -->
+            <el-form :model="form" class="demo-form-inline" label-width="120px">
                 <el-form-item label="产品名称">
-                    <el-input size="small" v-model="form.productName" placeholder="产品名称" style="width:400px"></el-input>
+                    <el-input size="small" v-model="form.productName" placeholder="请输入产品名称" style="width:400px"></el-input>
                 </el-form-item>
                 <el-form-item label="产品介绍">
-                    <el-input size="small" v-model="form.productIntroduce" type="textarea" placeholder="" :rows="6" maxlength="300" style="width:400px"></el-input>
+                    <el-input size="small" v-model="form.productIntroduce" type="textarea" placeholder="请输入产品介绍，不超过200字" :rows="4" maxlength="200" style="width:400px"></el-input>
                 </el-form-item>
-                <el-form-item label="产品搜索关键字">
-                    <el-input size="small" v-model="form.productKeyword" placeholder="如：光纤、电缆、无人驾驶，多个以顿号分割" style="width:400px"></el-input>
+                <el-form-item label="产品技术参数">
+                    <el-input size="small" v-model="form.productIntroduce" type="textarea" placeholder="请输入产品主要参数" :rows="4" style="width:400px"></el-input>
+                </el-form-item>
+                <el-form-item label="产品销售额">
+                    <el-input size="small" v-model="form.productName" placeholder="请输入产品销售额，单位：万元" style="width:400px"></el-input>
+                </el-form-item>
+                <el-form-item label="产品检索关键字">
+                    <el-input size="small" v-model="form.productKeyword" placeholder="便于检索、产品对接。多个以顿号分割。" style="width:400px"></el-input>
                 </el-form-item>
                 <el-form-item label="产品图片" prop="photos">
                     <el-upload
@@ -50,11 +53,20 @@
                     <video :src="form.myVideo" controls class="myVideo"></video>
                 </el-form-item>
                 <el-form-item>
-                    <el-button size="small" type="primary" style="width:100px" @click="postData">提交</el-button>
-                    <el-button size="small" type="info" @click="resetData">重置</el-button>
+                    <el-button size="small" type="primary" round style="width:200px" @click="postData">提交</el-button>
                 </el-form-item>
             </el-form>
         </div>
+        <el-dialog title="提示" :visible.sync="centerDialogVisible" width="400px" center :close-on-click-modal="false">
+            <div style="text-align:center">
+                <p>新增成功！</p>
+                <i class="el-icon-circle-check"></i>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="goProductList">产品列表</el-button>
+                <el-button type="primary" @click="addContinue">继续新增</el-button>
+            </span>
+        </el-dialog>
     </div>    
 </template>
 
@@ -63,232 +75,6 @@ import {addProduct,getProduct} from '@/api/collect'
 export default {
     data(){
         return{
-            industry:[],
-            industyList:[
-                {
-                    value: 1,
-                    label: '上游产业链',
-                    children:[
-                        {
-                            value: 11,
-                            label: '芯片',
-                            children:[
-                                {
-                                    value: 111,
-                                    label: '光芯片',
-                                },
-                                {
-                                    value: 112,
-                                    label: '射频芯片',
-                                },
-                                {
-                                    value: 113,
-                                    label: '基带芯片',
-                                },
-                                {
-                                    value: 114,
-                                    label: '其他芯片',
-                                }
-                            ]
-                        },
-                        {
-                            value: 12,
-                            label: '射频器件及模块',
-                            children:[
-                                {
-                                    value: 121,
-                                    label: '射频模块',
-                                },
-                                {
-                                    value: 122,
-                                    label: '滤波器',
-                                },
-                                {
-                                    value: 123,
-                                    label: '功率放大器',
-                                },
-                                {
-                                    value: 124,
-                                    label: '射频开关',
-                                },
-                                {
-                                    value: 125,
-                                    label: 'PCB',
-                                }
-                            ]
-                        },
-                        {
-                            value: 13,
-                            label: '光器件及模块',
-                            children:[
-                                {
-                                    value: 131,
-                                    label: '光模块',
-                                },
-                                {
-                                    value: 132,
-                                    label: '有源光器件',
-                                },
-                                {
-                                    value: 133,
-                                    label: '无源光器件',
-                                },
-                                {
-                                    value: 134,
-                                    label: '波分复用器',
-                                }
-                            ]
-                        },
-                        {
-                            value: 14,
-                            label: '传播介质',
-                            children:[
-                                {
-                                    value: 141,
-                                    label: '光纤光缆光棒',
-                                },
-                                {
-                                    value: 142,
-                                    label: '射频电缆(含连接器)',
-                                }
-                            ]
-                        },
-                        {
-                            value: 15,
-                            label: '天线',
-                            children:[
-                                {
-                                    value: 151,
-                                    label: '基站天线',
-                                },
-                                {
-                                    value: 152,
-                                    label: '小天线',
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    value: 2,
-                    label: '中游产业链',
-                    children:[
-                        {
-                           value: 21,
-                            label: '传播设备',
-                            children:[
-                                {
-                                    value: 211,
-                                    label: '宏基站',
-                                },
-                                {
-                                    value: 212,
-                                    label: '微基站'
-                                }
-                            ]
-                        },
-                        {
-                           value: 22,
-                            label: '网络设备',
-                            children:[
-                                {
-                                    value: 221,
-                                    label: '交换机',
-                                },
-                                {
-                                    value: 222,
-                                    label: '路由器',
-                                },
-                                {
-                                    value: 223,
-                                    label: '服务器',
-                                }
-                            ]
-                        },
-                        {
-                           value: 23,
-                            label: '网络规划服务',
-                            children:[
-                                {
-                                    value: 231,
-                                    label: '规划设计',
-                                },
-                                {
-                                    value: 232,
-                                    label: 'SDN/NFV',
-                                },
-                                {
-                                    value: 233,
-                                    label: '网络优化和维护',
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    value: 3,
-                    label: '下游产业链',
-                    children:[
-                        {
-                            value: 31,
-                            label: '终端设备',
-                            children:[
-                                {
-                                    value: 311,
-                                    label: '手机终端'
-                                },
-                                {
-                                    value: 312,
-                                    label: '智能终端'
-                                },
-                                {
-                                    value: 313,
-                                    label: '工业设备'
-                                },
-                                {
-                                    value: 314,
-                                    label: '智能穿戴设备'
-                                },
-                                
-                            ]
-                        },
-                        {
-                            value: 32,
-                            label: '应用服务',
-                            children:[
-                                {
-                                    value: 321,
-                                    label: '工业互联网'
-                                },
-                                {
-                                    value: 322,
-                                    label: '车联网'
-                                },
-                                {
-                                    value: 323,
-                                    label: '智慧城市'
-                                },
-                                {
-                                    value: 324,
-                                    label: '智慧医疗'
-                                },
-                                {
-                                    value: 325,
-                                    label: '智慧教育'
-                                },
-                                {
-                                    value: 326,
-                                    label: '高清视频'
-                                },
-                                {
-                                    value: 327,
-                                    label: 'VR/AR'
-                                }
-                            ]
-                        }
-                    ]
-                },
-            ],
             form:{
                 isRecord:1,
                 operateCom:'',
@@ -303,6 +89,7 @@ export default {
             fileList:[],
             videofileList:[],
             editFileList:[],
+            centerDialogVisible:false
         }
     },
     mounted(){
@@ -337,6 +124,7 @@ export default {
             })
         },
         postData(){
+            this.centerDialogVisible = true
             let id = parseInt(JSON.parse(sessionStorage.getItem("user")).companyId)
             let comName = JSON.parse(sessionStorage.getItem("user")).comName
             let myData={
@@ -402,7 +190,19 @@ export default {
             }
             return  isLt2M && isJPEG
         },
-
+        goProductList(){
+            let user =JSON.parse(sessionStorage.getItem("user")) 
+            this.$router.push({
+                path:'/product/productList',
+                query:{
+                    id:user.companyId
+                }
+            })
+        },
+        addContinue(){
+            this.centerDialogVisible = false
+            this.form = {}
+        }
     }
 }
 </script>

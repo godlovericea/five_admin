@@ -3,7 +3,7 @@
         <div class="divider"></div>
         <div class="formBox">
             <el-form :model="form" class="demo-form-inline" label-width="120px">
-                    <el-form-item label="公司名称">
+                    <el-form-item label="公司全称">
                         <el-input size="small" v-model="form.comName" placeholder="请输入公司名称" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="公司简称">
@@ -11,14 +11,30 @@
                     </el-form-item>
                     <el-form-item label="企业资质">
                         <el-radio-group v-model="form.econkind">
-                            <el-radio :label="1">规上</el-radio>
-                            <el-radio :label="2">高企</el-radio>
-                            <el-radio :label="3">独角兽</el-radio>
-                            <el-radio :label="4">瞪羚羊</el-radio>
+                            <el-radio :label="1">规模以上企业</el-radio>
+                            <el-radio :label="2">高新技术企业</el-radio>
+                            <el-radio :label="3">瞪羚企业</el-radio>
                         </el-radio-group>
                     </el-form-item>
+                    <el-form-item label="资质证书图片" v-if="form.econkind === 2 || form.econkind === 3">
+                        <el-upload
+                            class="upload-demo"
+                            list-type="picture-card"
+                            action="http://120.55.161.93:6011/qiniu/upload"
+                            name="file"
+                            :file-list="fileList"
+                            :before-upload="beforeAvatarUpload"
+                            :on-success="handleAvatarSuccess"
+                            :on-remove="handleRemove"
+                            :limit="2">
+                            <div style="height:148px;display:flex;align-items:center;justify-content:center">
+                                <i class="el-icon-plus"></i>
+                            </div>
+                        </el-upload>
+                        <p>可上传2张图片，每张图片大小不超过4m（支持格式为：png、jpeg）。</p>
+                    </el-form-item>
                     <el-form-item label="所属行业">
-                        <el-cascader v-model="industry" :options="industyList" @change="handleChange" style="width:400px"></el-cascader>
+                        <el-cascader v-model="industry" :props="props" :options="industyList" collapse-tags @change="handleChange" style="width:400px"></el-cascader>
                     </el-form-item>
                     <el-form-item label="所属市区">
                         <el-select v-model="form.city" style="width:400px">
@@ -37,10 +53,27 @@
                             <el-option label="宿迁市" value="13"></el-option>
                         </el-select>
                     </el-form-item>
+                    <el-form-item label="营业执照">
+                        <el-upload
+                            class="upload-demo"
+                            list-type="picture-card"
+                            action="http://120.55.161.93:6011/qiniu/upload"
+                            name="file"
+                            :file-list="fileList"
+                            :before-upload="beforeAvatarUpload"
+                            :on-success="handleAvatarSuccess"
+                            :on-remove="handleRemove"
+                            :limit="1">
+                            <div style="height:148px;display:flex;align-items:center;justify-content:center">
+                                <i class="el-icon-plus"></i>
+                            </div>
+                        </el-upload>
+                        <p>可上传1张图片，图片大小不超过4m（支持格式为：png、jpeg）。</p>
+                    </el-form-item>
                     <el-form-item label="法人">
                         <el-input size="small" v-model="form.opername" placeholder="请输入法人" style="width:400px"></el-input>
                     </el-form-item>
-                    <el-form-item label="注册资金（万元）">
+                    <el-form-item label="注册资金">
                         <el-input size="small" v-model="form.registcapi" placeholder="请输入注册资金（万元）" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="注册地址">
@@ -50,7 +83,7 @@
                         <el-date-picker v-model="form.startdate"  type="date" placeholder="选择日期" style="width:400px" :picker-options="picOptions"></el-date-picker>
                     </el-form-item>
                     <el-form-item label="公司简介">
-                        <el-input size="small" v-model="form.info" type="textarea" :rows="4" placeholder="请输入公司简介" style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.info" type="textarea" :rows="4" maxlength="500" placeholder="请输入公司简介，不超过500字" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="官网地址">
                         <el-input size="small" v-model="form.network" placeholder="请输入公司官网地址" style="width:400px"></el-input>
@@ -61,17 +94,28 @@
                             <el-radio :label="0">未上市</el-radio>
                         </el-radio-group>
                     </el-form-item>
+                    <el-form-item label="上市交易所" v-if="form.isonline === 1">
+                        <el-radio-group v-model="form.exchange">
+                            <el-radio :label="1">上海</el-radio>
+                            <el-radio :label="2">深圳</el-radio>
+                            <el-radio :label="3">香港</el-radio>
+                            <el-radio :label="4">纽约</el-radio>
+                            <el-radio :label="5">伦敦</el-radio>
+                            <el-radio :label="6">其他</el-radio>
+                        </el-radio-group>
+                        <el-input v-if="form.exchange === 6" v-model="form.exchangeCity" placeholder="请输入上市交易所" style="width:400px"></el-input>
+                    </el-form-item>
                     <el-form-item label="股票代码" v-if="form.isonline === 1">
                         <el-input size="small" v-model="form.stockCode" placeholder="请输入股票代码" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="员工人数">
                         <el-input size="small" v-model="form.staffnum" oninput = "value=value.replace(/[^\d.]/g,'')" placeholder="请输入员工人数" style="width:400px"></el-input>
                     </el-form-item>
-                    <el-form-item label="2019年收入总额（万元）">
-                        <el-input size="small" v-model="form.lastincome" placeholder="请输入2019年收入总额" style="width:400px"></el-input>
+                    <el-form-item label="2019年营业收入">
+                        <el-input size="small" v-model="form.lastincome" placeholder="请输入2019年营业收入，单位：万元" style="width:400px"></el-input>
                     </el-form-item>
-                    <el-form-item label="2018年收入总额（万元）">
-                        <el-input size="small" v-model="form.oldincome" placeholder="请输入2018年收入总额" style="width:400px"></el-input>
+                    <el-form-item label="2018年营业收入">
+                        <el-input size="small" v-model="form.oldincome" placeholder="请输入2018年营业收入，单位：万元" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="企业联系人姓名">
                         <el-input size="small" v-model="form.concatperson"  placeholder="请输入企业联系人姓名" style="width:400px"></el-input>
@@ -323,6 +367,10 @@ export default {
                     ]
                 },
             ],
+            props:{
+                multiple:true
+            },
+            fileList:[],
             elements:[],
             classification:[],
             adminFlag:false,
@@ -439,7 +487,34 @@ export default {
         },
        handleChange(value){
            console.log(value)
-       }
+       },
+       handleRemove(file, fileList) {
+            // console.log(file)
+            // console.log(fileList)
+            this.editFileList = []
+            fileList.forEach(l=>{
+                this.editFileList.push('q3vbt7rr5.bkt.clouddn.com'+ l.url.substring(23))
+            })
+        },
+        handleAvatarSuccess(res,file,fileList){
+            // console.log(res)
+            this.photos.push(res[0])
+        },
+        beforeAvatarUpload(file) {
+            const isJPEG = file.type === 'image/jpeg';
+            const isJPG = file.type === 'image/jpg';
+            const isPNG = file.type === 'image/png';
+            const isLt2M = file.size / 1024 / 1024 < 4
+            if (!isLt2M) {
+                this.$message.error('上传图片大小不能超过 4MB!')
+                return false
+            }
+            if(!isJPG && !isPNG && !isJPEG){
+                this.$message.error('上传图片只能是 JPG 或者 PNG 格式!')
+                return false
+            }
+            return isLt2M && (!isJPG || !isPNG || !isJPEG)
+        },
     }
 }
 </script>
