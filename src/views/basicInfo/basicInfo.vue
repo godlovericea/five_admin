@@ -34,7 +34,7 @@
                         <p>可上传2张图片，每张图片大小不超过4m（支持格式为：png、jpeg）。</p>
                     </el-form-item>
                     <el-form-item label="所属行业">
-                        <el-cascader v-model="industry" :props="props" :options="industyList" collapse-tags @change="handleChange" style="width:400px"></el-cascader>
+                        <el-cascader v-model="industryList" :props="props" :options="industyList" collapse-tags @change="handleChange" style="width:400px"></el-cascader>
                     </el-form-item>
                     <el-form-item label="所属市区">
                         <el-select v-model="form.city" style="width:400px">
@@ -103,7 +103,7 @@
                             <el-radio :label="5">伦敦</el-radio>
                             <el-radio :label="6">其他</el-radio>
                         </el-radio-group>
-                        <el-input v-if="form.exchange === 6" v-model="form.exchangeCity" placeholder="请输入上市交易所" style="width:400px"></el-input>
+                        <el-input v-if="form.exchange === 6" v-model="form.exchangeValue" placeholder="请输入上市交易所" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="股票代码" v-if="form.isonline === 1">
                         <el-input size="small" v-model="form.stockCode" placeholder="请输入股票代码" style="width:400px"></el-input>
@@ -141,7 +141,7 @@ export default {
     data(){
         return{
             form:{},
-            industry:[],
+            industryList:[],
             industyList:[
                 {
                     value: 1,

@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      title: '产业生态图资料收集',
+      title: '江苏省工业和信息化厅',
       logo: ''
     }
   }

@@ -6,6 +6,10 @@
                 <el-form-item label="项目名称">
                     <el-input size="small" v-model="form.projectName" placeholder="请输入项目名称" style="width:400px"></el-input>
                 </el-form-item>
+                <el-form-item label="是否保密">
+                    <el-switch v-model="form.pass" active-text="保密" inactive-text="公开"></el-switch>
+                    <p>保密项目，仅 自己 和 江苏省工业和信息化厅 可见，项目将以密文展示</p>
+                </el-form-item>
                 <el-form-item label="项目介绍">
                     <el-input size="small" v-model="form.projectIntroduce" placeholder="请输入项目介绍，不超过500字" type="textarea" :rows="6" maxlength="500" style="width:400px"></el-input>
                 </el-form-item>
@@ -16,10 +20,10 @@
                     <el-input size="small" v-model="form.projectKeyword" placeholder="便于检索、项目对接，多个以顿号隔开" style="width:400px"></el-input>
                 </el-form-item>
                 <el-form-item label="项目启动时间">
-                    <el-date-picker v-model="form.startdate" type="date" placeholder="选择日期"></el-date-picker>
+                    <el-date-picker v-model="form.startdate" type="date" placeholder="选择日期" style="width:400px"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="项目拟完成时间">
-                    <el-date-picker v-model="form.date" type="date" placeholder="选择日期"></el-date-picker>
+                    <el-date-picker v-model="form.date" type="date" placeholder="选择日期" style="width:400px"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="项目图片">
                     <el-upload
@@ -39,11 +43,22 @@
                     <p>可上传8张图片，每张图片大小不超过4m（支持格式为：png、jpeg）。</p>
                 </el-form-item>
                 <el-form-item>
-                    <el-button size="small" type="primary" style="width:100px" @click="postData">提交</el-button>
+                    <el-tooltip class="item" effect="dark" content="点击提交之后，项目代码稍后弹出" placement="top">
+                        <el-button size="small" type="primary" round style="width:200px" @click="postData">提交</el-button>
+                    </el-tooltip>
                 </el-form-item>
             </el-form>
         </div>
-        
+        <el-dialog title="提示" :visible.sync="centerDialogVisible" width="400px" center :close-on-click-modal="false" custom-class="dialogClass">
+            <div style="text-align:center">
+                <p>新增成功！</p>
+                <i class="el-icon-circle-check"></i>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="goProductList">项目列表</el-button>
+                <el-button type="primary" @click="addContinue">继续新增</el-button>
+            </span>
+        </el-dialog>
     </div>    
 </template>
 
@@ -52,232 +67,6 @@ import {addProject,getCompanyProject} from '../../api/collect'
 export default {
     data(){
         return{
-            industry:[],
-            industyList:[
-                {
-                    value: 1,
-                    label: '上游产业链',
-                    children:[
-                        {
-                            value: 11,
-                            label: '芯片',
-                            children:[
-                                {
-                                    value: 111,
-                                    label: '光芯片',
-                                },
-                                {
-                                    value: 112,
-                                    label: '射频芯片',
-                                },
-                                {
-                                    value: 113,
-                                    label: '基带芯片',
-                                },
-                                {
-                                    value: 114,
-                                    label: '其他芯片',
-                                }
-                            ]
-                        },
-                        {
-                            value: 12,
-                            label: '射频器件及模块',
-                            children:[
-                                {
-                                    value: 121,
-                                    label: '射频模块',
-                                },
-                                {
-                                    value: 122,
-                                    label: '滤波器',
-                                },
-                                {
-                                    value: 123,
-                                    label: '功率放大器',
-                                },
-                                {
-                                    value: 124,
-                                    label: '射频开关',
-                                },
-                                {
-                                    value: 125,
-                                    label: 'PCB',
-                                }
-                            ]
-                        },
-                        {
-                            value: 13,
-                            label: '光器件及模块',
-                            children:[
-                                {
-                                    value: 131,
-                                    label: '光模块',
-                                },
-                                {
-                                    value: 132,
-                                    label: '有源光器件',
-                                },
-                                {
-                                    value: 133,
-                                    label: '无源光器件',
-                                },
-                                {
-                                    value: 134,
-                                    label: '波分复用器',
-                                }
-                            ]
-                        },
-                        {
-                            value: 14,
-                            label: '传播介质',
-                            children:[
-                                {
-                                    value: 141,
-                                    label: '光纤光缆光棒',
-                                },
-                                {
-                                    value: 142,
-                                    label: '射频电缆(含连接器)',
-                                }
-                            ]
-                        },
-                        {
-                            value: 15,
-                            label: '天线',
-                            children:[
-                                {
-                                    value: 151,
-                                    label: '基站天线',
-                                },
-                                {
-                                    value: 152,
-                                    label: '小天线',
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    value: 2,
-                    label: '中游产业链',
-                    children:[
-                        {
-                           value: 21,
-                            label: '传播设备',
-                            children:[
-                                {
-                                    value: 211,
-                                    label: '宏基站',
-                                },
-                                {
-                                    value: 212,
-                                    label: '微基站'
-                                }
-                            ]
-                        },
-                        {
-                           value: 22,
-                            label: '网络设备',
-                            children:[
-                                {
-                                    value: 221,
-                                    label: '交换机',
-                                },
-                                {
-                                    value: 222,
-                                    label: '路由器',
-                                },
-                                {
-                                    value: 223,
-                                    label: '服务器',
-                                }
-                            ]
-                        },
-                        {
-                           value: 23,
-                            label: '网络规划服务',
-                            children:[
-                                {
-                                    value: 231,
-                                    label: '规划设计',
-                                },
-                                {
-                                    value: 232,
-                                    label: 'SDN/NFV',
-                                },
-                                {
-                                    value: 233,
-                                    label: '网络优化和维护',
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    value: 3,
-                    label: '下游产业链',
-                    children:[
-                        {
-                            value: 31,
-                            label: '终端设备',
-                            children:[
-                                {
-                                    value: 311,
-                                    label: '手机终端'
-                                },
-                                {
-                                    value: 312,
-                                    label: '智能终端'
-                                },
-                                {
-                                    value: 313,
-                                    label: '工业设备'
-                                },
-                                {
-                                    value: 314,
-                                    label: '智能穿戴设备'
-                                },
-                                
-                            ]
-                        },
-                        {
-                            value: 32,
-                            label: '应用服务',
-                            children:[
-                                {
-                                    value: 321,
-                                    label: '工业互联网'
-                                },
-                                {
-                                    value: 322,
-                                    label: '车联网'
-                                },
-                                {
-                                    value: 323,
-                                    label: '智慧城市'
-                                },
-                                {
-                                    value: 324,
-                                    label: '智慧医疗'
-                                },
-                                {
-                                    value: 325,
-                                    label: '智慧教育'
-                                },
-                                {
-                                    value: 326,
-                                    label: '高清视频'
-                                },
-                                {
-                                    value: 327,
-                                    label: 'VR/AR'
-                                }
-                            ]
-                        }
-                    ]
-                },
-            ],
             form:{
                 isRecord:1,
                 operateCom:'',
@@ -292,6 +81,8 @@ export default {
             fileList:[],
             videofileList:[],
             editFileList:[],
+            centerDialogVisible:false,
+            proCode:'AA12QQ'
         }
     },
     mounted(){
@@ -317,24 +108,25 @@ export default {
                 })
             })
         },
-       postData(){
-           let id = parseInt(JSON.parse(sessionStorage.getItem("user")).companyId)
-           let comName = JSON.parse(sessionStorage.getItem("user")).comName
-           let myData={
-                comName:comName,
-                companyId:id,
-                industry:this.industry,
-                isactualmake:this.form.isactualmake,
-                projectIntroduce:this.form.projectIntroduce,
-                projectKeyword:this.form.projectKeyword,
-                projectName:this.form.projectName,
-                imgList:this.photos
-            }
-           addProject(myData)
-           .then(res=>{
-               
-           })
-       },
+        postData(){
+        this.centerDialogVisible = true
+            let id = parseInt(JSON.parse(sessionStorage.getItem("user")).companyId)
+            let comName = JSON.parse(sessionStorage.getItem("user")).comName
+            let myData={
+                    comName:comName,
+                    companyId:id,
+                    industry:this.industry,
+                    isactualmake:this.form.isactualmake,
+                    projectIntroduce:this.form.projectIntroduce,
+                    projectKeyword:this.form.projectKeyword,
+                    projectName:this.form.projectName,
+                    imgList:this.photos
+                }
+            addProject(myData)
+            .then(res=>{
+                
+            })
+        },
         resetData(){
 
         },
@@ -382,7 +174,19 @@ export default {
             }
             return  isLt2M && isJPEG
         },
-
+        goProductList(){
+            let user =JSON.parse(sessionStorage.getItem("user")) 
+            this.$router.push({
+                path:'/product/productList',
+                query:{
+                    id:user.companyId
+                }
+            })
+        },
+        addContinue(){
+            this.centerDialogVisible = false
+            this.form = {}
+        }
     }
 }
 </script>

@@ -72,3 +72,15 @@
   color: #009966;
   font-size: 50px;
 }
+.dialogClass{
+  border-radius: 10px;
+  .proClass{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .nameClass{
+      margin-left: 10px;
+      font-size: 24px;
+    }
+  }
+}

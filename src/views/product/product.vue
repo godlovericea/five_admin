@@ -57,7 +57,7 @@
                 </el-form-item>
             </el-form>
         </div>
-        <el-dialog title="提示" :visible.sync="centerDialogVisible" width="400px" center :close-on-click-modal="false">
+        <el-dialog title="提示" :visible.sync="centerDialogVisible" width="400px" center :close-on-click-modal="false" custom-class="dialogClass">
             <div style="text-align:center">
                 <p>新增成功！</p>
                 <i class="el-icon-circle-check"></i>
