@@ -57,9 +57,6 @@
           <el-button :loading="loading" type="text" style="font-size:14px" @click.native.prevent="handleRegister">注册</el-button>
         </div>
       </div>
-      <div>
-        <p class="tips">本次征求意见的总体目标是，以推动人工智能技术持续创新和与经济社会深度融合为主线，按照并跑、领跑两步走战略，围绕大数据智能、跨媒体智能、群体智能、混合增强智能、自主智能系统等五大方向持续攻关，从基础理论、支撑体系、关键技术、创新应用四个层面构筑知识群、技术群和产品群的生态环境，抢占人工智能技术制高点，妥善应对可能带来的新问题和新挑战，促进大众创业万众创新，使人工智能成为智能经济社会发展的强大引擎。</p>
-      </div>
     </el-form>
   </div>
 </template>
