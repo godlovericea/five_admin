@@ -50,7 +50,11 @@
       <div class="regBox">
         <div>
           <span style="font-size:14px;color:#ffffff">需要帮助，点击</span>
-          <el-button :loading="loading" type="text" style="font-size:14px" @click.native.prevent="handleHelp">帮助</el-button>
+           <el-tooltip class="item" effect="dark" content="填报之前，请仔细阅读" placement="top">
+                
+                <el-button :loading="loading" type="text" style="font-size:14px" @click.native.prevent="handleHelp">帮助</el-button>
+          </el-tooltip>
+         
         </div>
         <div>
           <span style="font-size:14px;color:#ffffff">没有账号，点击</span>

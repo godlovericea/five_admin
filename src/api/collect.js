@@ -52,6 +52,33 @@ export function updateBaseInfo(data) {
   })
 }
 
+// 获取公司列表
+export function listCompany(data) {
+  return request({
+    url: '/companyBaseInfo/listCompany',
+    method: 'post',
+    data
+  })
+}
+
+// 修改公司是否为管理员身份
+export function updateCompanyAdmin(data) {
+  return request({
+    url: '/companyBaseInfo/updateCompanyAdmin',
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
+// 删除公司
+export function deleteCompany(data) {
+  return request({
+    url: '/companyBaseInfo/deleteCompany',
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
 //增加公司产品
 export function addProduct(data) {
   return request({

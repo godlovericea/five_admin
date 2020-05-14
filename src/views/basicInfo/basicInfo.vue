@@ -10,7 +10,7 @@
                         <el-input size="small" v-model="form.litcomname" placeholder="请输入公司简称" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="企业资质">
-                        <el-radio-group v-model="form.econkind">
+                        <el-radio-group v-model="form.econkind" @change="changeRadio">
                             <el-radio :label="1">规模以上企业</el-radio>
                             <el-radio :label="2">高新技术企业</el-radio>
                             <el-radio :label="3">瞪羚企业</el-radio>
@@ -20,21 +20,26 @@
                         <el-upload
                             class="upload-demo"
                             list-type="picture-card"
-                            action="http://120.55.161.93:6011/qiniu/upload"
+                            action="http://120.55.161.93:6012/qiniu/upload"
                             name="file"
                             :file-list="fileList"
                             :before-upload="beforeAvatarUpload"
                             :on-success="handleAvatarSuccess"
                             :on-remove="handleRemove"
+                            :on-preview="handlePreview"
                             :limit="2">
                             <div style="height:148px;display:flex;align-items:center;justify-content:center">
                                 <i class="el-icon-plus"></i>
                             </div>
                         </el-upload>
+                        <el-dialog :visible.sync="dialogVisible">
+                                <img width="100%" :src="dialogImageUrl" alt="">
+                            </el-dialog>
                         <p>可上传2张图片，每张图片大小不超过4m（支持格式为：png、jpeg）。</p>
+                        <p>如果企业资质发生变化，请删除之前图片，重新上传最新资质图片</p>
                     </el-form-item>
                     <el-form-item label="所属行业">
-                        <el-cascader v-model="industryList" :props="props" :options="industyList" collapse-tags @change="handleChange" style="width:400px"></el-cascader>
+                        <el-cascader v-model="industryList" :props="props" :options="options" collapse-tags @change="handleChange" style="width:400px"></el-cascader>
                     </el-form-item>
                     <el-form-item label="所属市区">
                         <el-select v-model="form.city" style="width:400px">
@@ -57,17 +62,21 @@
                         <el-upload
                             class="upload-demo"
                             list-type="picture-card"
-                            action="http://120.55.161.93:6011/qiniu/upload"
+                            action="http://120.55.161.93:6012/qiniu/upload"
                             name="file"
-                            :file-list="fileList"
-                            :before-upload="beforeAvatarUpload"
-                            :on-success="handleAvatarSuccess"
+                            :file-list="fileListLicense"
+                            :before-upload="beforeLicenseAvatarUpload"
+                            :on-success="handleLicenseAvatarSuccess"
                             :on-remove="handleRemove"
+                            :on-preview="handleLicensePreview"
                             :limit="1">
                             <div style="height:148px;display:flex;align-items:center;justify-content:center">
                                 <i class="el-icon-plus"></i>
                             </div>
                         </el-upload>
+                        <el-dialog :visible.sync="licenseVisible">
+                            <img width="100%" :src="licenseImageUrl" alt="">
+                        </el-dialog>
                         <p>可上传1张图片，图片大小不超过4m（支持格式为：png、jpeg）。</p>
                     </el-form-item>
                     <el-form-item label="法人">
@@ -86,7 +95,7 @@
                         <el-input size="small" v-model="form.info" type="textarea" :rows="4" maxlength="500" placeholder="请输入公司简介，不超过500字" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="官网地址">
-                        <el-input size="small" v-model="form.network" placeholder="请输入公司官网地址" style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.websiteAddress" placeholder="请输入公司官网地址" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="是否上市">
                         <el-radio-group v-model="form.isonline">
@@ -142,7 +151,7 @@ export default {
         return{
             form:{},
             industryList:[],
-            industyList:[
+            options:[
                 {
                     value: 1,
                     label: '上游产业链',
@@ -370,8 +379,10 @@ export default {
             props:{
                 multiple:true
             },
+            businessLicense:'',
+            econkindImgs:[],
             fileList:[],
-            elements:[],
+            fileListLicense:[],
             classification:[],
             adminFlag:false,
             picOptions:{
@@ -380,7 +391,11 @@ export default {
                 }
             },
             comType:1,
-            companyBaseInfoId:0
+            companyBaseInfoId:0,
+            dialogImageUrl: '',
+            dialogVisible: false,
+            licenseVisible:false,
+            licenseImageUrl:''
         }
     },
     mounted(){
@@ -395,9 +410,25 @@ export default {
             getBaseInfo(myData)
             .then(res=>{
                 if(res.code === 200){
+                    this.fileList = []
+                    this.fileListLicense = []
                     this.form = res.result
                     this.companyBaseInfoId = this.form.companyBaseInfoId
-                    this.industry = this.form.industry
+                    this.industryList = this.form.industryList
+                    if(this.form.businessLicense){
+                        this.fileListLicense.push({
+                            name:'license',
+                            url:this.form.businessLicense
+                        })
+                    }
+                    if(this.form.econkindImg){
+                        this.form.econkindImg.forEach(el=>{
+                            this.fileList.push({
+                                name:'eckind',
+                                url:el
+                            })
+                        })
+                    }
                 }else{
                     this.companyBaseInfoId = null
                 }
@@ -407,18 +438,22 @@ export default {
             let companyId = JSON.parse(sessionStorage.getItem("user")).companyId
             let myData={
                     address: this.form.address,
-                    adressinfo: this.form.adressinfo,
+                    businessLicense:this.businessLicense,
+                    city: this.form.city,
                     comName: this.form.comName,
                     companyId: companyId,
+                    econkindImgs:this.econkindImgs,
                     concatperson: this.form.concatperson,
                     econkind: this.form.econkind,
                     email: this.form.email,
-                    industry: this.industry,
+                    websiteAddress:this.form.websiteAddress,
+                    exchangeValue:this.form.exchangeValue,
+                    exchange:this.form.exchange,
+                    industryList: this.industryList,
                     info: this.form.info,
                     isonline: this.form.isonline,
                     lastincome: this.form.lastincome,
                     litcomname: this.form.litcomname,
-                    mainproject: this.form.mainproject,
                     oldincome: this.form.oldincome,
                     opername: this.form.opername,
                     phone: this.form.phone,
@@ -428,7 +463,6 @@ export default {
                     startdate: this.form.startdate,
                     stockCode: this.form.stockCode,
                     upcoroper: this.form.upcoroper,
-                    city: this.form.city
             }
             addBaseInfo(myData)
             .then(res=>{
@@ -446,19 +480,24 @@ export default {
         updatePostData(){
             let companyId = JSON.parse(sessionStorage.getItem("user")).companyId
             let myData={
+                companyBaseInfoId:this.companyBaseInfoId,
                 address: this.form.address,
-                adressinfo: this.form.adressinfo,
+                businessLicense:this.businessLicense,
+                city: this.form.city,
                 comName: this.form.comName,
                 companyId: companyId,
+                econkindImgs:this.econkindImgs,
                 concatperson: this.form.concatperson,
                 econkind: this.form.econkind,
                 email: this.form.email,
-                industry: this.industry,
+                websiteAddress:this.form.websiteAddress,
+                exchangeValue:this.form.exchangeValue,
+                exchange:this.form.exchange,
+                industryList: this.industryList,
                 info: this.form.info,
                 isonline: this.form.isonline,
                 lastincome: this.form.lastincome,
                 litcomname: this.form.litcomname,
-                mainproject: this.form.mainproject,
                 oldincome: this.form.oldincome,
                 opername: this.form.opername,
                 phone: this.form.phone,
@@ -468,8 +507,6 @@ export default {
                 startdate: this.form.startdate,
                 stockCode: this.form.stockCode,
                 upcoroper: this.form.upcoroper,
-                city: this.form.city,
-                companyBaseInfoId:this.companyBaseInfoId
             }
             updateBaseInfo(myData)
             .then(res=>{
@@ -492,13 +529,10 @@ export default {
             // console.log(file)
             // console.log(fileList)
             this.editFileList = []
-            fileList.forEach(l=>{
-                this.editFileList.push('q3vbt7rr5.bkt.clouddn.com'+ l.url.substring(23))
-            })
         },
         handleAvatarSuccess(res,file,fileList){
             // console.log(res)
-            this.photos.push(res[0])
+            this.econkindImgs.push(res[0])
         },
         beforeAvatarUpload(file) {
             const isJPEG = file.type === 'image/jpeg';
@@ -515,6 +549,38 @@ export default {
             }
             return isLt2M && (!isJPG || !isPNG || !isJPEG)
         },
+        beforeLicenseAvatarUpload(file){
+            const isJPEG = file.type === 'image/jpeg';
+            const isJPG = file.type === 'image/jpg';
+            const isPNG = file.type === 'image/png';
+            const isLt2M = file.size / 1024 / 1024 < 4
+            if (!isLt2M) {
+                this.$message.error('上传图片大小不能超过 4MB!')
+                return false
+            }
+            if(!isJPG && !isPNG && !isJPEG){
+                this.$message.error('上传图片只能是 JPG 或者 PNG 格式!')
+                return false
+            }
+            return isLt2M && (!isJPG || !isPNG || !isJPEG)
+        },
+        handleLicenseAvatarSuccess(res,file,fileList){
+            // console.log(res)
+            this.businessLicense = res[0]
+        },
+        handleLicensePreview(file){
+            this.licenseImageUrl = file.url;
+            this.licenseVisible = true;
+        },
+        handlePreview(file){
+            this.dialogImageUrl = file.url;
+            this.dialogVisible = true;
+        },
+        changeRadio(cal){
+            if(cal === 1){
+                this.fileList  = []
+            }
+        }
     }
 }
 </script>

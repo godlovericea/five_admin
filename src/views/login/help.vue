@@ -1,35 +1,40 @@
 <template>
     <div class="tabBox">
         <div class="helpHeaderBox">
-            <h2>产业生态图填报流程帮助文档</h2>
-        </div>
-        <div class="warnTips">
-            <p>为促进产业生态圈建设的发展，优化资源配置，开展南京经济技术开发区内企业产业生态图素材征集工作，特开发产业生态图资料收集系统，该系统帮助文档如下：</p>
+            <h2>帮助文档</h2>
         </div>
         <div class="helpContent">
-            <p class="contentTitle">一、流程介绍</p>
-            <div>
-                <img src="../../assets/help/steps.png" alt="" class="stepsPng">
-            </div>
-            <p class="contentTitle">二、功能介绍</p>
-            <p>1，登录</p>
-            <p>输入正确的用户名和密码，点击 <el-button type="text" @click="goLogin">登录</el-button>按钮，即可进入系统。</p>
-            <p>2，注册</p>
-            <p>新企业用户在登录页面上点击<el-button type="text" @click="goRegister">注册</el-button>按钮，即可进入公司注册页面。</p>
-            <p>请正确填写公司名称、企业类型、统一社会信用代码、用户名、密码和确认密码。填写过程中，请根据公司实际情况填写企业类型。</p>
+            <p class="contentTitle">一、使用流程介绍</p>
+            <p>1，注册</p>
+            <p>新企业用户在登录页面上点击 <el-button type="text" @click="goRegister">注册</el-button> 按钮，进入公司注册页面。</p>
+            <p>请正确填写公司全称、社会统一信用代码，并牢记登录名。其中，<span class="tipsBtn">社会统一信用代码</span>是用户唯一身份标识。</p>
+            <p>2，登录</p>
+            <p>输入正确的登录名和密码，点击 <el-button type="text" @click="goLogin">登录</el-button> 按钮，即可进入系统。</p>
             <p>3，基本信息</p>
-            <p>用户登录系统后选择进入【基本信息】页面</p>
-            <p>完善基本信息资料并完成提交</p>
-            <p>4，场景信息</p>
-            <p>用户点击左栏【场景信息】，进入场景信息页面</p>
-            <p>场景信息包含场景分类、场景名称、场景定义、场景关键字、上传图片（提供不超过8张描述场景的图片，单张图大小不超过4M,格式为png或jpeg）、上传视频（视频大小不超过100M，格式为MP4）等，填报完毕点击提交</p>
+            <p>用户成功登录系统后，进入【基本信息】页面，填写基本信息，每次填写完毕，需点击 <span class="tipsBtn">提交</span> 或者 <span class="tipsBtn">修改</span> 按钮，方可保存信息。</p>
+            <p>每次点击提交或者修改按钮，系统会自动保存之前未完成的信息，可在此基础上修改。</p>
+            <p>4，主营产品</p>
+            <p>用户点击菜单栏【主营产品】，进入主营产品填报页面，请根据产品实际情况填写信息</p>
+            <p class="tipsBtn">注意：</p>
+            <p>(1)，主营产品图片最多上传8张，单张图大小不超过4M，格式为png或jpeg</p>
+            <p>(2)，主营产品视频最多上传1个，格式为MP4格式，如果不是该格式，请转换后上传，否则系统无法播放</p>
+            <p class="tipsBtn">(3)，图片或者视频上传成功的标志为：右上角出现绿色对号。</p>
+            <p class="tipsBtn">进度条出现100%，并不代表完全上传成功。如下图所示状态才为成功案例：</p>
+            <div>
+                <img src="@/assets/help/shili.png" alt="">
+            </div>
+            <p>5，在研项目</p>
+            <p class="tipsBtn">在研项目是否保密，默认是公开，如该项目是保密项目，请点击开关切换成保密。</p>
+            <p>6，合作需求</p>
+            <p>合作需求分为 主营产品合作需求，在研项目合作需求，其他类型合作需求。请按照实际合作需求填写。</p>
+            <p class="tipsBtn">合作需求是否保密，默认是公开，如该需求是保密需求，请点击开关切换成保密。</p>
         </div>
         <div class="concatBox">
-            <p class="contentTitle">三、产业生态图QQ交流群(群号：1065561981)</p>
+            <p class="contentTitle">二、产业生态图QQ交流群(群号：657407015)</p>
+            <p class="tipsBtn">进群之后，请勿添加非管理员账号，避免造成损失。</p>
             <div class="">
                 <img src="../../assets/help/qq.png" alt="" class="qqPng">
             </div>
-            
         </div>
     </div>
 </template>
@@ -71,17 +76,28 @@ export default {
         font-size: 18px;
     }
     .helpContent{
+        font-size: 16px;
         color: #fff;
+        width: 90%;
+        margin: 0 auto;
         .contentTitle{
             font-size: 20px;
         }
         .stepsPng{
             width: 60%;
         }
+        .tipsBtn{
+            color: red;
+        }
     }
     .concatBox{
+        width: 90%;
+        margin: 0 auto;
         color: #fff;
         font-size: 20px;
+        .tipsBtn{
+            color: red;
+        }
     }
     .pagnation{
         padding: 20px 0;

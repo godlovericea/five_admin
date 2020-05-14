@@ -13,7 +13,8 @@
       
       <el-button type="text" @click="goAdmin" v-if="adminFlag">管理员入口</el-button>
       <el-button type="text" @click="gologs" v-if="adminFlag">日志</el-button>
-      <el-button type="text" @click="goHelp">帮助</el-button>
+      <el-button type="text" v-if="!adminFlag" @click="goHelp">帮助</el-button>
+      <el-button type="text" v-if="adminFlag" @click="goAdminHelp">帮助</el-button>
       <el-button type="text" @click="logout">退出</el-button>
     </div>
   </div>
@@ -107,8 +108,12 @@ export default {
       this.$router.push({
         path:'/help'
       })
+    },
+    goAdminHelp(){
+      this.$router.push({
+        path:'/adminHelp'
+      })
     }
-
   }
 }
 </script>
