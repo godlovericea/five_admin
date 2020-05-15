@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import {login} from '../../api/collect'
+import {login} from '@/api/collect'
 
 export default {
   name: 'Login',

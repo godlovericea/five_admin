@@ -27,7 +27,7 @@
                             :on-success="handleAvatarSuccess"
                             :on-remove="handleRemove"
                             :on-preview="handlePreview"
-                            :limit="2">
+                            :limit="1">
                             <div style="height:148px;display:flex;align-items:center;justify-content:center">
                                 <i class="el-icon-plus"></i>
                             </div>
@@ -35,7 +35,7 @@
                         <el-dialog :visible.sync="dialogVisible">
                                 <img width="100%" :src="dialogImageUrl" alt="">
                             </el-dialog>
-                        <p>可上传2张图片，每张图片大小不超过4m（支持格式为：png、jpeg）。</p>
+                        <p>可上传1张图片，图片大小不超过4m（支持格式为：png、jpeg）。</p>
                         <p>如果企业资质发生变化，请删除之前图片，重新上传最新资质图片</p>
                     </el-form-item>
                     <el-form-item label="所属行业">
@@ -67,7 +67,7 @@
                             :file-list="fileListLicense"
                             :before-upload="beforeLicenseAvatarUpload"
                             :on-success="handleLicenseAvatarSuccess"
-                            :on-remove="handleRemove"
+                            :on-remove="handleLiceseRemove"
                             :on-preview="handleLicensePreview"
                             :limit="1">
                             <div style="height:148px;display:flex;align-items:center;justify-content:center">
@@ -135,17 +135,34 @@
                     <el-form-item label="联系人邮件">
                         <el-input size="small" v-model="form.email" placeholder="请输入联系人邮件" style="width:400px"></el-input>
                     </el-form-item>
+                    <el-form-item label="审核意见">
+                        <el-input type="textarea" v-model="form.rejected" placeholder="请输入联系人邮件" :rows="6" disabled style="width:400px"></el-input>
+                    </el-form-item>
                     <el-form-item>
-                        <el-button v-if="companyBaseInfoId === 0" size="small" type="primary" round style="width:200px" @click="addPostData">提交</el-button>
-                        <el-button v-else size="small" type="primary" style="width:200px" round @click="updatePostData">修改</el-button>
+                        <div v-if="!adminFlag">
+                            <el-button v-if="companyBaseInfoId === 0" size="small" type="primary" round style="width:100px" @click="addPostData">提交</el-button>
+                            <el-button v-else size="small" type="primary" style="width:100px" round @click="updatePostData">修改</el-button>
+                        </div>
+                        <div v-if="adminFlag">
+                            <el-button size="small" type="success" round style="width:100px" @click="overSure">通过</el-button>
+                            <el-button size="small" type="danger" round style="width:100px" @click="openReject">驳回</el-button>
+                            <el-button size="small" type="primary" round style="width:100px" @click="backToList">返回列表</el-button>
+                        </div>
                     </el-form-item>
                 </el-form>
         </div>
+        <el-dialog title="驳回理由" :visible.sync="rejectDialog" width="400px" center :close-on-click-modal="false" custom-class="dialogClass">
+            <el-input type="textarea" :rows="6" v-model="remarks" placeholder="请输入驳回理由"></el-input>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="rejectDialog = false">取消</el-button>
+                <el-button type="primary" @click="sureReject">确定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-import {addBaseInfo,getBaseInfo,updateBaseInfo} from '@/api/collect'
+import {addBaseInfo,getBaseInfo,updateBaseInfo,checkCompanyBaseInfo} from '@/api/collect'
 export default {
     data(){
         return{
@@ -380,10 +397,10 @@ export default {
                 multiple:true
             },
             businessLicense:'',
-            econkindImgs:[],
+            econkindImg:'',
             fileList:[],
             fileListLicense:[],
-            classification:[],
+            editImgList:[],
             adminFlag:false,
             picOptions:{
                 disabledDate(time) {
@@ -395,7 +412,12 @@ export default {
             dialogImageUrl: '',
             dialogVisible: false,
             licenseVisible:false,
-            licenseImageUrl:''
+            licenseImageUrl:'',
+            adminFlag:false,
+            rejectDialog:false,
+            remarks:'',
+            removeFlag:false,
+            licenseRemoveFlag:false
         }
     },
     mounted(){
@@ -403,7 +425,14 @@ export default {
     },
     methods:{
         getInfo(){
-            let companyId = JSON.parse(sessionStorage.getItem("user")).companyId
+            let isAdmin = JSON.parse(sessionStorage.getItem("user")).isAdmin
+            this.adminFlag = isAdmin===1?true:false
+            let companyId = 0
+            if(this.$route.query.id){
+                companyId = this.$route.query.id
+            }else{
+                companyId = JSON.parse(sessionStorage.getItem("user")).companyId
+            }
             let myData={
                 companyId:companyId
             }
@@ -422,11 +451,9 @@ export default {
                         })
                     }
                     if(this.form.econkindImg){
-                        this.form.econkindImg.forEach(el=>{
-                            this.fileList.push({
-                                name:'eckind',
-                                url:el
-                            })
+                        this.fileList.push({
+                            name:'eckind',
+                            url:this.form.econkindImg
                         })
                     }
                 }else{
@@ -442,7 +469,7 @@ export default {
                     city: this.form.city,
                     comName: this.form.comName,
                     companyId: companyId,
-                    econkindImgs:this.econkindImgs,
+                    econkindImg:this.econkindImg,
                     concatperson: this.form.concatperson,
                     econkind: this.form.econkind,
                     email: this.form.email,
@@ -486,7 +513,7 @@ export default {
                 city: this.form.city,
                 comName: this.form.comName,
                 companyId: companyId,
-                econkindImgs:this.econkindImgs,
+                econkindImg:this.econkindImg,
                 concatperson: this.form.concatperson,
                 econkind: this.form.econkind,
                 email: this.form.email,
@@ -526,13 +553,13 @@ export default {
            console.log(value)
        },
        handleRemove(file, fileList) {
-            // console.log(file)
-            // console.log(fileList)
-            this.editFileList = []
+           
+        },
+        handleLiceseRemove(file,list){
+            this.licenseRemoveFlag = true
         },
         handleAvatarSuccess(res,file,fileList){
-            // console.log(res)
-            this.econkindImgs.push(res[0])
+            this.econkindImg = res[0]
         },
         beforeAvatarUpload(file) {
             const isJPEG = file.type === 'image/jpeg';
@@ -580,6 +607,43 @@ export default {
             if(cal === 1){
                 this.fileList  = []
             }
+        },
+        backToList(){
+            this.$router.push({
+                path:'/admin/com'
+            })
+        },
+        overSure(){
+            this.$confirm('此操作将审核通过该公司, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+                }).then(() => {
+                    const myData = {
+                        companyBaseInfoId:this.companyBaseInfoId,
+                        state:'N'
+                    }
+                    checkCompanyBaseInfo(myData)
+                    .then(res=>{
+                        this.getInfo()
+                    })
+                })
+        },
+        openReject(){
+            this.rejectDialog = true
+        },
+        sureReject(){
+            const myData = {
+                companyBaseInfoId:this.companyBaseInfoId,
+                state:'F',
+                rejected:this.remarks
+            }
+            checkCompanyBaseInfo(myData)
+            .then(res=>{
+                this.rejectDialog = false
+                this.remarks = ''
+                this.getInfo()
+            })
         }
     }
 }

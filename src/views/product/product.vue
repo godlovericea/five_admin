@@ -10,41 +10,46 @@
                     <el-input size="small" v-model="form.productIntroduce" type="textarea" placeholder="请输入产品介绍，不超过200字" :rows="4" maxlength="200" style="width:400px"></el-input>
                 </el-form-item>
                 <el-form-item label="产品技术参数">
-                    <el-input size="small" v-model="form.productIntroduce" type="textarea" placeholder="请输入产品主要参数" :rows="4" style="width:400px"></el-input>
+                    <el-input size="small" v-model="form.productParameters" type="textarea" placeholder="请输入产品主要参数" :rows="4" style="width:400px"></el-input>
                 </el-form-item>
                 <el-form-item label="产品销售额">
-                    <el-input size="small" v-model="form.productName" placeholder="请输入产品销售额，单位：万元" style="width:400px"></el-input>
+                    <el-input size="small" type="number" v-model="form.productSales" placeholder="请输入产品销售额，单位：万元" style="width:400px"></el-input>
                 </el-form-item>
                 <el-form-item label="产品检索关键字">
                     <el-input size="small" v-model="form.productKeyword" placeholder="便于检索、产品对接。多个以顿号分割。" style="width:400px"></el-input>
                 </el-form-item>
-                <el-form-item label="产品图片" prop="photos">
+                <el-form-item label="产品图片">
                     <el-upload
                         class="upload-demo"
                         list-type="picture-card"
-                        action="http://120.55.161.93:6011/qiniu/upload"
+                        action="http://120.55.161.93:6012/qiniu/upload"
                         name="file"
                         :file-list="fileList"
                         :before-upload="beforeAvatarUpload"
                         :on-success="handleAvatarSuccess"
                         :on-remove="handleRemove"
+                        :on-preview="handlePreview"
                         :limit="8">
                         <div style="height:148px;display:flex;align-items:center;justify-content:center">
                             <i class="el-icon-plus"></i>
                         </div>
                     </el-upload>
+                    <el-dialog :visible.sync="dialogVisible">
+                        <img width="100%" :src="dialogImageUrl" alt="">
+                    </el-dialog>
                     <p>可上传8张图片，每张图片大小不超过4m（支持格式为：png、jpeg）。</p>
                 </el-form-item>
                 <el-form-item label="产品宣传视频">
                     <el-upload
                         class="upload-demo"
                         list-type="picture"
-                        action="http://120.55.161.93:6011/qiniu/upload"
+                        action="http://120.55.161.93:6012/qiniu/upload"
                         name="file"
                         :file-list="videofileList"
                         :before-upload="beforeVideoUpload"
                         :on-success="handleVideoSuccess"
-                        :limit="8">
+                        
+                        :limit="1">
                         <el-button size="small" type="primary">点击上传</el-button>
                     </el-upload>
                     <p>可上传1个视频，视频大小不超过100M（支持格式为：mp4）。</p>
@@ -52,8 +57,19 @@
                 <el-form-item label="视频预览" v-if="form.productVideo">
                     <video :src="form.myVideo" controls class="myVideo"></video>
                 </el-form-item>
+                <el-form-item label="驳回理由" v-if="form.rejected">
+                    <el-input v-model="form.rejected" type="textarea" :rows="6" disabled></el-input>
+                </el-form-item>
                 <el-form-item>
-                    <el-button size="small" type="primary" round style="width:200px" @click="postData">提交</el-button>
+                    <div v-if="!adminFlag">
+                        <el-button v-if="companyProductId === 0" size="small" type="primary" round style="width:100px" @click="addPostData">提交</el-button>
+                        <el-button v-else size="small" type="primary" style="width:100px" round @click="updatePostData">修改</el-button>
+                    </div>
+                    <div v-if="adminFlag">
+                        <el-button size="small" type="success" round style="width:100px" @click="overSure">通过</el-button>
+                        <el-button size="small" type="danger" round style="width:100px" @click="openReject">驳回</el-button>
+                        <el-button size="small" type="primary" round style="width:100px" @click="backToList">返回列表</el-button>
+                    </div>
                 </el-form-item>
             </el-form>
         </div>
@@ -67,11 +83,18 @@
                 <el-button type="primary" @click="addContinue">继续新增</el-button>
             </span>
         </el-dialog>
+        <el-dialog title="驳回理由" :visible.sync="rejectDialog" width="400px" center :close-on-click-modal="false" custom-class="dialogClass">
+            <el-input type="textarea" :rows="6" v-model="remarks"></el-input>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="rejectDialog = false">取消</el-button>
+                <el-button type="primary" @click="sureReject">确定</el-button>
+            </span>
+        </el-dialog>
     </div>    
 </template>
 
 <script>
-import {addProduct,getProduct} from '@/api/collect'
+import {addProduct,getProduct,updateProduct,checkCompanyProduct} from '@/api/collect'
 export default {
     data(){
         return{
@@ -81,7 +104,6 @@ export default {
                 video:''
             },
             photos:[],
-            checkedCities:[],
             uploadData:{
                 token:'',
                 key:''
@@ -89,42 +111,65 @@ export default {
             fileList:[],
             videofileList:[],
             editFileList:[],
-            centerDialogVisible:false
+            centerDialogVisible:false,
+            dialogVisible:false,
+            dialogImageUrl:'',
+            rejectDialog:false,
+            remarks:'',
+            adminFlag:false,
+            companyProductId:0,
+            removeFlag:false,
+            removeTimeStamp:0,
+            upTimeStamp:0,
+            upFlag:false,
+            productImgList:[],
+
         }
     },
     mounted(){
-        if(this.$route.query.id){
+        this.checkAdmin()
+        if(this.$route.query.proId){
             this.getInfo()
         }
     },
     methods:{
         getInfo(){
-            let id = parseInt(this.$route.query.id)
+            let proId = parseInt(this.$route.query.proId)
             let myData={
-                companyProductId:id
+                companyProductId:proId
             }
             getProduct(myData)
             .then(res=>{
+                this.fileList = []
                 this.form = res.result
-                this.industry = this.form.industry
-                res.result.imgList.forEach(l=>{
-                    this.fileList.push({
-                        name:l.companyProductImgId,
-                        url:'http://qiniu.iwooke'+ l.imgUrl.substring(21)
+                this.companyProductId = this.form.companyProductId
+                if(res.result.imgList){
+                    res.result.imgList.forEach(l=>{
+                        this.fileList.push({
+                            name:l.companyProductImgId,
+                            url:l.imgUrl
+                        })
                     })
-                })
+                }
+                
                 if(this.form.productVideo){
                     this.videofileList.push({
                         name:this.form.productName,
-                        // url:'http://'+ this.form.video
-                        url:'http://qiniu.iwooke'+ this.form.productVideo.substring(21)
+                        url:this.form.productVideo
                     })
-                    this.form.myVideo = 'http://qiniu.iwooke'+ this.form.productVideo.substring(21)
+                    this.form.myVideo = this.form.productVideo
                 }
             })
         },
-        postData(){
-            this.centerDialogVisible = true
+        checkAdmin(){
+            let isAdmin = JSON.parse(sessionStorage.getItem("user")).isAdmin
+            if(isAdmin === 1){
+                this.adminFlag = true
+            }else{
+                this.adminFlag = false
+            }
+        },
+        addPostData(){
             let id = parseInt(JSON.parse(sessionStorage.getItem("user")).companyId)
             let comName = JSON.parse(sessionStorage.getItem("user")).comName
             let myData={
@@ -132,32 +177,92 @@ export default {
                     companyId:id,
                     productName:this.form.productName,
                     productIntroduce:this.form.productIntroduce,
-                    industry:this.industry,
-                    scenarioDefined:this.form.scenarioDefined,
+                    productParameters:this.form.productParameters,
                     productKeyword:this.form.productKeyword,
                     productVideo:this.form.productVideo,
-                    imgList:this.photos
+                    imgList:this.photos,
+                    productSales:this.form.productSales
                 }
             addProduct(myData)
             .then(res=>{
-                console.log(res)
+                if(res.code === 200){
+                    this.centerDialogVisible = true
+                }
             })
         },
-        resetData(){
-
+        updatePostData(){
+            let imgList = []
+            if(!this.removeFlag && !this.upFlag){
+                this.fileList.forEach(el=>{
+                    imgList.push(el.url)
+                })
+            }else if(this.removeFlag && !this.upFlag){
+                imgList = this.productImgList
+            }else if(!this.removeFlag && this.upFlag){
+                imgList = this.photos
+            }else if(this.removeFlag && this.upFlag){
+                if(this.removeTimeStamp > this.upTimeStamp){
+                    imgList = this.productImgList
+                }else{
+                    imgList = this.photos
+                }
+            }
+            let id = parseInt(JSON.parse(sessionStorage.getItem("user")).companyId)
+            let comName = JSON.parse(sessionStorage.getItem("user")).comName
+            let myData={
+                    comName:comName,
+                    companyId:id,
+                    companyProductId:this.companyProductId,
+                    productName:this.form.productName,
+                    productIntroduce:this.form.productIntroduce,
+                    productParameters:this.form.productParameters,
+                    productKeyword:this.form.productKeyword,
+                    productVideo:this.form.productVideo,
+                    imgList:imgList,
+                    productSales:this.form.productSales
+                }
+            updateProduct(myData)
+            .then(res=>{
+                if(res.code === 200){
+                    this.$message({
+                        type: 'success',
+                        message: '修改成功!'
+                    })
+                }
+            })
         },
         handleRemove(file, fileList) {
-            // console.log(file)
-            // console.log(fileList)
-            this.editFileList = []
-            fileList.forEach(l=>{
-                this.editFileList.push('q3vbt7rr5.bkt.clouddn.com'+ l.url.substring(23))
+            console.log(file)
+            console.log(fileList)
+            this.productImgList = []
+            this.removeFlag = true
+            
+            fileList.forEach(el=>{
+                if(el.size){
+                    this.productImgList.push(el.response[0])
+                }else{
+                    this.productImgList.push(el.url)
+                }
             })
-            // console.log(this.editFileList)
+            this.removeTimeStamp =new Date().getTime()
+        },
+        handlePreview(file){
+            this.dialogImageUrl = file.url;
+            this.dialogVisible = true;
         },
         handleAvatarSuccess(res,file,fileList){
-            // console.log(res)
-            this.photos.push(res[0])
+            this.upFlag = true
+            console.log(fileList)
+            console.log(res)
+            this.photos =[]
+            fileList.forEach(el=>{
+                if(el.size){
+                    this.photos.push(el.response[0])
+                }else{
+                    this.photos.push(el.url)
+                }
+            })
+            this.upTimeStamp =new Date().getTime()
         },
         beforeAvatarUpload(file) {
             const isJPEG = file.type === 'image/jpeg';
@@ -175,7 +280,7 @@ export default {
             return isLt2M && (!isJPG || !isPNG || !isJPEG)
         },
         handleVideoSuccess(res,file,fileList){
-            this.form.video = res[0]
+            this.form.productVideo = res[0]
         },
         beforeVideoUpload(file) {
             const isJPEG = file.type === 'video/mp4';
@@ -202,6 +307,51 @@ export default {
         addContinue(){
             this.centerDialogVisible = false
             this.form = {}
+            this.fileList =[]
+        },
+        backToList(){
+            this.$router.push({
+                path:'/product/productList',
+                query:{
+                    comId:this.$route.query.comId,
+                    proId:this.$route.query.proId
+                }
+            })
+        },
+        overSure(){
+            this.$confirm('此操作将审核通过该项目, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+                }).then(() => {
+                    let comName = JSON.parse(sessionStorage.getItem("user")).comName
+                    let myData = {
+                        companyProductId:this.companyProductId,
+                        comName:comName
+                    }
+                    deleteProject(myData)
+                    .then(res => {
+                        this.getData()
+                    })
+                })
+        },
+        openReject(){
+            this.rejectDialog = true
+        },
+        sureReject(){
+            let comName = JSON.parse(sessionStorage.getItem("user")).comName
+            const myData = {
+                comName:comName,
+                companyProductId:this.companyProductId,
+                state:'F',
+                rejected:this.remarks
+            }
+            checkCompanyProduct(myData)
+            .then(res=>{
+                this.rejectDialog = false
+                this.remarks = ''
+                // this.getInfo()
+            })
         }
     }
 }

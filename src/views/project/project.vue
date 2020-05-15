@@ -7,45 +7,58 @@
                     <el-input size="small" v-model="form.projectName" placeholder="请输入项目名称" style="width:400px"></el-input>
                 </el-form-item>
                 <el-form-item label="是否保密">
-                    <el-switch v-model="form.pass" active-text="保密" inactive-text="公开"></el-switch>
+                    <el-switch v-model="form.isEncryption" active-text="保密" inactive-text="公开"></el-switch>
                     <p>保密项目，仅 自己 和 江苏省工业和信息化厅 可见，项目将以密文展示</p>
                 </el-form-item>
                 <el-form-item label="项目介绍">
                     <el-input size="small" v-model="form.projectIntroduce" placeholder="请输入项目介绍，不超过500字" type="textarea" :rows="6" maxlength="500" style="width:400px"></el-input>
                 </el-form-item>
                 <el-form-item label="项目投资总额">
-                    <el-input size="small" v-model="form.projectKeyword" placeholder="请输入项目投资总额，单位：万元" style="width:400px"></el-input>
+                    <el-input size="small" type="number" v-model="form.projectMoney" placeholder="请输入项目投资总额，单位：万元" style="width:400px"></el-input>
                 </el-form-item>
                 <el-form-item label="项目关键字">
                     <el-input size="small" v-model="form.projectKeyword" placeholder="便于检索、项目对接，多个以顿号隔开" style="width:400px"></el-input>
                 </el-form-item>
                 <el-form-item label="项目启动时间">
-                    <el-date-picker v-model="form.startdate" type="date" placeholder="选择日期" style="width:400px"></el-date-picker>
+                    <el-date-picker v-model="form.projectStart" type="date" placeholder="选择日期" style="width:400px"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="项目拟完成时间">
-                    <el-date-picker v-model="form.date" type="date" placeholder="选择日期" style="width:400px"></el-date-picker>
+                    <el-date-picker v-model="form.projectEnd" type="date" placeholder="选择日期" style="width:400px"></el-date-picker>
                 </el-form-item>
-                <el-form-item label="项目图片">
+                <el-form-item label="驳回理由">
+                    <el-input size="small" type="textarea" :rows="6" v-model="form.rejected" disabled style="width:400px"></el-input>
+                </el-form-item>
+                <!-- <el-form-item label="项目图片">
                     <el-upload
                         class="upload-demo"
                         list-type="picture-card"
-                        action="http://120.55.161.93:6011/qiniu/upload"
+                        action="http://120.55.161.93:6012/qiniu/upload"
                         name="file"
                         :file-list="fileList"
                         :before-upload="beforeAvatarUpload"
                         :on-success="handleAvatarSuccess"
                         :on-remove="handleRemove"
+                        :on-preview="handlePreview"
                         :limit="8">
                         <div style="height:148px;display:flex;align-items:center;justify-content:center">
                             <i class="el-icon-plus"></i>
                         </div>
                     </el-upload>
+                    <el-dialog :visible.sync="dialogVisible">
+                        <img width="100%" :src="dialogImageUrl" alt="">
+                    </el-dialog>
                     <p>可上传8张图片，每张图片大小不超过4m（支持格式为：png、jpeg）。</p>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item>
-                    <el-tooltip class="item" effect="dark" content="点击提交之后，项目代码稍后弹出" placement="top">
-                        <el-button size="small" type="primary" round style="width:200px" @click="postData">提交</el-button>
-                    </el-tooltip>
+                    <div v-if="!adminFlag">
+                        <el-button v-if="companyProjectId === 0" size="small" type="primary" round style="width:100px" @click="addPostData">提交</el-button>
+                        <el-button v-else size="small" type="primary" style="width:100px" round @click="updatePostData">修改</el-button>
+                    </div>
+                    <div v-if="adminFlag">
+                        <el-button size="small" type="success" round style="width:100px" @click="overSure">通过</el-button>
+                        <el-button size="small" type="danger" round style="width:100px" @click="openReject">驳回</el-button>
+                        <el-button size="small" type="primary" round style="width:100px" @click="backToList">返回列表</el-button>
+                    </div>
                 </el-form-item>
             </el-form>
         </div>
@@ -59,11 +72,18 @@
                 <el-button type="primary" @click="addContinue">继续新增</el-button>
             </span>
         </el-dialog>
+        <el-dialog title="驳回理由" :visible.sync="rejectDialog" width="400px" center :close-on-click-modal="false" custom-class="dialogClass">
+            <el-input type="textarea" :rows="6" v-model="remarks"></el-input>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="rejectDialog = false">取消</el-button>
+                <el-button type="primary" @click="sureReject">确定</el-button>
+            </span>
+        </el-dialog>
     </div>    
 </template>
 
 <script>
-import {addProject,getCompanyProject} from '../../api/collect'
+import {addProject,getCompanyProject,checkCompanyProject} from '../../api/collect'
 export default {
     data(){
         return{
@@ -82,53 +102,100 @@ export default {
             videofileList:[],
             editFileList:[],
             centerDialogVisible:false,
-            proCode:'AA12QQ'
+            proCode:'AA12QQ',
+            companyProjectId:0,
+            dialogVisible:false,
+            dialogImageUrl:'',
+            adminFlag:false,
+            rejectDialog:false,
+            remarks:''
         }
     },
     mounted(){
-        if(this.$route.query.id){
+        this.checkAdmin()
+        if(this.$route.query.proId){
             this.getInfo()
         }
     },
     methods:{
         getInfo(){
-            let id = parseInt(this.$route.query.id)
+            let proId = parseInt(this.$route.query.proId)
             let myData={
-                companyProjectId:id
+                companyProjectId:proId
             }
             getCompanyProject(myData)
             .then(res=>{
                 this.form = res.result
-                this.industry = this.form.industry
+                this.companyProjectId = this.form.companyProjectId
+                if(this.form.isEncryption === 1){
+                    this.form.isEncryption = true
+                }else{
+                    this.form.isEncryption = false
+                }
                 res.result.imgList.forEach(l=>{
                     this.fileList.push({
                         name:l.companyProjectImgId,
-                        url:'http://qiniu.iwooke'+ l.imgUrl.substring(21)
+                        url:l.imgUrl
                     })
                 })
             })
         },
-        postData(){
-        this.centerDialogVisible = true
+        checkAdmin(){
+            let isAdmin = JSON.parse(sessionStorage.getItem("user")).isAdmin
+            if(isAdmin === 1){
+                this.adminFlag = true
+            }else{
+                this.adminFlag = false
+            }
+        },
+        addPostData(){
             let id = parseInt(JSON.parse(sessionStorage.getItem("user")).companyId)
             let comName = JSON.parse(sessionStorage.getItem("user")).comName
             let myData={
                     comName:comName,
                     companyId:id,
-                    industry:this.industry,
-                    isactualmake:this.form.isactualmake,
+                    isEncryption:this.form.isEncryption ? 1 : 0,
+                    projectStart:this.form.projectStart,
+                    projectEnd:this.form.projectEnd,
                     projectIntroduce:this.form.projectIntroduce,
                     projectKeyword:this.form.projectKeyword,
                     projectName:this.form.projectName,
-                    imgList:this.photos
+                    imgList:this.photos,
+                    projectMoney:this.form.projectMoney
                 }
             addProject(myData)
             .then(res=>{
-                
+                if(res.code === 200){
+                    this.centerDialogVisible = true
+                }else{
+                    this.$message.error(res.message)
+                }
             })
         },
-        resetData(){
-
+        updatePostData(){
+            let id = parseInt(JSON.parse(sessionStorage.getItem("user")).companyId)
+            let comName = JSON.parse(sessionStorage.getItem("user")).comName
+            let myData={
+                    comName:comName,
+                    companyId:id,
+                    isEncryption:this.form.isEncryption ? 1 : 0,
+                    projectStart:this.form.projectStart,
+                    projectEnd:this.form.projectEnd,
+                    projectIntroduce:this.form.projectIntroduce,
+                    projectKeyword:this.form.projectKeyword,
+                    projectName:this.form.projectName,
+                    imgList:this.photos,
+                    projectMoney:this.form.projectMoney,
+                    companyProjectId:this.companyProjectId
+                }
+            addProject(myData)
+            .then(res=>{
+                if(res.code === 200){
+                    this.centerDialogVisible = true
+                }else{
+                    this.$message.error(res.message)
+                }
+            })
         },
         handleRemove(file, fileList) {
             // console.log(file)
@@ -161,23 +228,14 @@ export default {
         handleVideoSuccess(res,file,fileList){
             this.form.video = res[0]
         },
-        beforeVideoUpload(file) {
-            const isJPEG = file.type === 'video/mp4';
-            const isLt2M = file.size / 1024 / 1024 < 100
-            if (!isLt2M) {
-                this.$message.error('上传视频大小不能超过 100MB!')
-                return false
-            }
-            if(!isJPEG){
-                this.$message.error('上传视频只能是MP4格式!')
-                return false
-            }
-            return  isLt2M && isJPEG
+        handlePreview(file){
+            this.dialogImageUrl = file.url;
+            this.dialogVisible = true;
         },
         goProductList(){
             let user =JSON.parse(sessionStorage.getItem("user")) 
             this.$router.push({
-                path:'/product/productList',
+                path:'/project/projectList',
                 query:{
                     id:user.companyId
                 }
@@ -186,6 +244,48 @@ export default {
         addContinue(){
             this.centerDialogVisible = false
             this.form = {}
+        },
+        overSure(){
+            this.$confirm('此操作将审核通过该项目, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+                }).then(() => {
+                    let comName = JSON.parse(sessionStorage.getItem("user")).comName
+                    let myData = {
+                        companyProjectId:this.companyProjectId,
+                        comName:comName
+                    }
+                    checkCompanyProject(myData)
+                    .then(res => {
+                        
+                    })
+                })
+        },
+        openReject(){
+            this.rejectDialog = true
+        },
+        sureReject(){
+            let comName = JSON.parse(sessionStorage.getItem("user")).comName
+            const myData = {
+                comName:comName,
+                companyProjectId:this.companyProjectId,
+                state:'F',
+                rejected:this.remarks
+            }
+            checkCompanyProject(myData)
+            .then(res=>{
+                this.rejectDialog = false
+                this.remarks = ''
+            })
+        },
+        backToList(){
+            this.$router.push({
+                path:'/project/projectList',
+                query:{
+                    id:this.$route.query.comId
+                }
+            })
         }
     }
 }

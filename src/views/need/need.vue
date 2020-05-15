@@ -38,7 +38,10 @@
                             <el-input size="small" v-model="form.demandIndo" type="textarea" placeholder="请填写具体的需求" :rows="6" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-button size="small" type="primary" round style="width:200px" @click="postData">提交主营产品合作需求</el-button>
+                            <el-button size="small" type="primary" round style="width:100px" @click="postData">提交</el-button>
+                            <el-button size="small" type="primary" round style="width:100px" @click="postData">修改</el-button>
+                            <el-button size="small" type="success" round style="width:100px" @click="overSure">通过</el-button>
+                            <el-button size="small" type="danger" round style="width:100px" @click="openReject">驳回</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -79,7 +82,10 @@
                             <el-input size="small" v-model="form.demandIndo" type="textarea" placeholder="请填写具体的需求" :rows="6" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-button size="small" type="primary" round style="width:200px" @click="postData">提交在研项目合作需求</el-button>
+                            <el-button size="small" type="primary" round style="width:100px" @click="postData">提交</el-button>
+                            <el-button size="small" type="primary" round style="width:100px" @click="postData">修改</el-button>
+                            <el-button size="small" type="success" round style="width:100px" @click="overSure">通过</el-button>
+                            <el-button size="small" type="danger" round style="width:100px" @click="openReject">驳回</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -118,7 +124,10 @@
                             <el-input size="small" v-model="form.demandIndo" type="textarea" placeholder="请填写具体的需求" :rows="6" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-button size="small" type="primary" round style="width:200px" @click="postData">提交合作需求</el-button>
+                            <el-button size="small" type="primary" round style="width:100px" @click="postData">提交</el-button>
+                            <el-button size="small" type="primary" round style="width:100px" @click="postData">修改</el-button>
+                            <el-button size="small" type="success" round style="width:100px" @click="overSure">通过</el-button>
+                            <el-button size="small" type="danger" round style="width:100px" @click="openReject">驳回</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -132,6 +141,13 @@
             <span slot="footer" class="dialog-footer">
                 <el-button @click="goProductList">需求列表</el-button>
                 <el-button type="primary" @click="addContinue">继续新增</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog title="驳回理由" :visible.sync="rejectDialog" width="400px" center :close-on-click-modal="false" custom-class="dialogClass">
+            <el-input type="textarea" :rows="6" v-model="remarks"></el-input>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="rejectDialog = false">取消</el-button>
+                <el-button type="primary" @click="sureReject">确定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -168,7 +184,9 @@ export default {
             },
             checkBoxList:[],
             options:[],
-            centerDialogVisible:false
+            centerDialogVisible:false,
+            rejectDialog:false,
+            remarks:''
         }
     },
     mounted(){
@@ -295,6 +313,15 @@ export default {
         addContinue(){
             this.centerDialogVisible = false
             this.form = {}
+        },
+        overSure(){
+            
+        },
+        openReject(){
+            this.rejectDialog = true
+        },
+        sureReject(){
+            
         }
 
     }

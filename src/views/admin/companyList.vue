@@ -115,10 +115,11 @@ export default {
             })
         },
         changeAdmin(id,state){
+            console.log(id,state)
             let comName = JSON.parse(sessionStorage.getItem("user")).comName
             let myData = {
                 companyId:id,
-                isAdmin:state?0:1,
+                isAdmin:state?1:0,
                 comName:comName
             }
             updateCompanyAdmin(myData)

@@ -57,7 +57,7 @@ export default {
       if(sessionStorage.getItem("user")){
          let user =JSON.parse(sessionStorage.getItem("user"))
          this.userName = user.loginName
-         if(user.companyId === 1){
+         if(user.isAdmin === 1){
            this.adminFlag = true
          }else{
            this.adminFlag = false

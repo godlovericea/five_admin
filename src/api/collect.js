@@ -70,6 +70,15 @@ export function updateCompanyAdmin(data) {
   })
 }
 
+// 审核公司基本信息
+export function checkCompanyBaseInfo(data) {
+  return request({
+    url: '/companyBaseInfo/checkCompanyBaseInfo',
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
 // 删除公司
 export function deleteCompany(data) {
   return request({
@@ -103,6 +112,24 @@ export function getProduct(data) {
     url: '/companyProduct/getProduct',
     method: 'post',
     data: qs.stringify(data)
+  })
+}
+
+//修改公司产品
+export function updateProduct(data) {
+  return request({
+    url: '/companyProduct/updateProduct',
+    method: 'post',
+    data
+  })
+}
+
+//审核公司产品信息
+export function checkCompanyProduct(data) {
+  return request({
+    url: '/companyProduct/checkCompanyProduct',
+    method: 'post',
+    data:qs.stringify(data)
   })
 }
 
@@ -144,6 +171,15 @@ export function getCompanyProject(data) {
 export function listCompanyProject(data) {
   return request({
     url: '/companyProject/listCompanyProject',
+    method: 'post',
+    data
+  })
+}
+
+// 审核公司项目信息
+export function checkCompanyProject(data) {
+  return request({
+    url: '/companyProject/checkCompanyProject',
     method: 'post',
     data
   })

@@ -2,7 +2,8 @@
     <div class="warnWrapper">
         <el-table :data="tableData" style="width: 100%">
             <el-table-column  prop="productName" label="产品名称"></el-table-column>
-            <el-table-column  prop="productIntroduce" label="产品介绍"></el-table-column>
+            <el-table-column  prop="productSales" label="销售额"></el-table-column>
+            <el-table-column  prop="productIntroduce" label="产品介绍" show-overflow-tooltip></el-table-column>
             <el-table-column  prop="date" label="产品关键字"></el-table-column>
             <el-table-column label="审核状态" width="180" class-name="checkState">
                 <template slot-scope="scope">
@@ -14,7 +15,7 @@
             <el-table-column  prop="createData" label="日期"></el-table-column>
             <el-table-column  label="操作" width="180">
                 <template slot-scope="scope">
-                    <el-button type="text" @click="goDetail(scope.row.companyProductId)">详情</el-button>
+                    <el-button type="text" @click="goDetail(scope.row.companyProductId,scope.row.companyId)">详情</el-button>
                     <el-button type="text" @click="handleDel(scope.row.companyProductId)">删除</el-button>
                 </template>
             </el-table-column>
@@ -60,9 +61,8 @@ export default {
     },
     methods:{
         getData(){
-            let id = parseInt(JSON.parse(sessionStorage.getItem("user")).companyId)
             let myData={
-                companyId:id,
+                companyId:this.$route.query.comId,
                 pageNum:this.pageNum,
                 pageSize:this.pageSize
             }
@@ -90,23 +90,30 @@ export default {
                 console.log(res)
             })
         },
-        goDetail(id){
+        goDetail(proId,comId){
             this.$router.push({
                 path:'/product/newProduct',
                 query:{
-                    id:id
+                    proId:proId,
+                    comId:comId
                 }
             })
         },
         handleDel(id){
-            let comName = JSON.parse(sessionStorage.getItem("user")).comName
-            let myData = {
-                companyProductId:id,
-                comName:comName
-            }
-            deleteProduct(myData)
-            .then(res => {
-                this.getData()
+            this.$confirm('此操作将永久删除该公司, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+                }).then(() => {
+                    let comName = JSON.parse(sessionStorage.getItem("user")).comName
+                    let myData = {
+                        companyProductId:id,
+                        comName:comName
+                    }
+                    deleteProduct(myData)
+                    .then(res => {
+                        this.getData()
+                    })
             })
         },
         handleRemove(file, fileList) {
