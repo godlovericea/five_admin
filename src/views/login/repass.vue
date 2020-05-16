@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">登录</h3>
+        <h3 class="title">修改密码</h3>
       </div>
 
       <el-form-item prop="username">
@@ -12,65 +12,73 @@
         </span>
         <el-input
           ref="username"
-          v-model="loginForm.loginName"
-          placeholder="用户名"
+          v-model="loginForm.comCode"
+          placeholder="请输入统一社会信用代码"
           name="username"
           type="text"
           tabindex="1"
           auto-complete="on"
         />
       </el-form-item>
-      <el-form-item prop="password">
+      <el-form-item prop="username">
+        <span class="svg-container">
+          <svg-icon icon-class="user" />
+        </span>
+        <el-input
+          ref="username"
+          v-model="loginForm.loginName"
+          placeholder="请输入登录账号"
+          name="username"
+          type="text"
+          tabindex="1"
+          auto-complete="on"
+        />
+      </el-form-item>
+      <el-form-item prop="username">
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
         <el-input
-          :key="passwordType"
-          ref="password"
+          ref="username"
           v-model="loginForm.pwd"
-          :type="passwordType"
-          placeholder="密码"
-          name="password"
-          tabindex="2"
+          placeholder="请输入旧密码"
+          name="username"
+          type="text"
+          tabindex="1"
           auto-complete="on"
-          @keyup.enter.native="handleLogin"
+          show-password
         />
-        <span class="show-pwd" @click="showPwd">
-          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
-        </span>
       </el-form-item>
-      
-        <div class="forPwclass">
-           <el-button :loading="loading" type="text"  @click="goResetPassword">修改密码</el-button>
-          <el-button :loading="loading" type="text" style="font-size:14px" @click.native.prevent="handleReset">重置密码</el-button>
-        </div>
-       
+      <el-form-item prop="username">
+        <span class="svg-container">
+          <svg-icon icon-class="password" />
+        </span>
+        <el-input
+          ref="username"
+          v-model="loginForm.newPwd"
+          placeholder="请输入新密码"
+          name="username"
+          type="text"
+          tabindex="1"
+          auto-complete="on"
+          show-password
+        />
+      </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
-      <div>
-        
-      </div>
-      
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleReset">确定</el-button>
       <div class="regBox">
-        <div>
-          <span style="font-size:14px;color:#ffffff">需要帮助，点击</span>
-           <el-tooltip class="item" effect="dark" content="填报之前，请仔细阅读" placement="top">
-                
-                <el-button :loading="loading" type="text" style="font-size:14px" @click.native.prevent="handleHelp">帮助</el-button>
-          </el-tooltip>
-         
+        <div style="text-align:right">
+          <span style="font-size:14px;color:#ffffff">去</span>
+          <el-button :loading="loading" type="text" style="font-size:14px" @click.native.prevent="handleLogin">登录</el-button>
         </div>
-        <div>
-          <span style="font-size:14px;color:#ffffff">没有账号，点击</span>
-          <el-button :loading="loading" type="text" style="font-size:14px" @click.native.prevent="handleRegister">注册</el-button>
-        </div>
+        
       </div>
     </el-form>
   </div>
 </template>
 
 <script>
-import {login} from '@/api/collect'
+import {updatePwd} from '../../api/collect'
 
 export default {
   name: 'Login',
@@ -78,14 +86,16 @@ export default {
     return {
       loginForm: {
         loginName: '',
-        pwd: ''
+        pwd: '',
+        comCode:''
       },
       loginRules: {
         
       },
       loading: false,
       passwordType: 'password',
-      redirect: undefined
+      redirect: undefined,
+      flag:false
     }
   },
   watch: {
@@ -108,46 +118,35 @@ export default {
       })
     },
     handleLogin() {
-      let myData={
-        loginName:this.loginForm.loginName,
-        pwd:this.loginForm.pwd
-      }
-      login(myData)
-      .then(res=>{
-        if(res.code === 200){
-          sessionStorage.setItem("user", JSON.stringify(res.result))
-          // sessionStorage.setItem("userid",res.result.id)
-          this.$router.push({
-            path:'/home/basicInfo',
-            quert:{
-              type:res.result.comType
-            }
-          })
-        }else{
-          this.$message.error(res.message)
-        }
+      this.$router.push({
+        path:'/'
       })
     },
     handleRegister(){
       this.$router.push({
         path:'/register'
       })
-      
     },
     handleReset(){
-      this.$router.push({
-        path:'/reset'
-      })
-    },
-    handleHelp(){
-      this.$router.push({
-        path:'/help'
-      })
-    },
-    goResetPassword(){
-      this.$router.push({
-        path:'/repass'
-      })
+        let myData={
+            comCode:this.loginForm.comCode,
+            loginName:this.loginForm.loginName,
+            newPwd:this.loginForm.newPwd,
+            pwd:this.loginForm.pwd
+        }
+        updatePwd(myData)
+        .then(res=>{
+            if(res.code === 200){
+                this.$message({
+                  type:"success",
+                  message:'修改成功'
+                })
+                this.loginForm={}
+            }else{
+                this.$message.error(res.message)
+            }
+        })
+     
     }
   }
 }
@@ -197,13 +196,6 @@ $cursor: #fff;
     border-radius: 5px;
     color: #454545;
   }
-  .forPwclass{
-    border: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-  }
 }
 </style>
 
@@ -227,6 +219,17 @@ $light_gray:#eee;
     overflow: hidden;
   }
 
+  .tips {
+    font-size: 14px;
+    color: #fff;
+    margin-bottom: 10px;
+
+    span {
+      &:first-of-type {
+        margin-right: 16px;
+      }
+    }
+  }
 
   .svg-container {
     padding: 6px 5px 6px 15px;
@@ -261,11 +264,7 @@ $light_gray:#eee;
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
-  .tips{
     font-size: 14px;
-    color: #889aa4;
-    line-height: 24px;
   }
 }
 </style>

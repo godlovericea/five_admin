@@ -47,6 +47,11 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/repass',
+    component: () => import('@/views/login/repass'),
+    hidden: true
+  },
+  {
     path: '/help',
     component: () => import('@/views/login/help'),
     hidden: true

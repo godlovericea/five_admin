@@ -26,6 +26,14 @@ export function reset(data) {
         data:qs.stringify(data)
     })
 }
+// 修改密码
+export function updatePwd(data) {
+  return request({
+      url: '/user/updatePwd',
+      method: 'post',
+      data:qs.stringify(data)
+  })
+}
 // 增加公司信息
 export function addBaseInfo(data) {
   return request({
