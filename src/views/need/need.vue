@@ -53,9 +53,9 @@
             </el-tab-pane>
             <el-tab-pane label="在研项目合作需求" v-if="projectDetailFlag">
                 <div class="formBox">
-                    <el-form :model="form" class="demo-form-inline" label-width="120px">
+                    <el-form :model="project" class="demo-form-inline" label-width="120px">
                         <el-form-item label="选择在研项目">
-                            <el-select v-model="form.companyProjectId" placeholder="请选择在研项目" style="width:400px">
+                            <el-select v-model="project.companyProjectId" placeholder="请选择在研项目" style="width:400px">
                                 <el-option v-for="item in projectList" :key="item.companyProjectId" :label="item.projectName" :value="item.companyProjectId"></el-option>
                             </el-select>
                         </el-form-item>
@@ -72,19 +72,19 @@
                             <p>保密的需求，仅 自己 和 江苏省工业和信息化厅 可见，该需求将以密文展示</p>
                         </el-form-item>
                         <el-form-item label="其他需求" v-if="flag.otherFlag">
-                            <el-input size="small" v-model="form.other" placeholder="请输入需求名称，不超过20字" maxlength="20" style="width:400px"></el-input>
+                            <el-input size="small" v-model="project.otherDemand" placeholder="请输入需求名称，不超过20字" maxlength="20" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item label="所需资金" v-if="flag.moneyFlag">
-                            <el-input size="small" type="number" v-model="form.money" placeholder="单位：万元" style="width:400px"></el-input>
+                            <el-input size="small" type="number" v-model="project.requiredMoney" placeholder="单位：万元" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item label="技术需求简述" v-if="flag.techFlag">
-                            <el-input type="textarea" v-model="form.money" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px"></el-input>
+                            <el-input type="textarea" v-model="project.technologyDemandInfo" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item label="市场需求简述" v-if="flag.marketFlag">
-                            <el-input type="textarea" v-model="form.money" placeholder="请填写需求要点，不超过100字" maxlength="100" style="width:400px"></el-input>
+                            <el-input type="textarea" v-model="project.marketDemandInfo" placeholder="请填写需求要点，不超过100字" maxlength="100" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item label="需求描述">
-                            <el-input size="small" v-model="form.demandIndo" type="textarea" placeholder="请填写具体的需求" :rows="6" style="width:400px"></el-input>
+                            <el-input size="small" v-model="project.demandInfo" type="textarea" placeholder="请填写具体的需求" :rows="6" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item>
                             <div v-if="!adminFlag">
@@ -102,9 +102,9 @@
             </el-tab-pane>
             <el-tab-pane label="其他合作需求" v-if="otherDetailFlag">
                 <div class="formBox">
-                    <el-form :model="form" class="demo-form-inline" label-width="120px">
+                    <el-form :model="other" class="demo-form-inline" label-width="120px">
                         <el-form-item label="名称">
-                            <el-input size="small" v-model="form.other" placeholder="请输入课题/项目/产品" style="width:400px"></el-input>
+                            <el-input size="small" v-model="other.other" placeholder="请输入课题/项目/产品" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item label="需求类别">
                             <el-checkbox-group v-model="demandOtherClass" @change="handleChangeOther">
@@ -114,20 +114,20 @@
                             </el-checkbox-group>
                         </el-form-item>
                         <el-form-item label="是否保密">
-                            <el-switch v-model="form.pass" active-text="保密" inactive-text="公开"></el-switch>
+                            <el-switch v-model="other.pass" active-text="保密" inactive-text="公开"></el-switch>
                             <p>保密的需求，仅 自己 和 江苏省工业和信息化厅 可见，该需求将以密文展示</p>
                         </el-form-item>
                         <el-form-item label="所需资金" v-if="flag.moneyFlag">
-                            <el-input size="small" type="number" v-model="form.money" placeholder="单位：万元" style="width:400px"></el-input>
+                            <el-input size="small" type="number" v-model="other.money" placeholder="单位：万元" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item label="技术需求简述" v-if="flag.techFlag">
-                            <el-input type="textarea" v-model="form.money" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px"></el-input>
+                            <el-input type="textarea" v-model="other.money" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item label="市场需求简述" v-if="flag.marketFlag">
-                            <el-input type="textarea" v-model="form.money" placeholder="请填写需求要点，不超过100字" maxlength="100" style="width:400px"></el-input>
+                            <el-input type="textarea" v-model="other.money" placeholder="请填写需求要点，不超过100字" maxlength="100" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item label="需求描述">
-                            <el-input size="small" v-model="form.demandIndo" type="textarea" placeholder="请填写具体的需求" :rows="6" style="width:400px"></el-input>
+                            <el-input size="small" v-model="other.demandIndo" type="textarea" placeholder="请填写具体的需求" :rows="6" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item>
                             <div v-if="!adminFlag">
@@ -273,7 +273,7 @@ export default {
                 comName: this.comName,
                 companyId: this.companyId,
                 companyProjectId: this.project.companyProjectId,
-                demandClass: this.demandProductClass,
+                demandClass: this.demandProjectClass,
                 demandInfo: this.project.demandInfo,
                 isEncryption: this.projectIsEncryption ? 1:0,
                 marketDemandInfo: this.project.marketDemandInfo,
@@ -286,7 +286,7 @@ export default {
                 this.centerDialogVisible = true
             })
         },
-        addProductNeed(){
+        addOtherNeed(){
             const myData = {
                 comName: this.comName,
                 companyId: this.companyId,
@@ -319,28 +319,28 @@ export default {
         },
         getProjectDetail(){
             let myData={
-                companyProductDemandId:this.$route.query.id
+                companyProjectDemandId:this.$route.query.id
             }
             getCompanyProductDemand(myData)
             .then(res=>{
                 this.product = res.result
                 this.demandProductClass = this.product.demandClass
-                this.handleChangeProduct(this.demandProductClass)
+                this.handleChangeProject(this.demandProductClass)
                 this.productIsEncryption = this.product.isEncryption === 1 ? true :false
-                this.companyProductDemandId = this.product.companyProductDemandId
+                this.companyProjectDemandId = this.product.companyProjectDemandId
             })
         },
         getOtherDetail(){
             let myData={
-                companyProductDemandId:this.$route.query.id
+                companyOtherDemandId:this.$route.query.id
             }
             getCompanyProductDemand(myData)
             .then(res=>{
                 this.product = res.result
                 this.demandProductClass = this.product.demandClass
-                this.handleChangeProduct(this.demandProductClass)
+                this.handleChangeOther(this.demandProductClass)
                 this.productIsEncryption = this.product.isEncryption === 1 ? true :false
-                this.companyProductDemandId = this.product.companyProductDemandId
+                this.companyOtherDemandId = this.product.companyOtherDemandId
             })
         },
         updateProductNeed(){
@@ -482,14 +482,23 @@ export default {
             this.centerDialogVisible = false
             this.form = {}
         },
-        overSure(){
+        overOtherSure(){
             
         },
         openReject(){
             this.rejectDialog = true
         },
-        sureReject(){
+        backToList(){
             
+        },
+        sureReject(){
+
+        },
+        overProjectSure(){
+
+        },
+        overProductSure(){
+
         }
 
     }

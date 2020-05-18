@@ -1,14 +1,18 @@
 <template>
     <div class="warnWrapper">
-        <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+        <el-tabs v-model="activeName" type="card">
             <el-tab-pane label="主营产品需求" name="product">
                 <el-table :data="productTabledata" style="width: 100%">
                     <el-table-column  prop="companyProductName" label="产品名称"></el-table-column>
                     <el-table-column  prop="demandInfo" label="需求介绍"></el-table-column>
-                    <el-table-column  prop="projectKeyword" label="需求类别">
+                    <el-table-column  label="需求类别">
                         <template slot-scope="scope">
-                            <span class="over" v-if="scope.row.isEncryption === 1">加密</span>
-                            <span class="fail" v-if="scope.row.isEncryption === 0">公开</span>
+                            <span v-for="(item,index) in scope.row.demandClass" :key="index">
+                                <span class="over" v-if="item === 1">资金支持</span>
+                                <span class="fail" v-if="item === 2">技术支撑</span>
+                                <span class="fail" v-if="item === 3">市场推广</span>
+                                <span class="fail" v-if="item === 4">其他类型</span>
+                            </span>
                         </template>
                     </el-table-column>
                     <el-table-column  label="是否加密" class-name="checkState">
@@ -38,10 +42,14 @@
                 <el-table :data="projectTabledata" style="width: 100%">
                     <el-table-column  prop="companyProductName" label="项目名称"></el-table-column>
                     <el-table-column  prop="demandInfo" label="需求介绍"></el-table-column>
-                    <el-table-column  prop="projectKeyword" label="需求类别">
+                    <el-table-column  label="需求类别">
                         <template slot-scope="scope">
-                            <span class="over" v-if="scope.row.isEncryption === 1">加密</span>
-                            <span class="fail" v-if="scope.row.isEncryption === 0">公开</span>
+                            <span v-for="(item,index) in scope.row.demandClass" :key="index">
+                                <span class="over" v-if="item === 1">资金支持</span>
+                                <span class="fail" v-if="item === 2">技术支撑</span>
+                                <span class="fail" v-if="item === 3">市场推广</span>
+                                <span class="fail" v-if="item === 4">其他类型</span>
+                            </span>
                         </template>
                     </el-table-column>
                     <el-table-column  label="是否加密" class-name="checkState">
