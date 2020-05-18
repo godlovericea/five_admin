@@ -2,7 +2,7 @@
     <div class="warnWrapper">
         <div class="divider"></div>
         <el-tabs type="border-card">
-            <el-tab-pane label="主营产品合作需求">
+            <el-tab-pane label="主营产品合作需求" v-if="productDetailFlag">
                 <div class="formBox">
                     <el-form :model="product" class="demo-form-inline" label-width="120px">
                         <el-form-item label="选择主营产品">
@@ -19,14 +19,14 @@
                             </el-checkbox-group>
                         </el-form-item>
                         <el-form-item label="是否保密">
-                            <el-switch v-model="product.isEncryption" active-text="保密" inactive-text="公开"></el-switch>
+                            <el-switch v-model="productIsEncryption" active-text="保密" inactive-text="公开"></el-switch>
                             <p>保密的需求，仅 自己 和 江苏省工业和信息化厅 可见，该需求将以密文展示</p>
                         </el-form-item>
                         <el-form-item label="其他需求" v-if="flag.otherFlag">
                             <el-input size="small" v-model="product.otherDemand" placeholder="请输入需求名称，不超过20字" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item label="所需资金" v-if="flag.moneyFlag">
-                            <el-input size="small" v-model="product.requiredMoney" placeholder="单位：万元" style="width:400px"></el-input>
+                            <el-input size="small" type="number" v-model="product.requiredMoney" placeholder="单位：万元" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item label="技术需求简述" v-if="flag.techFlag">
                             <el-input type="textarea" v-model="product.technologyDemandInfo" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px"></el-input>
@@ -51,11 +51,11 @@
                     </el-form>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="在研项目合作需求">
+            <el-tab-pane label="在研项目合作需求" v-if="projectDetailFlag">
                 <div class="formBox">
                     <el-form :model="form" class="demo-form-inline" label-width="120px">
                         <el-form-item label="选择在研项目">
-                            <el-select v-model="form.value" placeholder="请选择在研项目" style="width:400px">
+                            <el-select v-model="form.companyProjectId" placeholder="请选择在研项目" style="width:400px">
                                 <el-option v-for="item in projectList" :key="item.companyProjectId" :label="item.projectName" :value="item.companyProjectId"></el-option>
                             </el-select>
                         </el-form-item>
@@ -68,14 +68,14 @@
                             </el-checkbox-group>
                         </el-form-item>
                         <el-form-item label="是否保密">
-                            <el-switch v-model="form.pass" active-text="保密" inactive-text="公开"></el-switch>
+                            <el-switch v-model="projectIsEncryption" active-text="保密" inactive-text="公开"></el-switch>
                             <p>保密的需求，仅 自己 和 江苏省工业和信息化厅 可见，该需求将以密文展示</p>
                         </el-form-item>
                         <el-form-item label="其他需求" v-if="flag.otherFlag">
-                            <el-input size="small" v-model="form.other" placeholder="单位：万元" style="width:400px"></el-input>
+                            <el-input size="small" v-model="form.other" placeholder="请输入需求名称，不超过20字" maxlength="20" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item label="所需资金" v-if="flag.moneyFlag">
-                            <el-input size="small" v-model="form.money" placeholder="单位：万元" style="width:400px"></el-input>
+                            <el-input size="small" type="number" v-model="form.money" placeholder="单位：万元" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item label="技术需求简述" v-if="flag.techFlag">
                             <el-input type="textarea" v-model="form.money" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px"></el-input>
@@ -87,15 +87,20 @@
                             <el-input size="small" v-model="form.demandIndo" type="textarea" placeholder="请填写具体的需求" :rows="6" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-button size="small" type="primary" round style="width:100px" @click="postData">提交</el-button>
-                            <el-button size="small" type="primary" round style="width:100px" @click="postData">修改</el-button>
-                            <el-button size="small" type="success" round style="width:100px" @click="overSure">通过</el-button>
-                            <el-button size="small" type="danger" round style="width:100px" @click="openReject">驳回</el-button>
+                            <div v-if="!adminFlag">
+                                <el-button v-if="companyProjectDemandId === 0" size="small" type="primary" round style="width:100px" @click="addProjectNeed">提交</el-button>
+                                <el-button v-else size="small" type="primary" style="width:100px" round @click="updateProjectNeed">修改</el-button>
+                            </div>
+                            <div v-if="adminFlag">
+                                <el-button size="small" type="success" round style="width:100px" @click="overProjectSure">通过</el-button>
+                                <el-button size="small" type="danger" round style="width:100px" @click="openReject">驳回</el-button>
+                                <el-button size="small" type="primary" round style="width:100px" @click="backToList">返回列表</el-button>
+                            </div>
                         </el-form-item>
                     </el-form>
                 </div>
             </el-tab-pane>
-            <el-tab-pane label="其他合作需求">
+            <el-tab-pane label="其他合作需求" v-if="otherDetailFlag">
                 <div class="formBox">
                     <el-form :model="form" class="demo-form-inline" label-width="120px">
                         <el-form-item label="名称">
@@ -106,18 +111,14 @@
                                 <el-checkbox :label="1">资金支持</el-checkbox>
                                 <el-checkbox :label="2">技术支撑</el-checkbox>
                                 <el-checkbox :label="3">市场推广</el-checkbox>
-                                <el-checkbox :label="4">其他</el-checkbox>
                             </el-checkbox-group>
                         </el-form-item>
                         <el-form-item label="是否保密">
                             <el-switch v-model="form.pass" active-text="保密" inactive-text="公开"></el-switch>
                             <p>保密的需求，仅 自己 和 江苏省工业和信息化厅 可见，该需求将以密文展示</p>
                         </el-form-item>
-                        <el-form-item label="其他需求" v-if="flag.otherFlag">
-                            <el-input size="small" v-model="form.other" placeholder="单位：万元" style="width:400px"></el-input>
-                        </el-form-item>
                         <el-form-item label="所需资金" v-if="flag.moneyFlag">
-                            <el-input size="small" v-model="form.money" placeholder="单位：万元" style="width:400px"></el-input>
+                            <el-input size="small" type="number" v-model="form.money" placeholder="单位：万元" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item label="技术需求简述" v-if="flag.techFlag">
                             <el-input type="textarea" v-model="form.money" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px"></el-input>
@@ -129,10 +130,15 @@
                             <el-input size="small" v-model="form.demandIndo" type="textarea" placeholder="请填写具体的需求" :rows="6" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-button size="small" type="primary" round style="width:100px" @click="postData">提交</el-button>
-                            <el-button size="small" type="primary" round style="width:100px" @click="postData">修改</el-button>
-                            <el-button size="small" type="success" round style="width:100px" @click="overSure">通过</el-button>
-                            <el-button size="small" type="danger" round style="width:100px" @click="openReject">驳回</el-button>
+                            <div v-if="!adminFlag">
+                                <el-button v-if="companyOtherDemandId === 0" size="small" type="primary" round style="width:100px" @click="addOtherNeed">提交</el-button>
+                                <el-button v-else size="small" type="primary" style="width:100px" round @click="updateOtherNeed">修改</el-button>
+                            </div>
+                            <div v-if="adminFlag">
+                                <el-button size="small" type="success" round style="width:100px" @click="overOtherSure">通过</el-button>
+                                <el-button size="small" type="danger" round style="width:100px" @click="openReject">驳回</el-button>
+                                <el-button size="small" type="primary" round style="width:100px" @click="backToList">返回列表</el-button>
+                            </div>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -140,11 +146,11 @@
         </el-tabs>
         <el-dialog title="提示" :visible.sync="centerDialogVisible" width="400px" center :close-on-click-modal="false" custom-class="dialogClass">
             <div style="text-align:center">
-                <p>新增成功！</p>
+                <p>成功！</p>
                 <i class="el-icon-circle-check"></i>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="goProductList">需求列表</el-button>
+                <el-button @click="goProductList">列表</el-button>
                 <el-button type="primary" @click="addContinue">继续新增</el-button>
             </span>
         </el-dialog>
@@ -159,7 +165,7 @@
 </template>
 
 <script>
-import {listProductNotPage,listProject,addProductDemand} from '@/api/need'
+import {listProductNotPage,listProject,addProductDemand,getCompanyProductDemand,updateProductDemand} from '@/api/need'
 export default {
     data(){
         return{
@@ -169,24 +175,29 @@ export default {
             comName:'',
             companyId:0,
 
+            productDetailFlag:true,
+            projectDetailFlag:true,
+            otherDetailFlag:true,
+
             product:{},
+            project:{},
+            other:{},
             demandProductClass:[],
-            companyProductDemandId:0,
             demandProjectClass:[],
             demandOtherClass:[],
+            companyProductDemandId:0,
+            companyProjectDemandId:0,
+            companyOtherDemandId:0,
+            productIsEncryption:false,
+            projectIsEncryption:false,
+            otherIsEncryption:false,
             
-            form:{},
-            
-            photos:[],
-            checkedCities:[],
             flag:{
                 moneyFlag:false,
                 techFlag:false,
                 marketFlag:false,
                 otherFlag:false
             },
-            checkBoxList:[],
-            options:[],
             centerDialogVisible:false,
             rejectDialog:false,
             remarks:''
@@ -197,7 +208,22 @@ export default {
         this.getProductList()
         this.getProjectList()
         if(this.$route.query.id){
-            this.getInfo()
+            if(this.$route.query.type === 'product'){
+                this.productDetailFlag = true
+                this.projectDetailFlag = false
+                this.otherDetailFlag = false
+                this.getProductDetail()
+            }else if(this.$route.query.type === 'project'){
+                this.productDetailFlag = false
+                this.projectDetailFlag = true
+                this.otherDetailFlag = false
+                this.getProjectDetail()
+            }else if(this.$route.query.type === 'other'){
+                this.productDetailFlag = false
+                this.projectDetailFlag = false
+                this.otherDetailFlag = true
+                this.getOtherDetail()
+            }
         }
     },
     methods:{
@@ -231,7 +257,7 @@ export default {
                 companyProductId: this.product.companyProductId,
                 demandClass: this.demandProductClass,
                 demandInfo: this.product.demandInfo,
-                isEncryption: this.product.isEncryption,
+                isEncryption: this.productIsEncryption ? 1:0,
                 marketDemandInfo: this.product.marketDemandInfo,
                 otherDemand: this.product.otherDemand,
                 requiredMoney: this.product.requiredMoney,
@@ -239,45 +265,140 @@ export default {
             }
             addProductDemand(myData)
             .then(res=>{
-
+                this.centerDialogVisible = true
             })
         },
-        getInfo(){
-            let id = parseInt(this.$route.query.id)
-            let myData={
-                companySceneId:id
+        addProjectNeed(){
+            const myData = {
+                comName: this.comName,
+                companyId: this.companyId,
+                companyProjectId: this.project.companyProjectId,
+                demandClass: this.demandProductClass,
+                demandInfo: this.project.demandInfo,
+                isEncryption: this.projectIsEncryption ? 1:0,
+                marketDemandInfo: this.project.marketDemandInfo,
+                otherDemand: this.project.otherDemand,
+                requiredMoney: this.project.requiredMoney,
+                technologyDemandInfo: this.project.technologyDemandInfo
             }
-            getCompanyDemand(myData)
+            addProductDemand(myData)
             .then(res=>{
-                this.form = res.result
-                this.industry = this.form.industry
+                this.centerDialogVisible = true
             })
         },
-        postData(){
-            this.centerDialogVisible = true
-            let id = parseInt(JSON.parse(sessionStorage.getItem("user")).companyId)
-            let comName = JSON.parse(sessionStorage.getItem("user")).comName
-            let myData={
-                comName:comName,
-                companyId:id,
-                attachmentUrl:this.form.attachmentUrl,
-                demandClass:this.form.demandClass,
-                demandIndo:this.form.demandIndo,
-                industry:this.industry
+        addProductNeed(){
+            const myData = {
+                comName: this.comName,
+                companyId: this.companyId,
+                companyProductId: this.product.companyProductId,
+                demandClass: this.demandProductClass,
+                demandInfo: this.product.demandInfo,
+                isEncryption: this.productIsEncryption ? 1:0,
+                marketDemandInfo: this.product.marketDemandInfo,
+                otherDemand: this.product.otherDemand,
+                requiredMoney: this.product.requiredMoney,
+                technologyDemandInfo: this.product.technologyDemandInfo
             }
-            addDemand(myData)
+            addProductDemand(myData)
             .then(res=>{
-                this.$message({
-                    type:'success',
-                    message:'提交成功'
-                })
+                this.centerDialogVisible = true
             })
         },
-        resetData(){
-
+        getProductDetail(){
+            let myData={
+                companyProductDemandId:this.$route.query.id
+            }
+            getCompanyProductDemand(myData)
+            .then(res=>{
+                this.product = res.result
+                this.demandProductClass = this.product.demandClass
+                this.handleChangeProduct(this.demandProductClass)
+                this.productIsEncryption = this.product.isEncryption === 1 ? true :false
+                this.companyProductDemandId = this.product.companyProductDemandId
+            })
         },
-        handleChange(file){
-            
+        getProjectDetail(){
+            let myData={
+                companyProductDemandId:this.$route.query.id
+            }
+            getCompanyProductDemand(myData)
+            .then(res=>{
+                this.product = res.result
+                this.demandProductClass = this.product.demandClass
+                this.handleChangeProduct(this.demandProductClass)
+                this.productIsEncryption = this.product.isEncryption === 1 ? true :false
+                this.companyProductDemandId = this.product.companyProductDemandId
+            })
+        },
+        getOtherDetail(){
+            let myData={
+                companyProductDemandId:this.$route.query.id
+            }
+            getCompanyProductDemand(myData)
+            .then(res=>{
+                this.product = res.result
+                this.demandProductClass = this.product.demandClass
+                this.handleChangeProduct(this.demandProductClass)
+                this.productIsEncryption = this.product.isEncryption === 1 ? true :false
+                this.companyProductDemandId = this.product.companyProductDemandId
+            })
+        },
+        updateProductNeed(){
+            const myData = {
+                comName: this.comName,
+                companyId: this.companyId,
+                companyProductId: this.product.companyProductId,
+                demandClass: this.demandProductClass,
+                demandInfo: this.product.demandInfo,
+                isEncryption: this.productIsEncryption ? 1:0,
+                marketDemandInfo: this.product.marketDemandInfo,
+                otherDemand: this.product.otherDemand,
+                requiredMoney: this.product.requiredMoney,
+                technologyDemandInfo: this.product.technologyDemandInfo,
+                companyProductDemandId:this.companyProductDemandId
+            }
+            updateProductDemand(myData)
+            .then(res=>{
+                
+            })
+        },
+        updateProductNeed(){
+            const myData = {
+                comName: this.comName,
+                companyId: this.companyId,
+                companyProductId: this.product.companyProductId,
+                demandClass: this.demandProductClass,
+                demandInfo: this.product.demandInfo,
+                isEncryption: this.productIsEncryption ? 1:0,
+                marketDemandInfo: this.product.marketDemandInfo,
+                otherDemand: this.product.otherDemand,
+                requiredMoney: this.product.requiredMoney,
+                technologyDemandInfo: this.product.technologyDemandInfo,
+                companyProductDemandId:this.companyProductDemandId
+            }
+            updateProductDemand(myData)
+            .then(res=>{
+                
+            })
+        },
+        updateProductNeed(){
+            const myData = {
+                comName: this.comName,
+                companyId: this.companyId,
+                companyProductId: this.product.companyProductId,
+                demandClass: this.demandProductClass,
+                demandInfo: this.product.demandInfo,
+                isEncryption: this.productIsEncryption ? 1:0,
+                marketDemandInfo: this.product.marketDemandInfo,
+                otherDemand: this.product.otherDemand,
+                requiredMoney: this.product.requiredMoney,
+                technologyDemandInfo: this.product.technologyDemandInfo,
+                companyProductDemandId:this.companyProductDemandId
+            }
+            updateProductDemand(myData)
+            .then(res=>{
+                
+            })
         },
         handleChangeProduct(value){
             this.demandClass = value
@@ -351,7 +472,7 @@ export default {
         goProductList(){
             let user =JSON.parse(sessionStorage.getItem("user")) 
             this.$router.push({
-                path:'/product/productList',
+                path:'/need/needList',
                 query:{
                     id:user.companyId
                 }
