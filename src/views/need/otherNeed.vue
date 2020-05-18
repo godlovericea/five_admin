@@ -4,10 +4,10 @@
         <el-tabs type="border-card">
             <el-tab-pane label="主营产品合作需求">
                 <div class="formBox">
-                    <el-form :model="product" class="demo-form-inline" label-width="120px">
+                    <el-form :model="form" class="demo-form-inline" label-width="120px">
                         <el-form-item label="选择主营产品">
-                            <el-select v-model="product.companyProductId" placeholder="请选择主营产品" style="width:400px">
-                                <el-option v-for="item in productList" :key="item.companyProductId" :label="item.productName" :value="item.companyProductId"></el-option>
+                            <el-select v-model="form.value" placeholder="请选择主营产品" style="width:400px">
+                                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="需求类别">
@@ -19,34 +19,29 @@
                             </el-checkbox-group>
                         </el-form-item>
                         <el-form-item label="是否保密">
-                            <el-switch v-model="product.isEncryption" active-text="保密" inactive-text="公开"></el-switch>
+                            <el-switch v-model="form.pass" active-text="保密" inactive-text="公开"></el-switch>
                             <p>保密的需求，仅 自己 和 江苏省工业和信息化厅 可见，该需求将以密文展示</p>
                         </el-form-item>
                         <el-form-item label="其他需求" v-if="flag.otherFlag">
-                            <el-input size="small" v-model="product.otherDemand" placeholder="请输入需求名称，不超过20字" style="width:400px"></el-input>
+                            <el-input size="small" v-model="form.other" placeholder="单位：万元" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item label="所需资金" v-if="flag.moneyFlag">
-                            <el-input size="small" v-model="product.requiredMoney" placeholder="单位：万元" style="width:400px"></el-input>
+                            <el-input size="small" v-model="form.money" placeholder="单位：万元" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item label="技术需求简述" v-if="flag.techFlag">
-                            <el-input type="textarea" v-model="product.technologyDemandInfo" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px"></el-input>
+                            <el-input type="textarea" v-model="form.money" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item label="市场需求简述" v-if="flag.marketFlag">
-                            <el-input type="textarea" v-model="product.marketDemandInfo" placeholder="请填写需求要点，不超过100字" maxlength="100" style="width:400px"></el-input>
+                            <el-input type="textarea" v-model="form.money" placeholder="请填写需求要点，不超过100字" maxlength="100" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item label="需求描述">
-                            <el-input size="small" v-model="product.demandInfo" type="textarea" placeholder="请填写具体的需求" :rows="6" style="width:400px"></el-input>
+                            <el-input size="small" v-model="form.demandIndo" type="textarea" placeholder="请填写具体的需求" :rows="6" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <div v-if="!adminFlag">
-                                <el-button v-if="companyProductDemandId === 0" size="small" type="primary" round style="width:100px" @click="addProductNeed">提交</el-button>
-                                <el-button v-else size="small" type="primary" style="width:100px" round @click="updateProductNeed">修改</el-button>
-                            </div>
-                            <div v-if="adminFlag">
-                                <el-button size="small" type="success" round style="width:100px" @click="overProductSure">通过</el-button>
-                                <el-button size="small" type="danger" round style="width:100px" @click="openReject">驳回</el-button>
-                                <el-button size="small" type="primary" round style="width:100px" @click="backToList">返回列表</el-button>
-                            </div>
+                            <el-button size="small" type="primary" round style="width:100px" @click="postData">提交</el-button>
+                            <el-button size="small" type="primary" round style="width:100px" @click="postData">修改</el-button>
+                            <el-button size="small" type="success" round style="width:100px" @click="overSure">通过</el-button>
+                            <el-button size="small" type="danger" round style="width:100px" @click="openReject">驳回</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -56,7 +51,7 @@
                     <el-form :model="form" class="demo-form-inline" label-width="120px">
                         <el-form-item label="选择在研项目">
                             <el-select v-model="form.value" placeholder="请选择在研项目" style="width:400px">
-                                <el-option v-for="item in projectList" :key="item.companyProjectId" :label="item.projectName" :value="item.companyProjectId"></el-option>
+                                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="需求类别">
@@ -159,26 +154,28 @@
 </template>
 
 <script>
-import {listProductNotPage,listProject,addProductDemand} from '@/api/need'
+import {addDemand,getCompanyDemand} from '../../api/collect'
 export default {
     data(){
         return{
-            adminFlag:false,
-            productList:[],
-            projectList:[],
-            comName:'',
-            companyId:0,
-
-            product:{},
             demandProductClass:[],
-            companyProductDemandId:0,
             demandProjectClass:[],
             demandOtherClass:[],
-            
-            form:{},
-            
+            form:{
+                isRecord:1,
+                operateCom:'',
+                video:'',
+                demandClass:[]
+            },
             photos:[],
             checkedCities:[],
+            uploadData:{
+                token:'',
+                key:''
+            },
+            fileList:[],
+            videofileList:[],
+            editFileList:[],
             flag:{
                 moneyFlag:false,
                 techFlag:false,
@@ -193,55 +190,11 @@ export default {
         }
     },
     mounted(){
-        this.checkAdmin()
-        this.getProductList()
-        this.getProjectList()
         if(this.$route.query.id){
             this.getInfo()
         }
     },
     methods:{
-        checkAdmin(){
-            let isAdmin = JSON.parse(sessionStorage.getItem("user")).isAdmin
-            this.comName = JSON.parse(sessionStorage.getItem("user")).comName
-            this.companyId = JSON.parse(sessionStorage.getItem("user")).companyId
-
-            if(isAdmin === 1){
-                this.adminFlag = true
-            }else{
-                this.adminFlag = false
-            }
-        },
-        getProductList(){
-            listProductNotPage()
-            .then(res=>{
-                this.productList = res.result
-            })
-        },
-        getProjectList(){
-            listProject()
-            .then(res=>{
-                this.projectList = res.result
-            })
-        },
-        addProductNeed(){
-            const myData = {
-                comName: this.comName,
-                companyId: this.companyId,
-                companyProductId: this.product.companyProductId,
-                demandClass: this.demandProductClass,
-                demandInfo: this.product.demandInfo,
-                isEncryption: this.product.isEncryption,
-                marketDemandInfo: this.product.marketDemandInfo,
-                otherDemand: this.product.otherDemand,
-                requiredMoney: this.product.requiredMoney,
-                technologyDemandInfo: this.product.technologyDemandInfo
-            }
-            addProductDemand(myData)
-            .then(res=>{
-
-            })
-        },
         getInfo(){
             let id = parseInt(this.$route.query.id)
             let myData={
