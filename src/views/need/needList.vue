@@ -115,7 +115,7 @@
 </template>
 
 <script>
-import {listCompanyProductDemand,listCompanyOtherDemand,listCompanyProjectDemand,deleteProductDemand} from '@/api/need'
+import {listCompanyProductDemand,listCompanyOtherDemand,listCompanyProjectDemand,deleteProductDemand,getCompanyProjectDemand} from '@/api/need'
 export default {
     data(){
         return{
@@ -130,18 +130,41 @@ export default {
     },
     mounted(){
         this.getProductData()
+        this.getProjectData()
+        this.getOtherData()
     },
     methods:{
         getProductData(){
-            let comName = JSON.parse(sessionStorage.getItem("user")).comName
             let myData={
-                comName:comName,
+                companyId:Number(this.$route.query.id),
                 pageNum:this.pageNum,
                 pageSize:this.pageSize
             }
             listCompanyProductDemand(myData)
             .then(res=>{
                 this.productTabledata = res.result.list
+            })
+        },
+        getProjectData(){
+            let myData={
+                companyId:Number(this.$route.query.id),
+                pageNum:this.pageNum,
+                pageSize:this.pageSize
+            }
+            listCompanyProjectDemand(myData)
+            .then(res=>{
+                this.projectTabledata = res.result.list
+            })
+        },
+        getOtherData(){
+            let myData={
+                companyId:Number(this.$route.query.id),
+                pageNum:this.pageNum,
+                pageSize:this.pageSize
+            }
+            listCompanyOtherDemand(myData)
+            .then(res=>{
+                this.otherTabledata = res.result.list
             })
         },
         goDetail(id,type){
