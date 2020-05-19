@@ -4,15 +4,15 @@
             <el-table-column  prop="projectName" label="项目名称" width="200"></el-table-column>
             <el-table-column  prop="projectIntroduce" label="项目介绍" show-overflow-tooltip></el-table-column>
             <el-table-column  prop="projectKeyword" label="项目关键字"  width="180"></el-table-column>
-            
             <el-table-column  prop="projectStart" label="启动日期" width="180"></el-table-column>
             <el-table-column  prop="projectEnd" label="拟完成日期" width="150"></el-table-column>
-            <el-table-column  label="是否加密" width="180">
+            <el-table-column  label="是否加密" width="180" class-name="checkState">
                 <template slot-scope="scope">
-                    <span class="over" v-if="scope.row.isEncryption == 1">加密</span>
+                    <span class="wait" v-if="scope.row.isEncryption == 1">加密</span>
                     <span class="fail" v-if="scope.row.isEncryption == 0">公开</span>
                 </template>
             </el-table-column>
+            <el-table-column  prop="encryptionCode" label="加密代码" width="180"></el-table-column>
             <el-table-column label="审核状态" width="180" class-name="checkState">
                 <template slot-scope="scope">
                     <span class="over" v-if="scope.row.state == 'N'">通过</span>
@@ -27,14 +27,16 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page.sync="pageNum"
-            :page-size="pageSize"
-            layout="total, prev, pager, next"
-            :total="total">
-        </el-pagination>
+        <div class="paginationBox">
+            <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page.sync="pageNum"
+                :page-size="pageSize"
+                layout="total, prev, pager, next"
+                :total="total">
+            </el-pagination>
+        </div>
     </div>    
 </template>
 
