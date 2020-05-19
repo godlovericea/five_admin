@@ -326,11 +326,16 @@ export default {
                     let comName = JSON.parse(sessionStorage.getItem("user")).comName
                     let myData = {
                         companyProductId:this.companyProductId,
-                        comName:comName
+                        comName:comName,
+                        state:'N',
+                        rejected:''
                     }
-                    deleteProject(myData)
+                    checkCompanyProduct(myData)
                     .then(res => {
-                        this.getData()
+                        this.$message({
+                            type:'success',
+                            message:'通过'
+                        })
                     })
                 })
         },
@@ -345,8 +350,16 @@ export default {
                 state:'F',
                 rejected:this.remarks
             }
+            if(!myData.rejected){
+                this.$message.error('驳回理由必填')
+                return false
+            }
             checkCompanyProduct(myData)
             .then(res=>{
+                this.$message({
+                    type:'info',
+                    message:'驳回成功'
+                })
                 this.rejectDialog = false
                 this.remarks = ''
                 // this.getInfo()

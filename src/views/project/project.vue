@@ -258,9 +258,16 @@ export default {
                         state:'N',
                         rejected:''
                     }
+                    if(!myData.rejected){
+                        this.$message.error('驳回理由必填')
+                        return false
+                    }
                     checkCompanyProject(myData)
                     .then(res => {
-                        
+                        this.$message({
+                            type:'success',
+                            message:'通过'
+                        })
                     })
                 })
         },
@@ -277,6 +284,10 @@ export default {
             }
             checkCompanyProject(myData)
             .then(res=>{
+                this.$message({
+                    type:'info',
+                    message:'驳回成功'
+                })
                 this.rejectDialog = false
                 this.remarks = ''
             })
