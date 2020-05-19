@@ -254,7 +254,9 @@ export default {
                     let comName = JSON.parse(sessionStorage.getItem("user")).comName
                     let myData = {
                         companyProjectId:this.companyProjectId,
-                        comName:comName
+                        comName:comName,
+                        state:'N',
+                        rejected:''
                     }
                     checkCompanyProject(myData)
                     .then(res => {

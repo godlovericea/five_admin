@@ -37,15 +37,18 @@
                         <el-form-item label="需求描述">
                             <el-input size="small" v-model="product.demandInfo" type="textarea" placeholder="请填写具体的需求" :rows="6" style="width:400px"></el-input>
                         </el-form-item>
+                        <el-form-item label="驳回理由" v-if="product.rejected">
+                            <el-input size="small" v-model="product.rejected" disabled type="textarea" :rows="6" style="width:400px"></el-input>
+                        </el-form-item>
                         <el-form-item>
                             <div v-if="!adminFlag">
                                 <el-button v-if="companyProductDemandId === 0" size="small" type="primary" round style="width:100px" @click="addProductNeed">提交</el-button>
                                 <el-button v-else size="small" type="primary" style="width:100px" round @click="updateProductNeed">修改</el-button>
                             </div>
                             <div v-if="adminFlag">
-                                <el-button size="small" type="success" round style="width:100px" @click="overProductSure">通过</el-button>
+                                <el-button size="small" type="success" round style="width:100px" @click="overSure">通过</el-button>
                                 <el-button size="small" type="danger" round style="width:100px" @click="openReject">驳回</el-button>
-                                <el-button size="small" type="primary" round style="width:100px" @click="backToList">返回列表</el-button>
+                                <el-button size="small" type="primary" round style="width:100px" @click="backToList">返回</el-button>
                             </div>
                         </el-form-item>
                     </el-form>
@@ -86,15 +89,18 @@
                         <el-form-item label="需求描述">
                             <el-input size="small" v-model="project.demandInfo" type="textarea" placeholder="请填写具体的需求" :rows="6" style="width:400px"></el-input>
                         </el-form-item>
+                        <el-form-item label="驳回理由" v-if="project.rejected">
+                            <el-input size="small" v-model="project.rejected" disabled type="textarea" :rows="6" style="width:400px"></el-input>
+                        </el-form-item>
                         <el-form-item>
                             <div v-if="!adminFlag">
                                 <el-button v-if="companyProjectDemandId === 0" size="small" type="primary" round style="width:100px" @click="addProjectNeed">提交</el-button>
                                 <el-button v-else size="small" type="primary" style="width:100px" round @click="updateProjectNeed">修改</el-button>
                             </div>
                             <div v-if="adminFlag">
-                                <el-button size="small" type="success" round style="width:100px" @click="overProjectSure">通过</el-button>
+                                <el-button size="small" type="success" round style="width:100px" @click="overSure">通过</el-button>
                                 <el-button size="small" type="danger" round style="width:100px" @click="openReject">驳回</el-button>
-                                <el-button size="small" type="primary" round style="width:100px" @click="backToList">返回列表</el-button>
+                                <el-button size="small" type="primary" round style="width:100px" @click="backToList">返回</el-button>
                             </div>
                         </el-form-item>
                     </el-form>
@@ -104,7 +110,7 @@
                 <div class="formBox">
                     <el-form :model="other" class="demo-form-inline" label-width="120px">
                         <el-form-item label="名称">
-                            <el-input size="small" v-model="other.other" placeholder="请输入课题/项目/产品" style="width:400px"></el-input>
+                            <el-input size="small" v-model="other.demandName" placeholder="请输入课题/项目/产品" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item label="需求类别">
                             <el-checkbox-group v-model="demandOtherClass" @change="handleChangeOther">
@@ -114,20 +120,23 @@
                             </el-checkbox-group>
                         </el-form-item>
                         <el-form-item label="是否保密">
-                            <el-switch v-model="other.pass" active-text="保密" inactive-text="公开"></el-switch>
+                            <el-switch v-model="otherIsEncryption" active-text="保密" inactive-text="公开"></el-switch>
                             <p>保密的需求，仅 自己 和 江苏省工业和信息化厅 可见，该需求将以密文展示</p>
                         </el-form-item>
                         <el-form-item label="所需资金" v-if="flag.moneyFlag">
-                            <el-input size="small" type="number" v-model="other.money" placeholder="单位：万元" style="width:400px"></el-input>
+                            <el-input size="small" type="number" v-model="other.requiredMoney" placeholder="单位：万元" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item label="技术需求简述" v-if="flag.techFlag">
-                            <el-input type="textarea" v-model="other.money" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px"></el-input>
+                            <el-input type="textarea" v-model="other.technologyDemandInfo" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item label="市场需求简述" v-if="flag.marketFlag">
-                            <el-input type="textarea" v-model="other.money" placeholder="请填写需求要点，不超过100字" maxlength="100" style="width:400px"></el-input>
+                            <el-input type="textarea" v-model="other.marketDemandInfo" placeholder="请填写需求要点，不超过100字" maxlength="100" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item label="需求描述">
-                            <el-input size="small" v-model="other.demandIndo" type="textarea" placeholder="请填写具体的需求" :rows="6" style="width:400px"></el-input>
+                            <el-input size="small" v-model="other.demandInfo" type="textarea" placeholder="请填写具体的需求" :rows="6" style="width:400px"></el-input>
+                        </el-form-item>
+                        <el-form-item label="驳回理由" v-if="other.rejected">
+                            <el-input size="small" v-model="other.rejected" disabled type="textarea" :rows="6" style="width:400px"></el-input>
                         </el-form-item>
                         <el-form-item>
                             <div v-if="!adminFlag">
@@ -135,9 +144,9 @@
                                 <el-button v-else size="small" type="primary" style="width:100px" round @click="updateOtherNeed">修改</el-button>
                             </div>
                             <div v-if="adminFlag">
-                                <el-button size="small" type="success" round style="width:100px" @click="overOtherSure">通过</el-button>
+                                <el-button size="small" type="success" round style="width:100px" @click="overSure">通过</el-button>
                                 <el-button size="small" type="danger" round style="width:100px" @click="openReject">驳回</el-button>
-                                <el-button size="small" type="primary" round style="width:100px" @click="backToList">返回列表</el-button>
+                                <el-button size="small" type="primary" round style="width:100px" @click="backToList">返回</el-button>
                             </div>
                         </el-form-item>
                     </el-form>
@@ -165,7 +174,9 @@
 </template>
 
 <script>
-import {listProductNotPage,listProject,addProductDemand,getCompanyProductDemand,updateProductDemand} from '@/api/need'
+import {listProductNotPage,listProject,addProductDemand,getCompanyProductDemand,updateProductDemand,addProjectDemand,
+        getCompanyProjectDemand,updateProjectDemand,addOtherDemand,getCompanyOtherDemand,updateOtherDemand,
+        checkCompanyProjectDemand,checkCompanyProductDemand,checkCompanyOtherDemand} from '@/api/need'
 export default {
     data(){
         return{
@@ -263,6 +274,14 @@ export default {
                 requiredMoney: this.product.requiredMoney,
                 technologyDemandInfo: this.product.technologyDemandInfo
             }
+            if(!myData.companyProductId){
+                this.$message.error("请选择主营产品")
+                return false
+            }
+            if(myData.demandClass.length === 0){
+                this.$message.error("请选择需求类别")
+                return false
+            }
             addProductDemand(myData)
             .then(res=>{
                 this.centerDialogVisible = true
@@ -281,7 +300,15 @@ export default {
                 requiredMoney: this.project.requiredMoney,
                 technologyDemandInfo: this.project.technologyDemandInfo
             }
-            addProductDemand(myData)
+            if(!myData.companyProjectId){
+                this.$message.error("请选择在研项目")
+                return false
+            }
+            if(myData.demandClass.length === 0){
+                this.$message.error("请选择需求类别")
+                return false
+            }
+            addProjectDemand(myData)
             .then(res=>{
                 this.centerDialogVisible = true
             })
@@ -290,16 +317,24 @@ export default {
             const myData = {
                 comName: this.comName,
                 companyId: this.companyId,
-                companyProductId: this.product.companyProductId,
-                demandClass: this.demandProductClass,
-                demandInfo: this.product.demandInfo,
-                isEncryption: this.productIsEncryption ? 1:0,
-                marketDemandInfo: this.product.marketDemandInfo,
-                otherDemand: this.product.otherDemand,
-                requiredMoney: this.product.requiredMoney,
-                technologyDemandInfo: this.product.technologyDemandInfo
+                demandName: this.other.demandName,
+                demandClass: this.demandOtherClass,
+                demandInfo: this.other.demandInfo,
+                isEncryption: this.otherIsEncryption ? 1:0,
+                marketDemandInfo: this.other.marketDemandInfo,
+                otherDemand: this.other.otherDemand,
+                requiredMoney: this.other.requiredMoney,
+                technologyDemandInfo: this.other.technologyDemandInfo
             }
-            addProductDemand(myData)
+            if(!myData.demandName){
+                this.$message.error("请输入需求名称")
+                return false
+            }
+            if(myData.demandClass.length === 0){
+                this.$message.error("请选择需求类别")
+                return false
+            }
+            addOtherDemand(myData)
             .then(res=>{
                 this.centerDialogVisible = true
             })
@@ -321,26 +356,26 @@ export default {
             let myData={
                 companyProjectDemandId:this.$route.query.id
             }
-            getCompanyProductDemand(myData)
+            getCompanyProjectDemand(myData)
             .then(res=>{
-                this.product = res.result
-                this.demandProductClass = this.product.demandClass
-                this.handleChangeProject(this.demandProductClass)
-                this.productIsEncryption = this.product.isEncryption === 1 ? true :false
-                this.companyProjectDemandId = this.product.companyProjectDemandId
+                this.project = res.result
+                this.demandProjectClass = this.project.demandClass
+                this.handleChangeProject(this.demandProjectClass)
+                this.projectIsEncryption = this.project.isEncryption === 1 ? true :false
+                this.companyProjectDemandId = this.project.companyProjectDemandId
             })
         },
         getOtherDetail(){
             let myData={
                 companyOtherDemandId:this.$route.query.id
             }
-            getCompanyProductDemand(myData)
+            getCompanyOtherDemand(myData)
             .then(res=>{
-                this.product = res.result
-                this.demandProductClass = this.product.demandClass
-                this.handleChangeOther(this.demandProductClass)
-                this.productIsEncryption = this.product.isEncryption === 1 ? true :false
-                this.companyOtherDemandId = this.product.companyOtherDemandId
+                this.other = res.result
+                this.demandOtherClass = this.other.demandClass
+                this.handleChangeOther(this.demandOtherClass)
+                this.otherIsEncryption = this.other.isEncryption === 1 ? true :false
+                this.companyOtherDemandId = this.other.companyOtherDemandId
             })
         },
         updateProductNeed(){
@@ -355,49 +390,61 @@ export default {
                 otherDemand: this.product.otherDemand,
                 requiredMoney: this.product.requiredMoney,
                 technologyDemandInfo: this.product.technologyDemandInfo,
-                companyProductDemandId:this.companyProductDemandId
+                companyOtherDemandId:this.companyOtherDemandId
             }
             updateProductDemand(myData)
             .then(res=>{
-                
+                this.$message({
+                    type:'success',
+                    message:'修改成功'
+                })
+                this.getProductDetail()
             })
         },
-        updateProductNeed(){
+        updateProjectNeed(){
             const myData = {
                 comName: this.comName,
                 companyId: this.companyId,
-                companyProductId: this.product.companyProductId,
-                demandClass: this.demandProductClass,
-                demandInfo: this.product.demandInfo,
-                isEncryption: this.productIsEncryption ? 1:0,
-                marketDemandInfo: this.product.marketDemandInfo,
-                otherDemand: this.product.otherDemand,
-                requiredMoney: this.product.requiredMoney,
-                technologyDemandInfo: this.product.technologyDemandInfo,
-                companyProductDemandId:this.companyProductDemandId
+                companyProjectId: this.project.companyProjectId,
+                demandClass: this.demandProjectClass,
+                demandInfo: this.project.demandInfo,
+                isEncryption: this.projectIsEncryption ? 1:0,
+                marketDemandInfo: this.project.marketDemandInfo,
+                otherDemand: this.project.otherDemand,
+                requiredMoney: this.project.requiredMoney,
+                technologyDemandInfo: this.project.technologyDemandInfo,
+                companyProjectDemandId:this.companyProjectDemandId
             }
-            updateProductDemand(myData)
+            updateProjectDemand(myData)
             .then(res=>{
-                
+                this.$message({
+                    type:'success',
+                    message:'修改成功'
+                })
+                this.getProjectDetail()
             })
         },
-        updateProductNeed(){
+        updateOtherNeed(){
             const myData = {
                 comName: this.comName,
                 companyId: this.companyId,
-                companyProductId: this.product.companyProductId,
-                demandClass: this.demandProductClass,
-                demandInfo: this.product.demandInfo,
-                isEncryption: this.productIsEncryption ? 1:0,
-                marketDemandInfo: this.product.marketDemandInfo,
-                otherDemand: this.product.otherDemand,
-                requiredMoney: this.product.requiredMoney,
-                technologyDemandInfo: this.product.technologyDemandInfo,
-                companyProductDemandId:this.companyProductDemandId
+                demandName: this.other.demandName,
+                demandClass: this.demandOtherClass,
+                demandInfo: this.other.demandInfo,
+                isEncryption: this.otherIsEncryption ? 1:0,
+                marketDemandInfo: this.other.marketDemandInfo,
+                otherDemand: this.other.otherDemand,
+                requiredMoney: this.other.requiredMoney,
+                technologyDemandInfo: this.other.technologyDemandInfo,
+                companyOtherDemandId:this.companyOtherDemandId
             }
-            updateProductDemand(myData)
+            updateOtherDemand(myData)
             .then(res=>{
-                
+                this.$message({
+                    type:'success',
+                    message:'修改成功'
+                })
+                this.getOtherDetail()
             })
         },
         handleChangeProduct(value){
@@ -480,27 +527,125 @@ export default {
         },
         addContinue(){
             this.centerDialogVisible = false
-            this.form = {}
-        },
-        overOtherSure(){
-            
+            this.product = {}
+            this.project = {}
+            this.other = {}
+            this.demandProductClass = []
+            this.demandOtherClass = []
+            this.demandProjectClass = []
+            this.productIsEncryption = false
+            this.projectIsEncryption = false
+            this.otherIsEncryption = false
         },
         openReject(){
             this.rejectDialog = true
         },
         backToList(){
-            
+            this.$router.go(-1)
         },
         sureReject(){
-
+            let myData = {}
+            if(this.$route.query.type === 'product'){
+                myData = {
+                    companyProductDemandId:this.companyProductDemandId,
+                    rejected:this.remarks,
+                    state:'F'
+                }
+                if(!myData.rejected){
+                    this.$message.error("驳回理由必填")
+                    return false
+                }
+                checkCompanyProductDemand(myData)
+                .then(res=>{
+                    this.$message({
+                        type:'warning',
+                        message:'已驳回'
+                    })
+                    this.rejectDialog = false
+                })
+            }else if(this.$route.query.type === 'project'){
+                myData = {
+                    companyProjectDemandId:this.companyProjectDemandId,
+                    rejected:this.remarks,
+                    state:'F'
+                }
+                if(!myData.rejected){
+                    this.$message.error("驳回理由必填")
+                    return false
+                }
+                checkCompanyProjectDemand(myData)
+                .then(res=>{
+                    this.$message({
+                        type:'warning',
+                        message:'已驳回'
+                    })
+                    this.rejectDialog = false
+                })
+                
+            }else if(this.$route.query.type === 'other'){
+                myData = {
+                    companyOtherDemandId:this.companyOtherDemandId,
+                    rejected:this.remarks,
+                    state:'F'
+                }
+                if(!myData.rejected){
+                    this.$message.error("驳回理由必填")
+                    return false
+                }
+                checkCompanyOtherDemand(myData)
+                .then(res=>{
+                    this.$message({
+                        type:'warning',
+                        message:'已驳回'
+                    })
+                    this.rejectDialog = false
+                })
+            }
         },
-        overProjectSure(){
-
-        },
-        overProductSure(){
-
+        overSure(){
+            let myData = {}
+            if(this.$route.query.type === 'product'){
+                myData = {
+                    companyProductDemandId:this.companyProductDemandId,
+                    rejected:'',
+                    state:'N'
+                }
+                checkCompanyProductDemand(myData)
+                .then(res=>{
+                    this.$message({
+                        type:'success',
+                        message:'审核通过'
+                    })
+                })
+            }else if(this.$route.query.type === 'project'){
+                myData = {
+                    companyProjectDemandId:this.companyProjectDemandId,
+                    rejected:'',
+                    state:'N'
+                }
+                checkCompanyProjectDemand(myData)
+                .then(res=>{
+                    this.$message({
+                        type:'success',
+                        message:'审核通过'
+                    })
+                })
+                
+            }else if(this.$route.query.type === 'other'){
+                myData = {
+                    companyOtherDemandId:this.companyOtherDemandId,
+                    rejected:'',
+                    state:'N'
+                }
+                checkCompanyOtherDemand(myData)
+                .then(res=>{
+                    this.$message({
+                        type:'success',
+                        message:'审核通过'
+                    })
+                })
+            }
         }
-
     }
 }
 </script>

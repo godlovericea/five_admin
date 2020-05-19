@@ -26,6 +26,7 @@
             <el-option label="孵化器" value="2"></el-option>
             <el-option label="企业" value="3"></el-option>
             <el-option label="服务机构" value="4"></el-option>
+            <el-option label="金融机构" value="5"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -119,9 +120,7 @@ export default {
         pwd: '',
         comfirmPwd:''
       },
-      loginRules: {
-        
-      },
+      loginRules: {},
       loading: false,
       passwordType: 'password',
       compasswordType: 'password',
@@ -132,7 +131,6 @@ export default {
       loginName: '',
         pwd: '',
         comfirmPwd:''
-
     }
   },
   watch: {

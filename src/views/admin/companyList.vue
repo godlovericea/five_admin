@@ -4,16 +4,26 @@
         <div class="formBox">
             <el-form :inline="true" :model="form" class="demo-form-inline">
                 <el-form-item label="公司名称">
-                    <el-input v-model="form.user" size="small" placeholder="请输入公司名称"></el-input>
+                    <el-input v-model="form.comName" size="small" placeholder="请输入公司名称"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" size="small" @click="getData">查询</el-button>
+                    <el-button type="info" size="small" @click="resetData">重置</el-button>
                 </el-form-item>
             </el-form>
         </div>
         <el-table :data="tableData" style="width: 100%">
             <el-table-column prop="comName" label="公司全称"></el-table-column>
             <el-table-column prop="comCode" label="统一社会信用代码"></el-table-column>
+            <el-table-column prop="comCode" label="公司类型">
+                <template slot-scope="scope">
+                    <span class="over" v-if="scope.row.comType == 1">新型研发机构</span>
+                    <span class="fail" v-if="scope.row.comType == 2">孵化器</span>
+                    <span class="wait" v-if="scope.row.comType == 3">企业</span>
+                    <span class="wait" v-if="scope.row.comType == 4">服务机构</span>
+                    <span class="wait" v-if="scope.row.comType == 5">金融机构</span>
+                </template>
+            </el-table-column>
             <el-table-column prop="loginName" label="登录名"></el-table-column>
             <el-table-column label="设置管理员">
                 <template slot-scope="scope">
@@ -68,6 +78,7 @@ export default {
     methods:{
         getData(){
             const myData = {
+                comName:this.form.comName,
                 pageNum:this.pageNum,
                 pageSize:this.pageSize
             }
@@ -84,6 +95,10 @@ export default {
                 })
                 this.total = res.result.total
             })
+        },
+        resetData(){
+            this.form = {}
+            this.getData()
         },
         delCompany(id){
             this.$confirm('此操作将永久删除该公司, 是否继续?', '提示', {
