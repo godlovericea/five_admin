@@ -7,7 +7,7 @@
     <div class="right-menu">
       <span class="welcome">欢迎！</span>
       <span class="username">{{userName}}</span>
-      <a class="alink" target="_blank" href="http://120.55.161.93/five/#/dashboard">可视化大屏</a>
+      <a class="alink" target="_blank" href="http://5gecomap.com/five/#/dashboard">可视化大屏</a>
       <el-button type="text" v-if="!adminFlag" @click="goproductsList">我的产品</el-button>
       <el-button type="text" v-if="!adminFlag" @click="goprojectList" >我的项目</el-button>
       <el-button type="text" v-if="!adminFlag" @click="goneedList">我的需求</el-button>
