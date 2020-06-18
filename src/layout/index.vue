@@ -54,7 +54,7 @@ export default {
     },
     beforeLeave(){
       window.addEventListener('beforeunload',e=>{
-          console.log(e)
+          // console.log(e)
           e.preventDefault()
           e.returnValue = "不要刷新"
       })

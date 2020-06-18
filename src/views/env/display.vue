@@ -7,13 +7,13 @@
                         <el-cascader v-model="industry" :options="industyList" style="width:400px"></el-cascader>
                     </el-form-item>
                     <el-form-item label="产品名称">
-                        <el-input size="small" v-model="form.scene" placeholder="如：以人找房" style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.scene" placeholder="如：以人找房" style="width:400px" autocomplete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="产品介绍">
-                        <el-input size="small" v-model="form.scenarioDefined" type="textarea" placeholder="如：人口，法人与房屋进行关联，实现以人找房，以房查人。举例，以一栋楼为例，这栋楼里有131个居民，居民的个人信息上面我们可以查看到，但是有一些个人隐私问题，我们做了脱敏的处理，同时这里面有21个法人，法人的基本信息，他的姓名，联系方式，经营范围，经营方式和成立日期等信息，在上面我们都可以查看到" :rows="6" maxlength="300" style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.scenarioDefined" type="textarea" autocomplete="off" placeholder="如：人口，法人与房屋进行关联，实现以人找房，以房查人。举例，以一栋楼为例，这栋楼里有131个居民，居民的个人信息上面我们可以查看到，但是有一些个人隐私问题，我们做了脱敏的处理，同时这里面有21个法人，法人的基本信息，他的姓名，联系方式，经营范围，经营方式和成立日期等信息，在上面我们都可以查看到" :rows="6" maxlength="300" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="产品关键字">
-                        <el-input size="small" v-model="form.scenarioKeyword" placeholder="如:人、房、以人找房、人房管理（必填、以顿号分割）" style="width:400px"></el-input>
+                        <el-input size="small" v-model="form.scenarioKeyword" autocomplete="off" placeholder="如:人、房、以人找房、人房管理（必填、以顿号分割）" style="width:400px"></el-input>
                     </el-form-item>
                     <el-form-item label="产品图片" prop="photos">
                         <el-upload
@@ -363,7 +363,7 @@ export default {
            }
            addCompanyScene(myData)
            .then(res=>{
-               console.log(res)
+            //    console.log(res)
                this.fileList = []
                 this.videoUrl = ''
                 this.form.sceneClassification = ''

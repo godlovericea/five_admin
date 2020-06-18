@@ -17,7 +17,7 @@
           name="username"
           type="text"
           tabindex="1"
-          auto-complete="on"
+          autocomplete="off"
         />
       </el-form-item>
       <el-form-item prop="username">
@@ -31,7 +31,7 @@
           name="username"
           type="text"
           tabindex="1"
-          auto-complete="on"
+          autocomplete="off"
         />
       </el-form-item>
       <el-form-item prop="username">
@@ -45,7 +45,7 @@
           name="username"
           type="text"
           tabindex="1"
-          auto-complete="on"
+          autocomplete="off"
           show-password
         />
       </el-form-item>
@@ -60,7 +60,7 @@
           name="username"
           type="text"
           tabindex="1"
-          auto-complete="on"
+          autocomplete="off"
           show-password
         />
       </el-form-item>

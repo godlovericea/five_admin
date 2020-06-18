@@ -17,7 +17,7 @@
           name="username"
           type="text"
           tabindex="1"
-          auto-complete="on"
+          autocomplete="off"
         />
       </el-form-item>
       <el-form-item prop="password">
@@ -32,7 +32,7 @@
           placeholder="密码"
           name="password"
           tabindex="2"
-          auto-complete="on"
+          autocomplete="off"
           @keyup.enter.native="handleLogin"
         />
         <span class="show-pwd" @click="showPwd">

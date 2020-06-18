@@ -23,22 +23,22 @@
                             <p>保密的需求，仅 自己 和 江苏省工业和信息化厅 可见，该需求将以密文展示</p>
                         </el-form-item>
                         <el-form-item label="其他需求" v-if="flag.otherFlag">
-                            <el-input size="small" v-model="product.otherDemand" placeholder="请输入需求名称，不超过20字" style="width:400px"></el-input>
+                            <el-input size="small" v-model="product.otherDemand" placeholder="请输入需求名称，不超过20字" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="所需资金" v-if="flag.moneyFlag">
-                            <el-input size="small" type="number" v-model="product.requiredMoney" placeholder="单位：万元" style="width:400px"></el-input>
+                            <el-input size="small" type="number" v-model="product.requiredMoney" placeholder="单位：万元" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="技术需求简述" v-if="flag.techFlag">
-                            <el-input type="textarea" v-model="product.technologyDemandInfo" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px"></el-input>
+                            <el-input type="textarea" v-model="product.technologyDemandInfo" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="市场需求简述" v-if="flag.marketFlag">
-                            <el-input type="textarea" v-model="product.marketDemandInfo" placeholder="请填写需求要点，不超过100字" maxlength="100" style="width:400px"></el-input>
+                            <el-input type="textarea" v-model="product.marketDemandInfo" placeholder="请填写需求要点，不超过100字" maxlength="100" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="需求描述">
-                            <el-input size="small" v-model="product.demandInfo" type="textarea" placeholder="请填写具体的需求" :rows="6" style="width:400px"></el-input>
+                            <el-input size="small" v-model="product.demandInfo" type="textarea" placeholder="请填写具体的需求" :rows="6" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="驳回理由" v-if="product.rejected">
-                            <el-input size="small" v-model="product.rejected" disabled type="textarea" :rows="6" style="width:400px"></el-input>
+                            <el-input size="small" v-model="product.rejected" disabled type="textarea" :rows="6" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item>
                             <div v-if="!adminFlag">
@@ -75,22 +75,22 @@
                             <p>保密的需求，仅 自己 和 江苏省工业和信息化厅 可见，该需求将以密文展示</p>
                         </el-form-item>
                         <el-form-item label="其他需求" v-if="flag.otherFlag">
-                            <el-input size="small" v-model="project.otherDemand" placeholder="请输入需求名称，不超过20字" maxlength="20" style="width:400px"></el-input>
+                            <el-input size="small" v-model="project.otherDemand" placeholder="请输入需求名称，不超过20字" maxlength="20" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="所需资金" v-if="flag.moneyFlag">
-                            <el-input size="small" type="number" v-model="project.requiredMoney" placeholder="单位：万元" style="width:400px"></el-input>
+                            <el-input size="small" type="number" v-model="project.requiredMoney" placeholder="单位：万元" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="技术需求简述" v-if="flag.techFlag">
-                            <el-input type="textarea" v-model="project.technologyDemandInfo" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px"></el-input>
+                            <el-input type="textarea" v-model="project.technologyDemandInfo" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="市场需求简述" v-if="flag.marketFlag">
-                            <el-input type="textarea" v-model="project.marketDemandInfo" placeholder="请填写需求要点，不超过100字" maxlength="100" style="width:400px"></el-input>
+                            <el-input type="textarea" v-model="project.marketDemandInfo" placeholder="请填写需求要点，不超过100字" maxlength="100" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="需求描述">
-                            <el-input size="small" v-model="project.demandInfo" type="textarea" placeholder="请填写具体的需求" :rows="6" style="width:400px"></el-input>
+                            <el-input size="small" v-model="project.demandInfo" type="textarea" placeholder="请填写具体的需求" :rows="6" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="驳回理由" v-if="project.rejected">
-                            <el-input size="small" v-model="project.rejected" disabled type="textarea" :rows="6" style="width:400px"></el-input>
+                            <el-input size="small" v-model="project.rejected" disabled type="textarea" :rows="6" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item>
                             <div v-if="!adminFlag">
@@ -110,7 +110,7 @@
                 <div class="formBox">
                     <el-form :model="other" class="demo-form-inline" label-width="120px">
                         <el-form-item label="名称">
-                            <el-input size="small" v-model="other.demandName" placeholder="请输入课题/项目/产品" style="width:400px"></el-input>
+                            <el-input size="small" v-model="other.demandName" placeholder="请输入课题/项目/产品" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="需求类别">
                             <el-checkbox-group v-model="demandOtherClass" @change="handleChangeOther">
@@ -124,19 +124,19 @@
                             <p>保密的需求，仅 自己 和 江苏省工业和信息化厅 可见，该需求将以密文展示</p>
                         </el-form-item>
                         <el-form-item label="所需资金" v-if="flag.moneyFlag">
-                            <el-input size="small" type="number" v-model="other.requiredMoney" placeholder="单位：万元" style="width:400px"></el-input>
+                            <el-input size="small" type="number" v-model="other.requiredMoney" placeholder="单位：万元" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="技术需求简述" v-if="flag.techFlag">
-                            <el-input type="textarea" v-model="other.technologyDemandInfo" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px"></el-input>
+                            <el-input type="textarea" v-model="other.technologyDemandInfo" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="市场需求简述" v-if="flag.marketFlag">
-                            <el-input type="textarea" v-model="other.marketDemandInfo" placeholder="请填写需求要点，不超过100字" maxlength="100" style="width:400px"></el-input>
+                            <el-input type="textarea" v-model="other.marketDemandInfo" placeholder="请填写需求要点，不超过100字" maxlength="100" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="需求描述">
-                            <el-input size="small" v-model="other.demandInfo" type="textarea" placeholder="请填写具体的需求" :rows="6" style="width:400px"></el-input>
+                            <el-input size="small" v-model="other.demandInfo" type="textarea" placeholder="请填写具体的需求" :rows="6" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="驳回理由" v-if="other.rejected">
-                            <el-input size="small" v-model="other.rejected" disabled type="textarea" :rows="6" style="width:400px"></el-input>
+                            <el-input size="small" v-model="other.rejected" disabled type="textarea" :rows="6" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item>
                             <div v-if="!adminFlag">
@@ -164,7 +164,7 @@
             </span>
         </el-dialog>
         <el-dialog title="驳回理由" :visible.sync="rejectDialog" width="400px" center :close-on-click-modal="false" custom-class="dialogClass">
-            <el-input type="textarea" :rows="6" v-model="remarks"></el-input>
+            <el-input type="textarea" :rows="6" v-model="remarks" autocomplete="off"></el-input>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="rejectDialog = false">取消</el-button>
                 <el-button type="primary" @click="sureReject">确定</el-button>

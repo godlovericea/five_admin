@@ -6,7 +6,7 @@
         <h3 class="title">注册</h3>
       </div>
 
-      <el-form-item prop="username">
+      <el-form-item prop="comName">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
@@ -17,10 +17,10 @@
           name="username"
           type="text"
           tabindex="1"
-          auto-complete="on"
+          autocomplete="off"
         />
       </el-form-item>
-      <el-form-item>
+      <el-form-item prop="comType">
         <el-select v-model="loginForm.comType" placeholder="请选择企业类型" style="width:100%" class="selectClass">
             <el-option label="新型研发机构" value="1"></el-option>
             <el-option label="孵化器" value="2"></el-option>
@@ -29,7 +29,7 @@
             <el-option label="金融机构" value="5"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item>
+      <el-form-item prop="comCode">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
@@ -40,10 +40,10 @@
           name="username"
           type="text"
           tabindex="1"
-          auto-complete="on"
+          autocomplete="off"
         />
       </el-form-item>
-      <el-form-item>
+      <el-form-item prop="loginName">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
@@ -54,11 +54,12 @@
           name="username"
           type="text"
           tabindex="1"
-          auto-complete="on"
+          maxlength="20"
+          autocomplete="off"
         />
       </el-form-item>
 
-      <el-form-item>
+      <el-form-item prop="pwd">
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
@@ -67,10 +68,10 @@
           ref="password"
           v-model="loginForm.pwd"
           :type="passwordType"
-          placeholder="密码"
+          placeholder="密码（8-20位数字加字符组合）"
           name="password"
           tabindex="2"
-          auto-complete="on"
+          autocomplete="off"
         />
         <span class="show-pwd" @click="showPwd">
           <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
@@ -85,10 +86,10 @@
           ref="compassword"
           v-model="loginForm.comfirmPwd"
           :type="compasswordType"
-          placeholder="确认密码"
+          placeholder="确认密码（8-20位数字加字符组合）"
           name="compassword"
           tabindex="3"
-          auto-complete="on"
+          autocomplete="off"
           @keyup.enter.native="handleLogin"
         />
         <span class="show-pwd" @click="showcomfirmPwd">
@@ -96,7 +97,7 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleRegister">注册</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleRegister('loginForm')">注册</el-button>
       <div class="regBox">
         <span style="font-size:14px;color:#ffffff">已有账号，点击</span>
         <el-button :loading="loading" type="text" style="font-size:14px" @click.native.prevent="handleLogin">登录</el-button>
@@ -111,6 +112,22 @@ import {register} from '../../api/collect'
 export default {
   name: 'Login',
   data() {
+    const comCodeRule = (rule, value, callback) => {
+        const reg = /[0-9A-HJ-NPQRTUWXY]{18}/g
+        if (!reg.test(value)) {
+            callback(new Error('请输入正确的统一社会信用代码'))
+        } else {
+            callback()
+        }
+    }
+    const passwordRule = (rule, value, callback) => {
+        const reg = /^(?=.*?[0-9])(?=.*?[a-zA-Z])[0-9a-zA-Z]{8,20}$/g
+        if (!reg.test(value)) {
+            callback(new Error('请输入8-20位数字加字母组合密码'))
+        } else {
+            callback()
+        }
+    }
     return {
       loginForm: {
         comName:'',
@@ -120,7 +137,14 @@ export default {
         pwd: '',
         comfirmPwd:''
       },
-      loginRules: {},
+      loginRules: {
+        loginName:[{required: true, trigger: 'blur', message: '用户名不能为空'}],
+        comName:[{required: true, trigger: 'blur', message: '公司名称不能为空'}],
+        comType:[{required: true, trigger: 'blur', message: '请选择公司类型'}],
+        comCode: [{ required: true, trigger: 'blur', validator: comCodeRule }],
+        pwd:[{required: true, trigger: 'blur', validator: passwordRule}]
+
+      },
       loading: false,
       passwordType: 'password',
       compasswordType: 'password',
@@ -167,30 +191,34 @@ export default {
         path:'/'
       })
     },
-    handleRegister(){
+    handleRegister(ruleForm){
         if(this.loginForm.pwd !== this.loginForm.comfirmPwd){
             this.$message.error("两次密码不一致，请重新输入")
             this.pwd = ''
             this.comfirmPwd = ''
             return false
         }
-        let myData={
-            comName:this.loginForm.comName,
-            comType:this.loginForm.comType,
-            comCode:this.loginForm.comCode,
-            loginName: this.loginForm.loginName,
-            pwd: this.loginForm.pwd
-        }
-        register(myData)
-        .then(res=>{
-           if(res.code === 200){
-               this.$router.push({
-                    path:'/'
+        this.$refs[ruleForm].validate((typeValid) => {
+            if (typeValid) {
+                let myData={
+                    comName:this.loginForm.comName,
+                    comType:this.loginForm.comType,
+                    comCode:this.loginForm.comCode,
+                    loginName: this.loginForm.loginName,
+                    pwd: this.loginForm.pwd
+                }
+                register(myData)
+                .then(res=>{
+                  if(res.code === 200){
+                      this.$router.push({
+                            path:'/'
+                        })
+                  }else{
+                      this.$message.error(res.message)
+                  }
+                    
                 })
-           }else{
-               this.$message.error(res.message)
-           }
-            
+            }
         })
     }
   }

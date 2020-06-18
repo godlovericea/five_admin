@@ -3,6 +3,15 @@ import request from '@/utils/request'
 import qs from 'qs'
 
 // 登录
+export function listLog(data) {
+  return request({
+    url: '/log/listLog',
+    method: 'post',
+    data: qs.stringify(data)
+  })
+}
+
+// 登录
 export function login(data) {
   return request({
     url: '/user/login',

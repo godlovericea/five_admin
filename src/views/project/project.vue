@@ -4,20 +4,20 @@
         <div class="formBox">
             <el-form :model="form" class="demo-form-inline" label-width="120px">
                 <el-form-item label="项目名称">
-                    <el-input size="small" v-model="form.projectName" placeholder="请输入项目名称" style="width:400px"></el-input>
+                    <el-input size="small" v-model="form.projectName" placeholder="请输入项目名称" style="width:400px" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="是否保密">
                     <el-switch v-model="form.isEncryption" active-text="保密" inactive-text="公开"></el-switch>
                     <p>保密项目，仅 自己 和 江苏省工业和信息化厅 可见，项目将以密文展示</p>
                 </el-form-item>
                 <el-form-item label="项目介绍">
-                    <el-input size="small" v-model="form.projectIntroduce" placeholder="请输入项目介绍，不超过500字" type="textarea" :rows="6" maxlength="500" style="width:400px"></el-input>
+                    <el-input size="small" v-model="form.projectIntroduce" placeholder="请输入项目介绍，不超过500字" type="textarea" :rows="6" maxlength="500" style="width:400px" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="项目投资总额">
-                    <el-input size="small" type="number" v-model="form.projectMoney" placeholder="请输入项目投资总额，单位：万元" style="width:400px"></el-input>
+                    <el-input size="small" type="number" v-model="form.projectMoney" placeholder="请输入项目投资总额，单位：万元" style="width:400px" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="项目关键字">
-                    <el-input size="small" v-model="form.projectKeyword" placeholder="便于检索、项目对接，多个以顿号隔开" style="width:400px"></el-input>
+                    <el-input size="small" v-model="form.projectKeyword" placeholder="便于检索、项目对接，多个以顿号隔开" style="width:400px" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="项目启动时间">
                     <el-date-picker v-model="form.projectStart" type="date" placeholder="选择日期" style="width:400px"></el-date-picker>
@@ -26,7 +26,7 @@
                     <el-date-picker v-model="form.projectEnd" type="date" placeholder="选择日期" style="width:400px"></el-date-picker>
                 </el-form-item>
                 <el-form-item label="驳回理由">
-                    <el-input size="small" type="textarea" :rows="6" v-model="form.rejected" disabled style="width:400px"></el-input>
+                    <el-input size="small" type="textarea" :rows="6" v-model="form.rejected" disabled style="width:400px" autocomplete="off"></el-input>
                 </el-form-item>
                 <!-- <el-form-item label="项目图片">
                     <el-upload
@@ -73,7 +73,7 @@
             </span>
         </el-dialog>
         <el-dialog title="驳回理由" :visible.sync="rejectDialog" width="400px" center :close-on-click-modal="false" custom-class="dialogClass">
-            <el-input type="textarea" :rows="6" v-model="remarks"></el-input>
+            <el-input type="textarea" :rows="6" v-model="remarks" autocomplete="off"></el-input>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="rejectDialog = false">取消</el-button>
                 <el-button type="primary" @click="sureReject">确定</el-button>

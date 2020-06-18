@@ -4,7 +4,7 @@
         <div class="formBox">
             <el-form :inline="true" :model="form" class="demo-form-inline">
                 <el-form-item label="公司名称">
-                    <el-input v-model="form.comName" size="small" placeholder="请输入公司名称"></el-input>
+                    <el-input v-model="form.comName" size="small" placeholder="请输入公司名称" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" size="small" @click="getData">查询</el-button>
@@ -130,7 +130,7 @@ export default {
             })
         },
         changeAdmin(id,state){
-            console.log(id,state)
+            // console.log(id,state)
             let comName = JSON.parse(sessionStorage.getItem("user")).comName
             let myData = {
                 companyId:id,

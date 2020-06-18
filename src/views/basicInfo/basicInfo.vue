@@ -2,13 +2,15 @@
   <div class="warnWrapper">
     <div class="divider"></div>
     <div class="formBox">
-      <el-form :model="form" class="demo-form-inline" label-width="120px">
+      <el-form :model="form" ref="ruleForm" class="demo-form-inline" label-width="120px">
         <el-form-item label="公司全称">
           <el-input
             size="small"
             v-model="form.comName"
             placeholder="请输入公司名称"
             style="width:400px"
+            autocomplete="off"
+            maxlength="100"
           ></el-input>
         </el-form-item>
         <el-form-item label="公司简称">
@@ -17,6 +19,8 @@
             v-model="form.litcomname"
             placeholder="请输入公司简称"
             style="width:400px"
+            autocomplete="off"
+            maxlength="100"
           ></el-input>
         </el-form-item>
         <el-form-item label="企业资质">
@@ -64,7 +68,7 @@
             style="width:400px"
           ></el-cascader>
         </el-form-item>
-        <el-form-item label="所属市区">
+        <el-form-item label="所属市区" prop="city">
           <el-select v-model="form.city" style="width:400px">
             <el-option label="南京市" value="1"></el-option>
             <el-option label="无锡市" value="2"></el-option>
@@ -111,6 +115,8 @@
             v-model="form.opername"
             placeholder="请输入法人"
             style="width:400px"
+            autocomplete="off"
+            maxlength="100"
           ></el-input>
         </el-form-item>
         <el-form-item label="注册资金">
@@ -119,6 +125,9 @@
             v-model="form.registcapi"
             placeholder="请输入注册资金（万元）"
             style="width:400px"
+            onkeyup="value=value.replace(/[^\0-9\.]/g,'')"
+            autocomplete="off"
+            maxlength="100"
           ></el-input>
         </el-form-item>
         <el-form-item label="注册地址">
@@ -127,6 +136,8 @@
             v-model="form.address"
             placeholder="请输入地址"
             style="width:400px"
+            autocomplete="off"
+            maxlength="100"
           ></el-input>
         </el-form-item>
         <el-form-item label="成立时间">
@@ -146,7 +157,9 @@
             :rows="4"
             maxlength="500"
             placeholder="请输入公司简介，不超过500字"
-            style="width:400px"
+            style="width:600px"
+            autocomplete="off"
+            show-word-limit
           ></el-input>
         </el-form-item>
         <el-form-item label="官网地址">
@@ -155,6 +168,8 @@
             v-model="form.websiteAddress"
             placeholder="请输入公司官网地址"
             style="width:400px"
+            autocomplete="off"
+            maxlength="100"
           ></el-input>
         </el-form-item>
         <el-form-item label="是否上市">
@@ -177,6 +192,8 @@
             v-model="form.exchangeValue"
             placeholder="请输入上市交易所"
             style="width:400px"
+            autocomplete="off"
+            maxlength="100"
           ></el-input>
         </el-form-item>
         <el-form-item label="股票代码" v-if="form.isonline === 1">
@@ -185,6 +202,8 @@
             v-model="form.stockCode"
             placeholder="请输入股票代码"
             style="width:400px"
+            autocomplete="off"
+            maxlength="100"
           ></el-input>
         </el-form-item>
         <el-form-item label="员工人数">
@@ -202,6 +221,9 @@
             v-model="form.lastincome"
             placeholder="请输入2019年营业收入，单位：万元"
             style="width:400px"
+            onkeyup="value=value.replace(/[^\0-9\.]/g,'')"
+            autocomplete="off"
+            maxlength="100"
           ></el-input>
         </el-form-item>
         <el-form-item label="2019年5G相关业务收入">
@@ -210,6 +232,9 @@
             v-model="form.oldincome"
             placeholder="请输入2019年5G相关业务收入，单位：万元"
             style="width:400px"
+            onkeyup="value=value.replace(/[^\0-9\.]/g,'')"
+            autocomplete="off"
+            maxlength="100"
           ></el-input>
         </el-form-item>
         <el-form-item label="企业联系人姓名">
@@ -218,6 +243,8 @@
             v-model="form.concatperson"
             placeholder="请输入企业联系人姓名"
             style="width:400px"
+            autocomplete="off"
+            maxlength="100"
           ></el-input>
         </el-form-item>
         <el-form-item label="联系人电话">
@@ -226,6 +253,8 @@
             v-model="form.phone"
             placeholder="请输入联系人电话"
             style="width:400px"
+            autocomplete="off"
+            maxlength="100"
           ></el-input>
         </el-form-item>
         <el-form-item label="联系人邮件">
@@ -234,16 +263,20 @@
             v-model="form.email"
             placeholder="请输入联系人邮件"
             style="width:400px"
+            autocomplete="off"
+            maxlength="100"
           ></el-input>
         </el-form-item>
         <el-form-item label="审核意见">
           <el-input
             type="textarea"
             v-model="form.rejected"
-            placeholder="请输入联系人邮件"
+            placeholder="请输入审核意见"
             :rows="6"
             disabled
             style="width:400px"
+            maxlength="500"
+            show-word-limit
           ></el-input>
         </el-form-item>
         <el-form-item>
@@ -707,7 +740,7 @@ export default {
       });
     },
     handleChange(value) {
-      console.log(value);
+      // console.log(value);
     },
     handleRemove(file, fileList) {},
     handleLiceseRemove(file, list) {

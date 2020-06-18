@@ -4,19 +4,19 @@
         <div class="formBox">
             <el-form :model="form" class="demo-form-inline" label-width="120px">
                 <el-form-item label="产品名称">
-                    <el-input size="small" v-model="form.productName" placeholder="请输入产品名称" style="width:400px"></el-input>
+                    <el-input size="small" v-model="form.productName" placeholder="请输入产品名称" style="width:400px" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="产品介绍">
-                    <el-input size="small" v-model="form.productIntroduce" type="textarea" placeholder="请输入产品介绍，不超过200字" :rows="4" maxlength="200" style="width:400px"></el-input>
+                    <el-input size="small" v-model="form.productIntroduce" type="textarea" placeholder="请输入产品介绍，不超过200字" :rows="4" maxlength="200" style="width:400px" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="产品技术参数">
-                    <el-input size="small" v-model="form.productParameters" type="textarea" placeholder="请输入产品主要参数" :rows="4" style="width:400px"></el-input>
+                    <el-input size="small" v-model="form.productParameters" type="textarea" placeholder="请输入产品主要参数" :rows="4" style="width:400px" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="产品销售额">
-                    <el-input size="small" type="number" v-model="form.productSales" placeholder="请输入产品销售额，单位：万元" style="width:400px"></el-input>
+                    <el-input size="small" type="number" v-model="form.productSales" placeholder="请输入产品销售额，单位：万元" style="width:400px" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="产品检索关键字">
-                    <el-input size="small" v-model="form.productKeyword" placeholder="便于检索、产品对接。多个以顿号分割。" style="width:400px"></el-input>
+                    <el-input size="small" v-model="form.productKeyword" placeholder="便于检索、产品对接。多个以顿号分割。" style="width:400px" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="产品图片">
                     <el-upload
@@ -57,7 +57,7 @@
                     <video :src="form.myVideo" controls class="myVideo"></video>
                 </el-form-item>
                 <el-form-item label="驳回理由" v-if="form.rejected">
-                    <el-input v-model="form.rejected" type="textarea" :rows="6" disabled></el-input>
+                    <el-input v-model="form.rejected" type="textarea" :rows="6" disabled autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <div v-if="!adminFlag">
@@ -83,7 +83,7 @@
             </span>
         </el-dialog>
         <el-dialog title="驳回理由" :visible.sync="rejectDialog" width="400px" center :close-on-click-modal="false" custom-class="dialogClass">
-            <el-input type="textarea" :rows="6" v-model="remarks"></el-input>
+            <el-input type="textarea" :rows="6" v-model="remarks" autocomplete="off"></el-input>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="rejectDialog = false">取消</el-button>
                 <el-button type="primary" @click="sureReject">确定</el-button>
@@ -231,8 +231,8 @@ export default {
             })
         },
         handleRemove(file, fileList) {
-            console.log(file)
-            console.log(fileList)
+            // console.log(file)
+            // console.log(fileList)
             this.productImgList = []
             this.removeFlag = true
             
@@ -251,8 +251,8 @@ export default {
         },
         handleAvatarSuccess(res,file,fileList){
             this.upFlag = true
-            console.log(fileList)
-            console.log(res)
+            // console.log(fileList)
+            // console.log(res)
             this.photos =[]
             fileList.forEach(el=>{
                 if(el.size){
