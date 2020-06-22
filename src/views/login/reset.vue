@@ -6,7 +6,7 @@
         <h3 class="title">找回账号</h3>
       </div>
 
-      <el-form-item prop="username">
+      <el-form-item prop="comCode">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
@@ -21,7 +21,7 @@
         />
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleReset">确定</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleReset('loginForm')">确定</el-button>
       <div class="regBox">
           <div v-if="flag">
             <p style="color:#fff">账号：{{loginForm.loginName}}</p>
@@ -43,6 +43,14 @@ import {reset} from '../../api/collect'
 export default {
   name: 'Login',
   data() {
+    const comCodeRule = (rule, value, callback) => {
+        const reg = /[0-9A-HJ-NPQRTUWXY]{18}/g
+        if (!reg.test(value)) {
+            callback(new Error('请输入正确的统一社会信用代码'))
+        } else {
+            callback()
+        }
+    }
     return {
       loginForm: {
         loginName: '',
@@ -50,7 +58,7 @@ export default {
         comCode:''
       },
       loginRules: {
-        
+        comCode: [{ required: true, trigger: 'blur', validator: comCodeRule }]
       },
       loading: false,
       passwordType: 'password',
@@ -87,20 +95,25 @@ export default {
         path:'/register'
       })
     },
-    handleReset(){
-        let myData={
-            comCode:this.loginForm.comCode
+    handleReset(ruleForm){
+      this.$refs[ruleForm].validate((typeValid) => {
+        if(typeValid){
+          let myData={
+              comCode:this.loginForm.comCode
+          }
+          reset(myData)
+          .then(res=>{
+              if(res.code === 200){
+                  this.flag = true
+                  this.loginForm = res.result
+              }else{
+                  this.$message.error(res.message)
+              }
+          })
+        }else{
+          return false
         }
-        reset(myData)
-        .then(res=>{
-            if(res.code === 200){
-                this.flag = true
-                this.loginForm = res.result
-            }else{
-                this.$message.error(res.message)
-            }
-        })
-     
+      })
     }
   }
 }

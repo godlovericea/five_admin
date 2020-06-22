@@ -143,7 +143,6 @@ export default {
         comType:[{required: true, trigger: 'blur', message: '请选择公司类型'}],
         comCode: [{ required: true, trigger: 'blur', validator: comCodeRule }],
         pwd:[{required: true, trigger: 'blur', validator: passwordRule}]
-
       },
       loading: false,
       passwordType: 'password',
@@ -216,8 +215,9 @@ export default {
                   }else{
                       this.$message.error(res.message)
                   }
-                    
                 })
+            } else {
+              return false
             }
         })
     }

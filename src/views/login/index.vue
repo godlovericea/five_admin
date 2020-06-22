@@ -6,7 +6,7 @@
         <h3 class="title">登录</h3>
       </div>
 
-      <el-form-item prop="username">
+      <el-form-item prop="loginName">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
@@ -20,7 +20,7 @@
           autocomplete="off"
         />
       </el-form-item>
-      <el-form-item prop="password">
+      <el-form-item prop="pwd">
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
@@ -33,7 +33,7 @@
           name="password"
           tabindex="2"
           autocomplete="off"
-          @keyup.enter.native="handleLogin"
+          @keyup.enter.native="handleLogin('loginForm')"
         />
         <span class="show-pwd" @click="showPwd">
           <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
@@ -46,7 +46,7 @@
         </div>
        
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin('loginForm')">登录</el-button>
       <div>
         
       </div>
@@ -75,13 +75,22 @@ import {login} from '@/api/collect'
 export default {
   name: 'Login',
   data() {
+    const passwordRule = (rule, value, callback) => {
+        const reg = /^(?=.*?[0-9])(?=.*?[a-zA-Z])[0-9a-zA-Z]{8,20}$/g
+        if (!reg.test(value)) {
+            callback(new Error('请输入8-20位数字加字母组合密码'))
+        } else {
+            callback()
+        }
+    }
     return {
       loginForm: {
         loginName: '',
         pwd: ''
       },
       loginRules: {
-        
+        loginName:[{required: true, trigger: 'blur', message: '用户名不能为空'}],
+        pwd:[{required: true, trigger: 'blur', validator: passwordRule}]
       },
       loading: false,
       passwordType: 'password',
@@ -107,24 +116,30 @@ export default {
         this.$refs.password.focus()
       })
     },
-    handleLogin() {
-      let myData={
-        loginName:this.loginForm.loginName,
-        pwd:this.loginForm.pwd
-      }
-      login(myData)
-      .then(res=>{
-        if(res.code === 200){
-          sessionStorage.setItem("user", JSON.stringify(res.result))
-          // sessionStorage.setItem("userid",res.result.id)
-          this.$router.push({
-            path:'/home/basicInfo',
-            quert:{
-              type:res.result.comType
+    handleLogin(ruleForm) {
+      this.$refs[ruleForm].validate((typeValid) => {
+        if(typeValid){
+          let myData={
+            loginName:this.loginForm.loginName,
+            pwd:this.loginForm.pwd
+          }
+          login(myData)
+          .then(res=>{
+            if(res.code === 200){
+              sessionStorage.setItem("user", JSON.stringify(res.result))
+              // sessionStorage.setItem("userid",res.result.id)
+              this.$router.push({
+                path:'/home/basicInfo',
+                quert:{
+                  type:res.result.comType
+                }
+              })
+            }else{
+              this.$message.error(res.message)
             }
           })
         }else{
-          this.$message.error(res.message)
+          return false
         }
       })
     },
