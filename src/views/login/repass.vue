@@ -138,7 +138,7 @@ export default {
     },
     handleLogin() {
       this.$router.push({
-        path:'/'
+        path:'/login'
       })
     },
     handleRegister(){

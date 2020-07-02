@@ -85,7 +85,7 @@
     color: #ffffff;
 }
 .el-select-dropdown__item.hover, .el-select-dropdown__item:hover{
-    background-color: #1679D5;
+    background-color: #1679D5 !important;
     color: #ffffff;
 }
 .el-select-dropdown{
