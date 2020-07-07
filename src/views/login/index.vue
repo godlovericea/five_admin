@@ -48,7 +48,7 @@
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin('loginForm')">登录企业信息填报系统</el-button>
       <div>
-              <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLoginDashbord('loginForm')">登录展示系统</el-button>
+              <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLoginDashbord('loginForm')">登录可视化平台</el-button>
       </div>
       
       <div class="regBox">

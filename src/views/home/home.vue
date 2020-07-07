@@ -44,14 +44,14 @@
                     <p class="headerTitle">企业数量</p>
                 </div>
                 <div class="etitle">总数:{{ amount }}家</div>
-                <div id="outputValue"></div>
+                <div id="outputValue" :style="{height:echartHeight}"></div>
             </div>
             <div class="leftItemsBox">
                 <div class="leftheaderBox">
                     <p class="headerTitle">产业规模</p>
                 </div>
                 <div class="etitle">总产值：{{ totalValue }}亿元</div>
-                <div id="modelll"></div>
+                <div id="modelll" :style="{height:echartHeight}"></div>
             </div>
         </div>
         <div class="rightBox">
@@ -68,116 +68,6 @@
             </div>
             <div class="content">
                 <div class="btnGroups">
-                    <!-- <md-tabs @md-changed="getScenList" md-alignment="fixed">
-                        <md-tab class="movies" id="1" md-label="产品">
-                            <div class="cardBox" v-for="(item,index) in productList" :key="index">
-                                <div class="cardContent">
-                                    <p class="cardTitle">{{item.productName}}</p>
-                                    <p class="cardDetail">{{item.productIntroduce}}</p>
-                                    <el-button type="text" style="color:'#ffffff';text-align: right;" @click="showProductDetail(item)">查看更多>></el-button>
-                                </div>
-                            </div>
-                        </md-tab>
-                        <md-tab id="2" class="movies" md-label="项目">
-                            <div class="cardBox" v-for="(item,index) in projectList" :key="index">
-                                <div v-if="!adminFlag">
-                                    <div class="cardContent" v-if="item.isEncryption === 0">
-                                        <p class="cardTitle">{{item.projectName}}</p>
-                                        <p class="cardDetail">{{item.projectIntroduce}}</p>
-                                        <el-button type="text" style="color:'#ffffff';text-align: right;" @click="showProjectDetail(item)">查看更多>></el-button>
-                                    </div>
-                                    <div class="cardContent" v-if="item.isEncryption === 1">
-                                        <p class="cardTitle">{{item.projectName}}</p>
-                                        <p class="cardDetail">加密：{{item.encryptionCode}}</p>
-                                    </div>
-                                </div>
-                                <div v-if="adminFlag">
-                                    <div class="cardContent">
-                                        <p class="cardTitle">{{item.projectName}}</p>
-                                        <p class="cardDetail">{{item.projectIntroduce}}</p>
-                                        <el-button type="text" style="color:'#ffffff';text-align: right;" @click="showProjectDetail(item)">查看更多>></el-button>
-                                    </div>
-                                </div>
-                            </div>
-                        </md-tab>
-                        <md-tab id="3" class="movies" md-label="需求">
-                            <div class="cardBox" v-for="(item,index) in needList" :key="index">
-                                <div v-if="!adminFlag">
-                                    <div class="cardContent" v-if="item.isEncryption === 0">
-                                        <p class="cardTitle">{{item.demandName}}</p>
-                                        <p class="cardDetail">{{item.demandInfo}}</p>
-                                        <el-button type="text" style="color:'#ffffff';text-align: right;" @click="showProjectDetail(item)">查看更多>></el-button>
-                                    </div>
-                                    <div class="cardContent" v-if="item.isEncryption === 1">
-                                        <p class="cardTitle">{{item.demandName}}</p>
-                                        <p class="cardDetail">加密：{{item.encryptionCode}}</p>
-                                    </div>
-                                </div>
-                                <div v-if="adminFlag">
-                                    <div class="cardContent">
-                                        <p class="cardTitle">{{item.demandName}}</p>
-                                        <p class="cardDetail">{{item.demandIndo}}</p>
-                                        <el-button type="text" style="color:'#ffffff';text-align: right;" @click="showNeedDetail(item)">查看更多>></el-button>
-                                    </div>
-                                </div>
-                            </div>
-                        </md-tab>
-                    </md-tabs> -->
-                    <!-- <el-tabs v-model="activeName" @tab-click="handleClick" class="elementTabs">
-                        <el-tab-pane label="产品" name="1">
-                            <div class="cardBox" v-for="(item,index) in productList" :key="index">
-                                <div class="cardContent">
-                                    <p class="cardTitle">{{item.productName}}</p>
-                                    <p class="cardDetail">{{item.productIntroduce}}</p>
-                                    <el-button type="text" style="color:'#ffffff';text-align: right;" @click="showProductDetail(item)">查看更多>></el-button>
-                                </div>
-                            </div>
-                        </el-tab-pane>
-                        <el-tab-pane label="项目" name="2">
-                            <div class="cardBox" v-for="(item,index) in projectList" :key="index">
-                                <div v-if="!adminFlag">
-                                    <div class="cardContent" v-if="item.isEncryption === 0">
-                                        <p class="cardTitle">{{item.projectName}}</p>
-                                        <p class="cardDetail">{{item.projectIntroduce}}</p>
-                                        <el-button type="text" style="color:'#ffffff';text-align: right;" @click="showProjectDetail(item)">查看更多>></el-button>
-                                    </div>
-                                    <div class="cardContent" v-if="item.isEncryption === 1">
-                                        <p class="cardTitle">{{item.projectName}}</p>
-                                        <p class="cardDetail">加密：{{item.encryptionCode}}</p>
-                                    </div>
-                                </div>
-                                <div v-if="adminFlag">
-                                    <div class="cardContent">
-                                        <p class="cardTitle">{{item.projectName}}</p>
-                                        <p class="cardDetail">{{item.projectIntroduce}}</p>
-                                        <el-button type="text" style="color:'#ffffff';text-align: right;" @click="showProjectDetail(item)">查看更多>></el-button>
-                                    </div>
-                                </div>
-                            </div>
-                        </el-tab-pane>
-                        <el-tab-pane label="需求" name="3">
-                            <div class="cardBox" v-for="(item,index) in needList" :key="index">
-                                <div v-if="!adminFlag">
-                                    <div class="cardContent" v-if="item.isEncryption === 0">
-                                        <p class="cardTitle">{{item.demandName}}</p>
-                                        <p class="cardDetail">{{item.demandInfo}}</p>
-                                        <el-button type="text" style="color:'#ffffff';text-align: right;" @click="showProjectDetail(item)">查看更多>></el-button>
-                                    </div>
-                                    <div class="cardContent" v-if="item.isEncryption === 1">
-                                        <p class="cardTitle">{{item.demandName}}</p>
-                                        <p class="cardDetail">加密：{{item.encryptionCode}}</p>
-                                    </div>
-                                </div>
-                                <div v-if="adminFlag">
-                                    <div class="cardContent">
-                                        <p class="cardTitle">{{item.demandName}}</p>
-                                        <p class="cardDetail">{{item.demandIndo}}</p>
-                                        <el-button type="text" style="color:'#ffffff';text-align: right;" @click="showNeedDetail(item)">查看更多>></el-button>
-                                    </div>
-                                </div>
-                            </div>
-                        </el-tab-pane>
-                    </el-tabs> -->
                     <el-radio-group
                         v-model="activeName"
                         @change="changeActiveName"
@@ -186,7 +76,7 @@
                         <el-radio-button label="项目"></el-radio-button>
                         <el-radio-button label="需求"></el-radio-button>
                     </el-radio-group>
-                    <div v-if="activeName === '产品'" class="listBox">
+                    <div v-if="activeName === '产品'" class="listBox" :style="{maxHeight:listBoxHeight}">
                         <div
                             class="cardBox"
                             v-for="(item, index) in productList"
@@ -206,7 +96,7 @@
                             </div>
                         </div>
                     </div>
-                    <div v-if="activeName === '项目'" class="listBox">
+                    <div v-if="activeName === '项目'" class="listBox" :style="{maxHeight:listBoxHeight}">
                         <div
                             class="cardBox"
                             v-for="(item, index) in projectList"
@@ -260,7 +150,7 @@
                             </div>
                         </div>
                     </div>
-                    <div v-if="activeName === '需求'" class="listBox">
+                    <div v-if="activeName === '需求'" class="listBox" :style="{maxHeight:listBoxHeight}">
                         <div
                             class="cardBox"
                             v-for="(item, index) in needList"
@@ -444,9 +334,16 @@
                             <div class="detailBox">
                                 <p>法人：{{ item.opername }}</p>
                                 <p>注册资金：{{ item.registcapi }}</p>
-                                <p>地址：{{ item.product }}</p>
+                                <p>地址：{{ item.address }}</p>
                                 <p>成立日期：{{ item.startdate }}</p>
                                 <p>简介：{{ item.info }}</p>
+                                <p>企业性质：
+                                    <span v-if="item.nature == 1">国有企业</span>
+                                    <span v-if="item.nature == 2">民营企业</span>
+                                    <span v-if="item.nature == 3">外资企业</span>
+                                    <span v-if="item.nature == 4">中外合资企业</span>
+                                    <span v-if="item.nature == 5">未填写</span>
+                                </p>
                                 <p>
                                     官方网站：<a
                                         target="_blank"
@@ -737,10 +634,13 @@ export default {
             newActiveTab: 0,
             oldActiveTab: 0,
             popup: "",
-            proFlag: false
+            proFlag: false,
+            listBoxHeight: '600px',
+            echartHeight: '300px'
         }
     },
     mounted() {
+        this.handleHeight()
         this.checkBrowserVersion()
         this.initMap()
         this.getEchartsData()
@@ -815,6 +715,12 @@ export default {
                     sessionStorage.getItem("user")
                 ).comName
             }
+        },
+        handleHeight () {
+            var oHeight = document.documentElement.clientHeight
+            // console.log(oHeight)
+            this.listBoxHeight = (oHeight * 0.51) + 'px'
+            this.echartHeight = (oHeight * 0.27) + 'px'
         },
         initMap() {
             mapboxgl.accessToken =
@@ -1961,5 +1867,21 @@ export default {
     color: #f9ce5f;
     font-size: 20px;
     margin: 10px 0 0 0;
+}
+.listBox{
+    /* max-height: 572px; */
+    overflow-y: auto;
+    width: 100%;
+}
+#outputValue{
+    /* height: 300px; */
+    width: 100%;
+    background-color: #101B26;
+}
+#modelll{
+    /* height: 300px; */
+    width: 80%;
+    background-color: #101B26;
+    margin: 0 auto;
 }
 </style>

@@ -42,17 +42,6 @@
     width: 100%;
     background-color: #101B26;
 }
-#outputValue{
-    height: 300px;
-    width: 100%;
-    background-color: #101B26;
-}
-#modelll{
-    height: 300px;
-    width: 80%;
-    background-color: #101B26;
-    margin: 0 auto;
-}
 .rightBox{
     position: absolute;
     top: 100px;
@@ -247,6 +236,7 @@
 .detailBox{
     margin-left: 20px;
     font-size: 16px;
+    padding-right: 10px;
 }
 .tagBox .qichachaTitle{
     color: #ffffff;
@@ -420,11 +410,6 @@
 }
 .btnGroups .el-radio-button:first-child .el-radio-button__inner{
     border-left: none;
-}
-.listBox{
-    max-height: 572px;
-    overflow-y: auto;
-    width: 100%;
 }
 .needTagBox{
     display: flex;

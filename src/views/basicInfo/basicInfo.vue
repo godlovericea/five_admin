@@ -58,6 +58,14 @@
           <p>可上传1张图片，图片大小不超过4m（支持格式为：png、jpeg）。</p>
           <p>如果企业资质发生变化，请删除之前图片，重新上传最新资质图片</p>
         </el-form-item>
+        <el-form-item label="企业性质">
+           <el-select v-model="form.nature" placeholder="请选择企业性质">
+              <el-option label="国有企业" :value="1"></el-option>
+              <el-option label="民营企业" :value="2"></el-option>
+              <el-option label="外资企业" :value="3"></el-option>
+              <el-option label="中外合资企业" :value="4"></el-option>
+           </el-select>
+        </el-form-item>
         <el-form-item label="所属行业">
           <el-cascader
             v-model="industryList"
@@ -657,6 +665,7 @@ export default {
     addPostData() {
       let companyId = JSON.parse(sessionStorage.getItem("user")).companyId;
       let myData = {
+        nature: this.form.nature,
         address: this.form.address,
         businessLicense: this.businessLicense,
         city: this.form.city,
@@ -700,6 +709,7 @@ export default {
       let companyId = JSON.parse(sessionStorage.getItem("user")).companyId;
       let myData = {
         companyBaseInfoId: this.companyBaseInfoId,
+        nature: this.form.nature,
         address: this.form.address,
         businessLicense: this.businessLicense,
         city: this.form.city,
