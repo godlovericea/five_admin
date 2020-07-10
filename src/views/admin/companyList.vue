@@ -6,6 +6,11 @@
                 <el-form-item label="公司名称">
                     <el-input v-model="form.comName" size="small" placeholder="请输入公司名称" autocomplete="off"></el-input>
                 </el-form-item>
+                <el-form-item label="所在市区">
+                    <el-select v-model="form.city" :disabled="adminFlag">
+                        <el-option v-for="(item, index) in cityList" :key="index" :label="item.label" :value="item.value"></el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item>
                     <el-button type="primary" size="small" @click="getData">查询</el-button>
                     <el-button type="info" size="small" @click="resetData">重置</el-button>
@@ -14,6 +19,7 @@
         </div>
         <el-table :data="tableData" style="width: 100%">
             <el-table-column prop="comName" label="公司全称"></el-table-column>
+            <el-table-column prop="city" label="公司全称"></el-table-column>
             <el-table-column prop="comCode" label="统一社会信用代码"></el-table-column>
             <el-table-column prop="comCode" label="公司类型">
                 <template slot-scope="scope">
@@ -65,11 +71,70 @@ import {listCompany,updateCompanyAdmin,deleteCompany} from '@/api/collect'
 export default {
     data(){
         return{
+            adminFlag:false,
             tableData:[],
             form:{},
             pageNum:1,
             pageSize:20,
-            total:0
+            total:0,
+            cityList:[
+                {
+                value: 0,
+                label:'全省'
+                },
+                {
+                value: 1,
+                label:'南京市'
+                },
+                {
+                value: 2,
+                label:'无锡市'
+                },
+                {
+                value: 3,
+                label:'徐州市'
+                },
+                {
+                value: 4,
+                label:'常州市'
+                },
+                {
+                value: 5,
+                label:'苏州市'
+                },
+                {
+                value: 6,
+                label:'南通市'
+                },
+                {
+                value: 7,
+                label:'连云港市'
+                },
+                {
+                value: 8,
+                label:'淮安市'
+                },
+                {
+                value: 9,
+                label:'盐城市'
+                },
+                {
+                value: 10,
+                label:'扬州市'
+                },
+                {
+                value: 11,
+                label:'镇江市'
+                },
+                {
+                value: 12,
+                label:'泰州市'
+                },
+                {
+                value: 13,
+                label:'宿迁市'
+                }
+            ]
         }
     },
     mounted(){
@@ -77,7 +142,16 @@ export default {
     },
     methods:{
         getData(){
+            const cityType = JSON.parse(sessionStorage.getItem('user')).cityType
+            // console.log(Object.prototype.toString.call(cityType))
+            if(cityType == '0') {
+                this.adminFlag = false
+            } else {
+                this.adminFlag = true
+            }
             const myData = {
+                cityType:cityType,
+                city:this.form.city || cityType,
                 comName:this.form.comName,
                 pageNum:this.pageNum,
                 pageSize:this.pageSize

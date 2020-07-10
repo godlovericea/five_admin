@@ -62,7 +62,7 @@ export default {
     methods:{
         getData(){
             let myData={
-                companyId:this.$route.query.comId,
+                companyId:this.$route.query.id,
                 pageNum:this.pageNum,
                 pageSize:this.pageSize
             }

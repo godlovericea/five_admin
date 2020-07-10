@@ -24,16 +24,17 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="企业资质">
-          <el-radio-group v-model="form.econkind" @change="changeRadio">
-            <el-radio :label="1">规模以上企业</el-radio>
-            <el-radio :label="2">高新技术企业</el-radio>
-            <el-radio :label="3">瞪羚企业</el-radio>
-          </el-radio-group>
+          <el-checkbox-group v-model="econkindList" @change="changeRadio">
+            <el-checkbox :label="1">规模以上企业</el-checkbox>
+            <el-checkbox :label="2">高新技术企业</el-checkbox>
+            <el-checkbox :label="3">瞪羚企业</el-checkbox>
+            <el-checkbox :label="4">其他</el-checkbox>
+          </el-checkbox-group>
         </el-form-item>
-        <el-form-item
-          label="资质证书图片"
-          v-if="form.econkind === 2 || form.econkind === 3"
-        >
+        <el-form-item v-if="otherFlag">
+          <el-input v-model="form.econkindName" placeholder="请输入其他资质名称并上传照片"></el-input>
+        </el-form-item>
+        <el-form-item label="资质证书图片">
           <el-upload
             class="upload-demo"
             list-type="picture-card"
@@ -44,7 +45,7 @@
             :on-success="handleAvatarSuccess"
             :on-remove="handleRemove"
             :on-preview="handlePreview"
-            :limit="1"
+            :limit="5"
           >
             <div
               style="height:148px;display:flex;align-items:center;justify-content:center"
@@ -369,7 +370,10 @@ import {
 export default {
   data() {
     return {
-      form: {},
+      form: {
+        
+      },
+      econkindList:[],
       industryList: [],
       options: [
         {
@@ -599,7 +603,7 @@ export default {
         multiple: true
       },
       businessLicense: "",
-      econkindImg: "",
+      econkindImg: [],
       fileList: [],
       fileListLicense: [],
       editImgList: [],
@@ -619,7 +623,8 @@ export default {
       rejectDialog: false,
       remarks: "",
       removeFlag: false,
-      licenseRemoveFlag: false
+      licenseRemoveFlag: false,
+      otherFlag: false,
     };
   },
   mounted() {
@@ -643,6 +648,7 @@ export default {
           this.fileList = [];
           this.fileListLicense = [];
           this.form = res.result;
+          this.econkindList = res.result.econkindList
           this.companyBaseInfoId = this.form.companyBaseInfoId;
           this.industryList = this.form.industryList;
           if (this.form.businessLicense) {
@@ -651,11 +657,13 @@ export default {
               url: this.form.businessLicense
             });
           }
-          if (this.form.econkindImg) {
-            this.fileList.push({
-              name: "eckind",
-              url: this.form.econkindImg
-            });
+          if (this.form.econkindImgList) {
+            this.form.econkindImgList.forEach((el) => {
+              this.fileList.push({
+                name: "eckind",
+                url: el
+              });
+            })
           }
         } else {
           this.companyBaseInfoId = null;
@@ -671,9 +679,10 @@ export default {
         city: this.form.city,
         comName: this.form.comName,
         companyId: companyId,
-        econkindImg: this.econkindImg,
+        econkindImgList: this.econkindImgList,
         concatperson: this.form.concatperson,
-        econkind: this.form.econkind,
+        econkindList: this.econkindList,
+        econkindName:this.form.econkindName,
         email: this.form.email,
         websiteAddress: this.form.websiteAddress,
         exchangeValue: this.form.exchangeValue,
@@ -715,9 +724,10 @@ export default {
         city: this.form.city,
         comName: this.form.comName,
         companyId: companyId,
-        econkindImg: this.econkindImg,
+        econkindImgList: this.econkindImgList,
         concatperson: this.form.concatperson,
-        econkind: this.form.econkind,
+        econkindList: this.econkindList,
+        econkindName:this.form.econkindName,
         email: this.form.email,
         websiteAddress: this.form.websiteAddress,
         exchangeValue: this.form.exchangeValue,
@@ -752,12 +762,30 @@ export default {
     handleChange(value) {
       // console.log(value);
     },
-    handleRemove(file, fileList) {},
+    handleRemove(file, fileList) {
+      this.econkindImgList = []
+      fileList.forEach(el=>{
+          if(el.size){
+              this.econkindImgList.push(el.response[0])
+          }else{
+              this.econkindImgList.push(el.url)
+          }
+      })
+      this.removeTimeStamp =new Date().getTime()
+    },
     handleLiceseRemove(file, list) {
       this.licenseRemoveFlag = true;
     },
     handleAvatarSuccess(res, file, fileList) {
-      this.econkindImg = res[0];
+      this.econkindImgList =[]
+      fileList.forEach(el=>{
+          if(el.size){
+              this.econkindImgList.push(el.response[0])
+          }else{
+              this.econkindImgList.push(el.url)
+          }
+      })
+      this.upTimeStamp =new Date().getTime()
     },
     beforeAvatarUpload(file) {
       const isJPEG = file.type === "image/jpeg";
@@ -801,11 +829,6 @@ export default {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     },
-    changeRadio(cal) {
-      if (cal === 1) {
-        this.fileList = [];
-      }
-    },
     backToList() {
       this.$router.push({
         path: "/admin/com"
@@ -840,6 +863,14 @@ export default {
         this.remarks = "";
         this.getInfo();
       });
+    },
+    changeRadio(value){
+      // console.log(value)
+      if(value.indexOf(4) === -1 ){
+          this.otherFlag = false
+      }else{
+          this.otherFlag = true
+      }
     }
   }
 };

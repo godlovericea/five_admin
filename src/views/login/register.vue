@@ -20,6 +20,23 @@
           autocomplete="off"
         />
       </el-form-item>
+      <el-form-item prop="cityType">
+          <el-select v-model="loginForm.cityType" style="width:100%" class="selectClass" placeholder="请选择单位所在市区">
+            <el-option label="南京市" value="1"></el-option>
+            <el-option label="无锡市" value="2"></el-option>
+            <el-option label="徐州市" value="3"></el-option>
+            <el-option label="常州市" value="4"></el-option>
+            <el-option label="苏州市" value="5"></el-option>
+            <el-option label="南通市" value="6"></el-option>
+            <el-option label="连云港市" value="7"></el-option>
+            <el-option label="淮安市" value="8"></el-option>
+            <el-option label="盐城市" value="9"></el-option>
+            <el-option label="扬州市" value="10"></el-option>
+            <el-option label="镇江市" value="11"></el-option>
+            <el-option label="泰州市" value="12"></el-option>
+            <el-option label="宿迁市" value="13"></el-option>
+          </el-select>
+        </el-form-item>
       <el-form-item prop="comType">
         <el-select v-model="loginForm.comType" placeholder="请选择企业类型" style="width:100%" class="selectClass">
             <el-option label="新型研发机构" value="1"></el-option>
@@ -132,6 +149,7 @@ export default {
       loginForm: {
         comName:'',
         comType:null,
+        cityType:null,
         comCode:'',
         loginName: '',
         pwd: '',
@@ -141,6 +159,7 @@ export default {
         loginName:[{required: true, trigger: 'blur', message: '用户名不能为空'}],
         comName:[{required: true, trigger: 'blur', message: '公司名称不能为空'}],
         comType:[{required: true, trigger: 'blur', message: '请选择公司类型'}],
+        cityType:[{required: true, trigger: 'blur', message: '请选择企业所在市区'}],
         comCode: [{ required: true, trigger: 'blur', validator: comCodeRule }],
         pwd:[{required: true, trigger: 'blur', validator: passwordRule}]
       },
@@ -200,6 +219,7 @@ export default {
         this.$refs[ruleForm].validate((typeValid) => {
             if (typeValid) {
                 let myData={
+                    cityType:this.loginForm.cityType,
                     comName:this.loginForm.comName,
                     comType:this.loginForm.comType,
                     comCode:this.loginForm.comCode,
