@@ -119,6 +119,9 @@
         <span style="font-size:14px;color:#ffffff">已有账号，点击</span>
         <el-button :loading="loading" type="text" style="font-size:14px" @click.native.prevent="handleLogin">登录</el-button>
       </div>
+      <div class="downloadClass">
+        <a href="https://www.google.cn/chrome/thank-you.html?statcb=0&installdataindex=empty&defaultbrowser=0" target="_blank">推荐使用Chrome浏览器</a>
+      </div>
     </el-form>
   </div>
 </template>
@@ -360,6 +363,11 @@ $light_gray:#eee;
   }
   .regBox{
     text-align: right;
+  }
+  .downloadClass{
+    text-align: center;
+    margin: 30px 0;
+    color: #fff;
   }
   .tips{
     font-size: 14px;
