@@ -19,7 +19,7 @@
         </div>
         <el-table :data="tableData" style="width: 100%">
             <el-table-column prop="comName" label="公司全称"></el-table-column>
-            <el-table-column prop="city" label="公司全称"></el-table-column>
+            <el-table-column prop="city" label="所属市区"></el-table-column>
             <el-table-column prop="comCode" label="统一社会信用代码"></el-table-column>
             <el-table-column prop="comCode" label="公司类型">
                 <template slot-scope="scope">
