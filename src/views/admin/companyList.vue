@@ -39,16 +39,17 @@
             <el-table-column label="审核状态" width="180" class-name="checkState">
                 <template slot-scope="scope">
                     <span class="over" v-if="scope.row.state == 'N'">通过</span>
+                    <span v-if="scope.row.state == 'B'">未填写信息</span>
                     <span class="fail" v-if="scope.row.state == 'F'">未通过</span>
                     <span class="wait" v-if="scope.row.state == 'W'">待审核</span>
                 </template>
             </el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
-                    <el-button type="text" @click="showDetail(scope.row.companyId,'/home/basicInfo')">基本信息</el-button>
-                    <el-button type="text" @click="showDetail(scope.row.companyId,'/product/productList')">产品</el-button>
-                    <el-button type="text" @click="showDetail(scope.row.companyId,'/project/projectList')">项目</el-button>
-                    <el-button type="text" @click="showDetail(scope.row.companyId,'/need/needList')">需求</el-button>
+                    <el-button type="text" v-if="scope.row.state !== 'B'" @click="showDetail(scope.row.companyId,'/home/basicInfo')">基本信息</el-button>
+                    <el-button type="text" v-if="scope.row.state !== 'B'" @click="showDetail(scope.row.companyId,'/product/productList')">产品</el-button>
+                    <el-button type="text" v-if="scope.row.state !== 'B'" @click="showDetail(scope.row.companyId,'/project/projectList')">项目</el-button>
+                    <el-button type="text" v-if="scope.row.state !== 'B'" @click="showDetail(scope.row.companyId,'/need/needList')">需求</el-button>
                     <el-button type="text" @click="delCompany(scope.row.companyId)">删除</el-button>
                 </template>
             </el-table-column>

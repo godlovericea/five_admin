@@ -33,6 +33,9 @@
                     >登录</el-button
                 >
                 <span class="bottomNmae" v-if="comName">{{ comName }}</span>
+                <el-button v-if="comName" type="text" @click="goAdmin"
+                    >后台管理</el-button
+                >
                 <el-button v-if="comName" type="text" @click="logOut"
                     >退出</el-button
                 >
@@ -50,7 +53,7 @@
                 <div class="leftheaderBox">
                     <p class="headerTitle">产业规模</p>
                 </div>
-                <div class="etitle">总产值：{{ totalValue }}亿元</div>
+                <div class="etitle">总产值：{{ totalValue }}万元</div>
                 <div id="modelll" :style="{height:echartHeight}"></div>
             </div>
         </div>
@@ -1775,6 +1778,17 @@ export default {
             sessionStorage.clear()
             this.$router.go(0)
         },
+        goAdmin () {
+            if (this.adminFlag) {
+                this.$router.push({
+                    path:'/admin/com'
+                })
+            } else {
+                this.$router.push({
+                    path:'/home/basicInfo'
+                })
+            }
+        }
     },
 }
 </script>
@@ -1809,7 +1823,7 @@ export default {
 }
 .title {
     color: #ffffff;
-    font-size: 30px;
+    font-size: 24px;
     margin-left: 10px;
 }
 .bottomBox {

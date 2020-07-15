@@ -56,7 +56,7 @@
           <el-dialog :visible.sync="dialogVisible">
             <img width="100%" :src="dialogImageUrl" alt="" />
           </el-dialog>
-          <p>可上传1张图片，图片大小不超过4m（支持格式为：png、jpeg）。</p>
+          <p>可上传5张图片，图片大小不超过4m（支持格式为：png、jpeg）。</p>
           <p>如果企业资质发生变化，请删除之前图片，重新上传最新资质图片</p>
         </el-form-item>
         <el-form-item label="企业性质">

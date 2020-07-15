@@ -71,7 +71,28 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true
   },
-
+  // {
+  //   path: '/dash',
+  //   component: Layout,
+  //   children: [
+  //       {
+  //         path: 'basicInfo',
+  //         component: () => import('@/views/home/home'),
+  //         name: '大屏展示',
+  //         meta: { title: '可视化大屏', icon: 'dashboard', affix: true }
+  //       }
+  //   ]
+  // },
+    {
+      path: '可视化大屏',
+      // component: Layout,
+      children: [
+        {
+          path: 'http://5gecomap.com/#/',
+          meta: { title: '可视化大屏', icon: 'link' }
+        }
+      ]
+  },
   {
     path: '/home',
     component: Layout,

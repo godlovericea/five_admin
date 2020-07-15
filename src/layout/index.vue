@@ -1,7 +1,7 @@
 <template>
   <div :class="classObj" class="app-wrapper">
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
-    <sidebar class="sidebar-container" />
+    <sidebar class="sidebar-container" v-if="!isAdminFlag"/>
     <div class="main-container">
       <div :class="{'fixed-header':fixedHeader}">
         <navbar />
@@ -17,6 +17,11 @@ import ResizeMixin from './mixin/ResizeHandler'
 
 export default {
   name: 'Layout',
+  data () {
+    return {
+      isAdminFlag: false
+    }
+  },
   components: {
     Navbar,
     Sidebar,
@@ -42,13 +47,24 @@ export default {
       }
     }
   },
-  // mounted(){
-  //   this.beforeLeave()
-  // },
+  mounted(){
+    // this.beforeLeave()
+    if (sessionStorage.getItem('user')) {
+      let isAdmin = JSON.parse(sessionStorage.getItem('user')).isAdmin
+      if (isAdmin === 1) {
+        this.isAdminFlag = true
+      } else {
+        this.isAdminFlag = false
+      }
+    }
+  },
   // beforeDestroy(){
   //   this.leave()
   // },
   methods: {
+    checkAdmin(){
+
+    },
     handleClickOutside() {
       this.$store.dispatch('app/closeSideBar', { withoutAnimation: false })
     },
