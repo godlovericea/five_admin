@@ -5,13 +5,13 @@
             <p class="title">全省5G产业生态在线系统</p>
         </div>
         <div class="switchBox">
-            <span class="switchTitle">卫星影像</span
-            ><el-switch
+            <span class="switchTitle"></span>
+            <!-- <el-switch
                 v-model="switchMap"
                 active-color="#13ce66"
                 inactive-color="#ff4949"
                 @change="setMapTheme"
-            ></el-switch>
+            ></el-switch> -->
         </div>
         <div class="bottomBox">
             <div
@@ -58,13 +58,26 @@
             </div>
         </div>
         <div class="rightBox">
-            <el-input v-model="search" placeholder="请输入企业名称">
+            <!-- <el-input v-model="search" placeholder="请输入企业名称">
                 <el-button
                     slot="append"
                     icon="el-icon-search"
                     @click="getScenList"
                 ></el-button>
-            </el-input>
+            </el-input> -->
+            <el-autocomplete
+                class="inline-input"
+                v-model="search"
+                :fetch-suggestions="querySearch"
+                placeholder="请输入内容"
+                :trigger-on-focus="true"
+                @select="handleSelect">
+                <el-button
+                    slot="append"
+                    icon="el-icon-search"
+                    @click="getScenList"
+                ></el-button>
+            </el-autocomplete>
             <div style="height:20px"></div>
             <div class="leftheaderBox">
                 <p class="headerTitle">产业链分布</p>
@@ -639,10 +652,12 @@ export default {
             popup: "",
             proFlag: false,
             listBoxHeight: '600px',
-            echartHeight: '300px'
+            echartHeight: '300px',
+            restaurants: [],
         }
     },
     mounted() {
+        this.handleRestaurants()
         this.handleHeight()
         this.checkBrowserVersion()
         this.initMap()
@@ -651,6 +666,25 @@ export default {
         this.getScenList()
     },
     methods: {
+        querySearch(queryString, cb) {
+            var restaurants = this.restaurants;
+            var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+            // 调用 callback 返回建议列表的数据
+            cb(results);
+        },
+        createFilter(queryString) {
+            return (restaurant) => {
+                return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+            };
+        },
+        handleSelect(item) {
+            console.log(item);
+            this.search = item.value
+            this.getScenList()
+        },
+        handleRestaurants () {
+
+        },
         checkBrowserVersion() {
             var browser = navigator.appName
             var b_version = navigator.appVersion
@@ -721,7 +755,7 @@ export default {
         },
         handleHeight () {
             var oHeight = document.documentElement.clientHeight
-            // console.log(oHeight)
+            console.log(oHeight)
             this.listBoxHeight = (oHeight * 0.51) + 'px'
             this.echartHeight = (oHeight * 0.27) + 'px'
         },
@@ -781,6 +815,17 @@ export default {
             listBaseInfoByStream(myData).then((res) => {
                 if (res.code === 200) {
                     this.searchReault.features = res.result
+                    // console.log(res.result)
+                    this.restaurants = []
+                    res.result.forEach(el => {
+                        el.properties.comList.forEach(eel => {
+                            this.restaurants.push({
+                                value: eel.comName,
+                                address: eel.city
+                            })
+                        })
+                    })
+                    console.log(this.restaurants)
                     var mag1 = ["<", ["get", "mag"], 5]
                     var mag2 = [
                         "all",
@@ -884,95 +929,6 @@ export default {
                 }
             })
         },
-        // 获取雷达图
-        getRadarEnterprise() {
-            let myChart = echarts.init(document.getElementById("enterprise"))
-            let option = {
-                // title: {
-                //     text: '基础雷达图'
-                // },
-                tooltip: {},
-                // legend: {
-                //     data: ['预算分配（Allocated Budget）', '实际开销（Actual Spending）']
-                // },
-                radar: {
-                    // shape: 'circle',
-                    name: {
-                        textStyle: {
-                            color: "#fff",
-                            // backgroundColor: '#999',
-                            borderRadius: 3,
-                            padding: [3, 5],
-                        },
-                    },
-                    indicator: [
-                        { name: "算法", max: 36500 },
-                        { name: "芯片", max: 16000 },
-                        { name: "模块", max: 30000 },
-                        { name: "终端", max: 38000 },
-                        { name: "系统", max: 52000 },
-                        { name: "网络", max: 25000 },
-                        { name: "平台", max: 25000 },
-                    ],
-                    splitArea: {
-                        areaStyle: {
-                            color: ["#101B26"],
-                            shadowColor: "rgba(0, 0, 0, 0.3)",
-                            shadowBlur: 10,
-                        },
-                    },
-                    axisLine: {
-                        lineStyle: {
-                            color: "rgba(114, 131, 150, 1)",
-                        },
-                    },
-                    splitLine: {
-                        lineStyle: {
-                            color: "rgba(114, 131, 150, 1)",
-                        },
-                    },
-                },
-                series: [
-                    {
-                        name: "从业人数",
-                        type: "radar",
-                        areaStyle: {
-                            normal: {
-                                color: "#1087F6", // 图表中各个图区域的颜色
-                                areaStyle: {
-                                    type: "default",
-                                    opacity: 0.8, // 图表中各个图区域的透明度
-                                    color: "#ff0000", // 图表中各个图区域的颜色
-                                },
-                            },
-                        },
-                        data: [
-                            {
-                                value: [
-                                    14300,
-                                    10000,
-                                    28000,
-                                    35000,
-                                    50000,
-                                    19000,
-                                    5200,
-                                ],
-                                name: "从业人数",
-                                itemStyle: {
-                                    normal: {
-                                        color: "#1087F6", // 图表中各个图区域的颜色
-                                    },
-                                },
-                            },
-                        ],
-                    },
-                ],
-            }
-            myChart.setOption(option)
-            window.addEventListener("resize", () => {
-                myChart.resize()
-            })
-        },
         // 获取柱状图
         getEnterpriseMode() {
             let myChart = echarts.init(document.getElementById("modelll"))
@@ -982,12 +938,13 @@ export default {
                     axisPointer: {
                         type: "shadow",
                     },
+                    formatter:'{b}:{c}万'
                 },
                 grid: {
                     top: "15%",
                     right: "3%",
-                    left: "10%",
-                    bottom: "20%",
+                    left: "20%",
+                    bottom: "15%",
                 },
                 xAxis: [
                     {
@@ -1010,7 +967,7 @@ export default {
                 yAxis: [
                     {
                         type: "value",
-                        name: "数量",
+                        name: "产值（万元）",
                         nameTextStyle: {
                             color: "#fff",
                         },
@@ -1894,7 +1851,7 @@ export default {
 }
 #modelll{
     /* height: 300px; */
-    width: 80%;
+    width: 90%;
     background-color: #101B26;
     margin: 0 auto;
 }
