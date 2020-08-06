@@ -29,6 +29,15 @@
     height: 60px;
     width: 100%;
     background:linear-gradient(90deg,rgba(22,121,213,0.2) 0%,rgba(22,121,213,0.63) 54%,rgba(22,121,213,1) 100%);
+    position: relative;
+    cursor: pointer;
+}
+.collapseImg{
+    position: absolute;
+    right: 0;
+    height: 20px;
+    top: 20px;
+    cursor: pointer;
 }
 .headerTitle{
     color: #ffffff;

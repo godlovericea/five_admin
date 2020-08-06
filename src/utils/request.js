@@ -8,8 +8,8 @@ import router from '../router/index'
 const service = axios.create({
   // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   // baseURL: 'https://120.55.161.93:6012/', // url = base url + request url
-  baseURL: 'http://5gecomap.com:6012/', // url = base url + request url
-  // baseURL: 'http://192.168.1.109:6012/', // url = base url + request url
+  // baseURL: 'http://5gecomap.com:6012/', // url = base url + request url
+  baseURL: 'http://192.168.1.113:6012/', // url = base url + request url
   // baseURL: 'http://192.168.20.108:8181/smartsite_cms/', // url = base url + request url
   withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout

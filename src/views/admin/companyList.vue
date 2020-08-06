@@ -31,12 +31,13 @@
                 </template>
             </el-table-column>
             <el-table-column prop="loginName" label="登录名"></el-table-column>
+            <el-table-column prop="createDate" label="注册时间"></el-table-column>
             <el-table-column label="设置管理员">
                 <template slot-scope="scope">
                     <el-switch v-model="scope.row.adminStatus" active-text="是" inactive-text="否" @change="changeAdmin(scope.row.companyId,scope.row.adminStatus)"></el-switch>
                 </template>
             </el-table-column>
-            <el-table-column label="审核状态" width="180" class-name="checkState">
+            <el-table-column label="审核状态" width="100" class-name="checkState">
                 <template slot-scope="scope">
                     <span class="over" v-if="scope.row.state == 'N'">通过</span>
                     <span v-if="scope.row.state == 'B'">未填写信息</span>

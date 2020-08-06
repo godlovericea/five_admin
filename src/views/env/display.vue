@@ -19,7 +19,7 @@
                         <el-upload
                             class="upload-demo"
                             list-type="picture-card"
-                            action="http://120.55.161.93:6011/qiniu/upload"
+                            action="http://5gecomap.com:6012/qiniu/upload"
                             name="file"
                             :file-list="fileList"
                             :before-upload="beforeAvatarUpload"
@@ -36,7 +36,7 @@
                         <el-upload
                             class="upload-demo"
                             list-type="picture"
-                            action="http://120.55.161.93:6011/qiniu/upload"
+                            action="http://5gecomap.com:6012/qiniu/upload"
                             name="file"
                             :file-list="videofileList"
                             :before-upload="beforeVideoUpload"

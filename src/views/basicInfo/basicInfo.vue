@@ -2,7 +2,7 @@
   <div class="warnWrapper">
     <div class="divider"></div>
     <div class="formBox">
-      <el-form :model="form" ref="ruleForm" class="demo-form-inline" label-width="120px">
+      <el-form :model="form" ref="ruleForm" class="demo-form-inline" label-position="top">
         <el-form-item label="公司全称">
           <el-input
             size="small"
@@ -11,6 +11,7 @@
             style="width:400px"
             autocomplete="off"
             maxlength="100"
+            :disabled="notMeFlag"
           ></el-input>
         </el-form-item>
         <el-form-item label="公司简称">
@@ -21,10 +22,11 @@
             style="width:400px"
             autocomplete="off"
             maxlength="100"
+            :disabled="notMeFlag"
           ></el-input>
         </el-form-item>
         <el-form-item label="企业资质">
-          <el-checkbox-group v-model="econkindList" @change="changeRadio">
+          <el-checkbox-group v-model="econkindList" @change="changeRadio" :disabled="notMeFlag">
             <el-checkbox :label="1">规模以上企业</el-checkbox>
             <el-checkbox :label="2">高新技术企业</el-checkbox>
             <el-checkbox :label="3">瞪羚企业</el-checkbox>
@@ -32,13 +34,13 @@
           </el-checkbox-group>
         </el-form-item>
         <el-form-item v-if="otherFlag">
-          <el-input v-model="form.econkindName" placeholder="请输入其他资质名称并上传照片"></el-input>
+          <el-input v-model="form.econkindName" placeholder="请输入其他资质名称并上传照片" style="width:200px"></el-input>
         </el-form-item>
         <el-form-item label="资质证书图片">
           <el-upload
             class="upload-demo"
             list-type="picture-card"
-            action="http://120.55.161.93:6012/qiniu/upload"
+            action="http://5gecomap.com:6012/qiniu/upload"
             name="file"
             :file-list="fileList"
             :before-upload="beforeAvatarUpload"
@@ -46,6 +48,7 @@
             :on-remove="handleRemove"
             :on-preview="handlePreview"
             :limit="5"
+            :disabled="notMeFlag"
           >
             <div
               style="height:148px;display:flex;align-items:center;justify-content:center"
@@ -56,11 +59,10 @@
           <el-dialog :visible.sync="dialogVisible">
             <img width="100%" :src="dialogImageUrl" alt="" />
           </el-dialog>
-          <p>可上传5张图片，图片大小不超过4m（支持格式为：png、jpeg）。</p>
-          <p>如果企业资质发生变化，请删除之前图片，重新上传最新资质图片</p>
+          <p>可上传5张图片，图片大小不超过4m（支持格式为：png、jpeg）。如果企业资质发生变化，请删除之前图片，重新上传最新资质图片</p>
         </el-form-item>
         <el-form-item label="企业性质">
-           <el-select v-model="form.nature" placeholder="请选择企业性质">
+           <el-select v-model="form.nature" placeholder="请选择企业性质" :disabled="notMeFlag">
               <el-option label="国有企业" :value="1"></el-option>
               <el-option label="民营企业" :value="2"></el-option>
               <el-option label="外资企业" :value="3"></el-option>
@@ -69,6 +71,7 @@
         </el-form-item>
         <el-form-item label="所属行业">
           <el-cascader
+          :disabled="notMeFlag"
             v-model="industryList"
             :props="props"
             :options="options"
@@ -78,7 +81,7 @@
           ></el-cascader>
         </el-form-item>
         <el-form-item label="所属市区" prop="city">
-          <el-select v-model="form.city" style="width:400px">
+          <el-select v-model="form.city" style="width:400px" :disabled="notMeFlag">
             <el-option label="南京市" value="1"></el-option>
             <el-option label="无锡市" value="2"></el-option>
             <el-option label="徐州市" value="3"></el-option>
@@ -98,7 +101,7 @@
           <el-upload
             class="upload-demo"
             list-type="picture-card"
-            action="http://120.55.161.93:6012/qiniu/upload"
+            action="http://5gecomap.com:6012/qiniu/upload"
             name="file"
             :file-list="fileListLicense"
             :before-upload="beforeLicenseAvatarUpload"
@@ -106,6 +109,7 @@
             :on-remove="handleLiceseRemove"
             :on-preview="handleLicensePreview"
             :limit="1"
+            :disabled="notMeFlag"
           >
             <div
               style="height:148px;display:flex;align-items:center;justify-content:center"
@@ -126,17 +130,20 @@
             style="width:400px"
             autocomplete="off"
             maxlength="100"
+            :disabled="notMeFlag"
           ></el-input>
         </el-form-item>
-        <el-form-item label="注册资金">
+        <el-form-item label="注册资金（万元）">
           <el-input
             size="small"
             v-model="form.registcapi"
             placeholder="请输入注册资金（万元）"
             style="width:400px"
-            onkeyup="value=value.replace(/[^\0-9\.]/g,'')"
+            oninput = "value=value.replace(/[^\d.]/g,'')"
+            onkeyup="value=value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3')"
             autocomplete="off"
             maxlength="100"
+            :disabled="notMeFlag"
           ></el-input>
         </el-form-item>
         <el-form-item label="注册地址">
@@ -147,6 +154,7 @@
             style="width:400px"
             autocomplete="off"
             maxlength="100"
+            :disabled="notMeFlag"
           ></el-input>
         </el-form-item>
         <el-form-item label="成立时间">
@@ -156,6 +164,7 @@
             placeholder="选择日期"
             style="width:400px"
             :picker-options="picOptions"
+            :disabled="notMeFlag"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="公司简介">
@@ -169,6 +178,7 @@
             style="width:600px"
             autocomplete="off"
             show-word-limit
+            :disabled="notMeFlag"
           ></el-input>
         </el-form-item>
         <el-form-item label="官网地址">
@@ -179,16 +189,17 @@
             style="width:400px"
             autocomplete="off"
             maxlength="100"
+            :disabled="notMeFlag"
           ></el-input>
         </el-form-item>
         <el-form-item label="是否上市">
-          <el-radio-group v-model="form.isonline">
+          <el-radio-group v-model="form.isonline" :disabled="notMeFlag">
             <el-radio :label="1">已上市</el-radio>
             <el-radio :label="0">未上市</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="上市交易所" v-if="form.isonline === 1">
-          <el-radio-group v-model="form.exchange">
+          <el-radio-group v-model="form.exchange" :disabled="notMeFlag">
             <el-radio :label="1">上海</el-radio>
             <el-radio :label="2">深圳</el-radio>
             <el-radio :label="3">香港</el-radio>
@@ -203,6 +214,7 @@
             style="width:400px"
             autocomplete="off"
             maxlength="100"
+            :disabled="notMeFlag"
           ></el-input>
         </el-form-item>
         <el-form-item label="股票代码" v-if="form.isonline === 1">
@@ -213,6 +225,7 @@
             style="width:400px"
             autocomplete="off"
             maxlength="100"
+            :disabled="notMeFlag"
           ></el-input>
         </el-form-item>
         <el-form-item label="员工人数">
@@ -222,17 +235,20 @@
             oninput="value=value.replace(/[^\d.]/g,'')"
             placeholder="请输入员工人数"
             style="width:400px"
+            :disabled="notMeFlag"
           ></el-input>
         </el-form-item>
-        <el-form-item label="2019年营业收入">
+        <el-form-item label="2019年营收(万元)">
           <el-input
             size="small"
             v-model="form.lastincome"
             placeholder="请输入2019年营业收入，单位：万元"
             style="width:400px"
-            onkeyup="value=value.replace(/[^\0-9\.]/g,'')"
+            oninput = "value=value.replace(/[^\d.]/g,'')"
+            onkeyup="value=value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3')"
             autocomplete="off"
             maxlength="100"
+            :disabled="notMeFlag"
           ></el-input>
         </el-form-item>
         <el-form-item label="2019年5G相关业务收入">
@@ -241,9 +257,11 @@
             v-model="form.oldincome"
             placeholder="请输入2019年5G相关业务收入，单位：万元"
             style="width:400px"
-            onkeyup="value=value.replace(/[^\0-9\.]/g,'')"
+            oninput = "value=value.replace(/[^\d.]/g,'')"
+            onkeyup="value=value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3')"
             autocomplete="off"
             maxlength="100"
+            :disabled="notMeFlag"
           ></el-input>
         </el-form-item>
         <el-form-item label="企业联系人姓名">
@@ -254,6 +272,7 @@
             style="width:400px"
             autocomplete="off"
             maxlength="100"
+            :disabled="notMeFlag"
           ></el-input>
         </el-form-item>
         <el-form-item label="联系人电话">
@@ -264,6 +283,7 @@
             style="width:400px"
             autocomplete="off"
             maxlength="100"
+            :disabled="notMeFlag"
           ></el-input>
         </el-form-item>
         <el-form-item label="联系人邮件">
@@ -274,6 +294,7 @@
             style="width:400px"
             autocomplete="off"
             maxlength="100"
+            :disabled="notMeFlag"
           ></el-input>
         </el-form-item>
         <el-form-item label="审核意见">
@@ -625,10 +646,11 @@ export default {
       removeFlag: false,
       licenseRemoveFlag: false,
       otherFlag: false,
+      notMeFlag: false
     };
   },
   mounted() {
-    this.getInfo();
+    this.getInfo()
   },
   methods: {
     getInfo() {
@@ -648,6 +670,8 @@ export default {
           this.fileList = [];
           this.fileListLicense = [];
           this.form = res.result;
+          // 0只读，1可读写
+          this.notMeFlag = this.form.wr === 0 ? true : false;
           this.econkindList = res.result.econkindList
           this.companyBaseInfoId = this.form.companyBaseInfoId;
           this.industryList = this.form.industryList;

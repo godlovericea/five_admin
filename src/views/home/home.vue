@@ -42,19 +42,31 @@
             </div>
         </div>
         <div class="leftBox">
-            <div class="leftItemsBox">
+            <div class="leftItemsBox" v-show="collapseFlag">
                 <div class="leftheaderBox">
                     <p class="headerTitle">企业数量</p>
+                    <el-tooltip class="item" effect="dark" content="折叠" placement="left">
+                        <img src="@/assets/collapse.png" alt="" class="collapseImg" @click="collapseBar">
+                    </el-tooltip>
                 </div>
                 <div class="etitle">总数:{{ amount }}家</div>
                 <div id="outputValue" :style="{height:echartHeight}"></div>
             </div>
-            <div class="leftItemsBox">
+            <div class="leftItemsBox" v-show="collapseFlag">
                 <div class="leftheaderBox">
                     <p class="headerTitle">产业规模</p>
+                    <el-tooltip class="item" effect="dark" content="折叠" placement="left">
+                        <img src="@/assets/collapse.png" alt="" class="collapseImg" @click="collapseBar">
+                    </el-tooltip>
                 </div>
                 <div class="etitle">总产值：{{ totalValue }}万元</div>
                 <div id="modelll" :style="{height:echartHeight}"></div>
+            </div>
+            <div v-show="!collapseFlag">
+                <div class="leftheaderBox" @click="collapseBar">
+                    <p class="headerTitle">展开</p>
+                </div>
+                <!-- <el-button type="primary" icon="el-icon-search" style="width:100%" @click="collapseBar">展开</el-button> -->
             </div>
         </div>
         <div class="rightBox">
@@ -654,6 +666,7 @@ export default {
             listBoxHeight: '600px',
             echartHeight: '300px',
             restaurants: [],
+            collapseFlag: true
         }
     },
     mounted() {
@@ -661,7 +674,7 @@ export default {
         this.handleHeight()
         this.checkBrowserVersion()
         this.initMap()
-        this.getEchartsData()
+        // this.getEchartsData()
         this.checkLogin()
         this.getScenList()
     },
@@ -755,7 +768,7 @@ export default {
         },
         handleHeight () {
             var oHeight = document.documentElement.clientHeight
-            console.log(oHeight)
+            // console.log(oHeight)
             this.listBoxHeight = (oHeight * 0.51) + 'px'
             this.echartHeight = (oHeight * 0.27) + 'px'
         },
@@ -788,6 +801,7 @@ export default {
             this.map.on("styledata", () => {
                 this.getPrivinceData(4)
                 this.getQixiaDistribute()
+                this.getEchartsData()
             })
         },
         getEchartsData() {
@@ -825,7 +839,7 @@ export default {
                             })
                         })
                     })
-                    console.log(this.restaurants)
+                    // console.log(this.restaurants)
                     var mag1 = ["<", ["get", "mag"], 5]
                     var mag2 = [
                         "all",
@@ -1700,7 +1714,7 @@ export default {
                 })
             } else if (params.type === 2) {
                 myData = {
-                    getCompanyProjectDemand: params.demandId,
+                    companyProjectDemandId: params.demandId
                 }
                 getCompanyProjectDemand(myData).then((res) => {
                     this.sceanData = res.result
@@ -1709,7 +1723,7 @@ export default {
                 })
             } else {
                 myData = {
-                    companyOtherDemandId: params.demandId,
+                    companyOtherDemandId: params.demandId
                 }
                 getCompanyOtherDemand(myData).then((res) => {
                     this.sceanData = res.result
@@ -1745,6 +1759,9 @@ export default {
                     path:'/home/basicInfo'
                 })
             }
+        },
+        collapseBar () {
+            this.collapseFlag = !this.collapseFlag
         }
     },
 }

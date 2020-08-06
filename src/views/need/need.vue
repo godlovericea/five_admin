@@ -6,12 +6,12 @@
                 <div class="formBox">
                     <el-form :model="product" class="demo-form-inline" label-width="120px">
                         <el-form-item label="选择主营产品">
-                            <el-select v-model="product.companyProductId" placeholder="请选择主营产品" style="width:400px">
+                            <el-select v-model="product.companyProductId" :disabled="notMeFlag" placeholder="请选择主营产品" style="width:400px">
                                 <el-option v-for="item in productList" :key="item.companyProductId" :label="item.productName" :value="item.companyProductId"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="需求类别">
-                            <el-checkbox-group v-model="demandProductClass" @change="handleChangeProduct">
+                            <el-checkbox-group v-model="demandProductClass" @change="handleChangeProduct" :disabled="notMeFlag">
                                 <el-checkbox :label="1">资金支持</el-checkbox>
                                 <el-checkbox :label="2">技术支撑</el-checkbox>
                                 <el-checkbox :label="3">市场推广</el-checkbox>
@@ -19,36 +19,28 @@
                             </el-checkbox-group>
                         </el-form-item>
                         <el-form-item label="是否保密">
-                            <el-switch v-model="productIsEncryption" active-text="保密" inactive-text="公开"></el-switch>
+                            <el-switch v-model="productIsEncryption" active-text="保密" :disabled="notMeFlag" inactive-text="公开"></el-switch>
                             <p>保密的需求，仅 自己 和 江苏省工业和信息化厅 可见，该需求将以密文展示</p>
                         </el-form-item>
                         <el-form-item label="其他需求" v-if="flag.otherFlag">
-                            <el-input size="small" v-model="product.otherDemand" placeholder="请输入需求名称，不超过20字" style="width:400px" autocomplete="off"></el-input>
+                            <el-input size="small" v-model="product.otherDemand" :disabled="notMeFlag" placeholder="请输入需求名称，不超过20字" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="所需资金" v-if="flag.moneyFlag">
-                            <el-input size="small" type="number" v-model="product.requiredMoney" placeholder="单位：万元" style="width:400px" autocomplete="off"></el-input>
+                            <el-input size="small" type="number" v-model="product.requiredMoney" :disabled="notMeFlag" placeholder="单位：万元" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="技术需求简述" v-if="flag.techFlag">
-                            <el-input type="textarea" v-model="product.technologyDemandInfo" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px" autocomplete="off"></el-input>
+                            <el-input type="textarea" v-model="product.technologyDemandInfo" :disabled="notMeFlag" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="市场需求简述" v-if="flag.marketFlag">
-                            <el-input type="textarea" v-model="product.marketDemandInfo" placeholder="请填写需求要点，不超过100字" maxlength="100" style="width:400px" autocomplete="off"></el-input>
+                            <el-input type="textarea" v-model="product.marketDemandInfo" :disabled="notMeFlag" placeholder="请填写需求要点，不超过100字" maxlength="100" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="需求描述">
-                            <el-input size="small" v-model="product.demandInfo" type="textarea" placeholder="请填写具体的需求" :rows="6" style="width:400px" autocomplete="off"></el-input>
-                        </el-form-item>
-                        <el-form-item label="驳回理由" v-if="product.rejected">
-                            <el-input size="small" v-model="product.rejected" disabled type="textarea" :rows="6" style="width:400px" autocomplete="off"></el-input>
+                            <el-input size="small" v-model="product.demandInfo" :disabled="notMeFlag" type="textarea" placeholder="请填写具体的需求" :rows="6" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <div v-if="!adminFlag">
-                                <el-button v-if="companyProductDemandId === 0" size="small" type="primary" round style="width:100px" @click="addProductNeed">提交</el-button>
-                                <el-button v-else size="small" type="primary" style="width:100px" round @click="updateProductNeed">修改</el-button>
-                            </div>
-                            <div v-if="adminFlag">
-                                <el-button size="small" type="success" round style="width:100px" @click="overSure">通过</el-button>
-                                <el-button size="small" type="danger" round style="width:100px" @click="openReject">驳回</el-button>
-                                <el-button size="small" type="primary" round style="width:100px" @click="backToList">返回</el-button>
+                            <div>
+                                <el-button v-if="companyProductDemandId === 0" size="small" type="primary" :disabled="notMeFlag" round style="width:100px" @click="addProductNeed">提交</el-button>
+                                <el-button v-else size="small" type="primary" style="width:100px" :disabled="notMeFlag" round @click="updateProductNeed">修改</el-button>
                             </div>
                         </el-form-item>
                     </el-form>
@@ -58,12 +50,12 @@
                 <div class="formBox">
                     <el-form :model="project" class="demo-form-inline" label-width="120px">
                         <el-form-item label="选择在研项目">
-                            <el-select v-model="project.companyProjectId" placeholder="请选择在研项目" style="width:400px">
+                            <el-select v-model="project.companyProjectId" placeholder="请选择在研项目" :disabled="notMeFlag" style="width:400px">
                                 <el-option v-for="item in projectList" :key="item.companyProjectId" :label="item.projectName" :value="item.companyProjectId"></el-option>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="需求类别">
-                            <el-checkbox-group v-model="demandProjectClass" @change="handleChangeProject">
+                            <el-checkbox-group v-model="demandProjectClass" @change="handleChangeProject" :disabled="notMeFlag">
                                 <el-checkbox :label="1">资金支持</el-checkbox>
                                 <el-checkbox :label="2">技术支撑</el-checkbox>
                                 <el-checkbox :label="3">市场推广</el-checkbox>
@@ -71,36 +63,28 @@
                             </el-checkbox-group>
                         </el-form-item>
                         <el-form-item label="是否保密">
-                            <el-switch v-model="projectIsEncryption" active-text="保密" inactive-text="公开"></el-switch>
+                            <el-switch v-model="projectIsEncryption" :disabled="notMeFlag" active-text="保密" inactive-text="公开"></el-switch>
                             <p>保密的需求，仅 自己 和 江苏省工业和信息化厅 可见，该需求将以密文展示</p>
                         </el-form-item>
                         <el-form-item label="其他需求" v-if="flag.otherFlag">
-                            <el-input size="small" v-model="project.otherDemand" placeholder="请输入需求名称，不超过20字" maxlength="20" style="width:400px" autocomplete="off"></el-input>
+                            <el-input size="small" v-model="project.otherDemand" :disabled="notMeFlag" placeholder="请输入需求名称，不超过20字" maxlength="20" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="所需资金" v-if="flag.moneyFlag">
-                            <el-input size="small" type="number" v-model="project.requiredMoney" placeholder="单位：万元" style="width:400px" autocomplete="off"></el-input>
+                            <el-input size="small" type="number" v-model="project.requiredMoney" :disabled="notMeFlag" placeholder="单位：万元" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="技术需求简述" v-if="flag.techFlag">
-                            <el-input type="textarea" v-model="project.technologyDemandInfo" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px" autocomplete="off"></el-input>
+                            <el-input type="textarea" v-model="project.technologyDemandInfo" :disabled="notMeFlag" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="市场需求简述" v-if="flag.marketFlag">
-                            <el-input type="textarea" v-model="project.marketDemandInfo" placeholder="请填写需求要点，不超过100字" maxlength="100" style="width:400px" autocomplete="off"></el-input>
+                            <el-input type="textarea" v-model="project.marketDemandInfo" :disabled="notMeFlag" placeholder="请填写需求要点，不超过100字" maxlength="100" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="需求描述">
-                            <el-input size="small" v-model="project.demandInfo" type="textarea" placeholder="请填写具体的需求" :rows="6" style="width:400px" autocomplete="off"></el-input>
-                        </el-form-item>
-                        <el-form-item label="驳回理由" v-if="project.rejected">
-                            <el-input size="small" v-model="project.rejected" disabled type="textarea" :rows="6" style="width:400px" autocomplete="off"></el-input>
+                            <el-input size="small" v-model="project.demandInfo" type="textarea" :disabled="notMeFlag" placeholder="请填写具体的需求" :rows="6" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <div v-if="!adminFlag">
-                                <el-button v-if="companyProjectDemandId === 0" size="small" type="primary" round style="width:100px" @click="addProjectNeed">提交</el-button>
-                                <el-button v-else size="small" type="primary" style="width:100px" round @click="updateProjectNeed">修改</el-button>
-                            </div>
-                            <div v-if="adminFlag">
-                                <el-button size="small" type="success" round style="width:100px" @click="overSure">通过</el-button>
-                                <el-button size="small" type="danger" round style="width:100px" @click="openReject">驳回</el-button>
-                                <el-button size="small" type="primary" round style="width:100px" @click="backToList">返回</el-button>
+                            <div>
+                                <el-button v-if="companyProjectDemandId === 0" :disabled="notMeFlag" size="small" type="primary" round style="width:100px" @click="addProjectNeed">提交</el-button>
+                                <el-button v-else size="small" type="primary" :disabled="notMeFlag" style="width:100px" round @click="updateProjectNeed">修改</el-button>
                             </div>
                         </el-form-item>
                     </el-form>
@@ -110,43 +94,35 @@
                 <div class="formBox">
                     <el-form :model="other" class="demo-form-inline" label-width="120px">
                         <el-form-item label="名称">
-                            <el-input size="small" v-model="other.demandName" placeholder="请输入课题/项目/产品" style="width:400px" autocomplete="off"></el-input>
+                            <el-input size="small" v-model="other.demandName" :disabled="notMeFlag" placeholder="请输入课题/项目/产品" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="需求类别">
-                            <el-checkbox-group v-model="demandOtherClass" @change="handleChangeOther">
+                            <el-checkbox-group v-model="demandOtherClass" @change="handleChangeOther" :disabled="notMeFlag">
                                 <el-checkbox :label="1">资金支持</el-checkbox>
                                 <el-checkbox :label="2">技术支撑</el-checkbox>
                                 <el-checkbox :label="3">市场推广</el-checkbox>
                             </el-checkbox-group>
                         </el-form-item>
                         <el-form-item label="是否保密">
-                            <el-switch v-model="otherIsEncryption" active-text="保密" inactive-text="公开"></el-switch>
+                            <el-switch v-model="otherIsEncryption" active-text="保密" :disabled="notMeFlag" inactive-text="公开"></el-switch>
                             <p>保密的需求，仅 自己 和 江苏省工业和信息化厅 可见，该需求将以密文展示</p>
                         </el-form-item>
                         <el-form-item label="所需资金" v-if="flag.moneyFlag">
-                            <el-input size="small" type="number" v-model="other.requiredMoney" placeholder="单位：万元" style="width:400px" autocomplete="off"></el-input>
+                            <el-input size="small" type="number" v-model="other.requiredMoney" :disabled="notMeFlag" placeholder="单位：万元" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="技术需求简述" v-if="flag.techFlag">
-                            <el-input type="textarea" v-model="other.technologyDemandInfo" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px" autocomplete="off"></el-input>
+                            <el-input type="textarea" v-model="other.technologyDemandInfo" :disabled="notMeFlag" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="市场需求简述" v-if="flag.marketFlag">
-                            <el-input type="textarea" v-model="other.marketDemandInfo" placeholder="请填写需求要点，不超过100字" maxlength="100" style="width:400px" autocomplete="off"></el-input>
+                            <el-input type="textarea" v-model="other.marketDemandInfo" :disabled="notMeFlag" placeholder="请填写需求要点，不超过100字" maxlength="100" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="需求描述">
-                            <el-input size="small" v-model="other.demandInfo" type="textarea" placeholder="请填写具体的需求" :rows="6" style="width:400px" autocomplete="off"></el-input>
-                        </el-form-item>
-                        <el-form-item label="驳回理由" v-if="other.rejected">
-                            <el-input size="small" v-model="other.rejected" disabled type="textarea" :rows="6" style="width:400px" autocomplete="off"></el-input>
+                            <el-input size="small" v-model="other.demandInfo" type="textarea" :disabled="notMeFlag" placeholder="请填写具体的需求" :rows="6" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <div v-if="!adminFlag">
-                                <el-button v-if="companyOtherDemandId === 0" size="small" type="primary" round style="width:100px" @click="addOtherNeed">提交</el-button>
-                                <el-button v-else size="small" type="primary" style="width:100px" round @click="updateOtherNeed">修改</el-button>
-                            </div>
-                            <div v-if="adminFlag">
-                                <el-button size="small" type="success" round style="width:100px" @click="overSure">通过</el-button>
-                                <el-button size="small" type="danger" round style="width:100px" @click="openReject">驳回</el-button>
-                                <el-button size="small" type="primary" round style="width:100px" @click="backToList">返回</el-button>
+                            <div>
+                                <el-button v-if="companyOtherDemandId === 0" size="small" type="primary" :disabled="notMeFlag" round style="width:100px" @click="addOtherNeed">提交</el-button>
+                                <el-button v-else size="small" type="primary" style="width:100px" :disabled="notMeFlag" round @click="updateOtherNeed">修改</el-button>
                             </div>
                         </el-form-item>
                     </el-form>
@@ -161,13 +137,6 @@
             <span slot="footer" class="dialog-footer">
                 <el-button @click="goProductList">列表</el-button>
                 <el-button type="primary" @click="addContinue">继续新增</el-button>
-            </span>
-        </el-dialog>
-        <el-dialog title="驳回理由" :visible.sync="rejectDialog" width="400px" center :close-on-click-modal="false" custom-class="dialogClass">
-            <el-input type="textarea" :rows="6" v-model="remarks" autocomplete="off"></el-input>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="rejectDialog = false">取消</el-button>
-                <el-button type="primary" @click="sureReject">确定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -211,7 +180,8 @@ export default {
             },
             centerDialogVisible:false,
             rejectDialog:false,
-            remarks:''
+            remarks:'',
+            notMeFlag: false
         }
     },
     mounted(){
@@ -346,6 +316,8 @@ export default {
             getCompanyProductDemand(myData)
             .then(res=>{
                 this.product = res.result
+                // 0只读，1可读写
+                this.notMeFlag = this.product.wr === 0 ? true : false;
                 this.demandProductClass = this.product.demandClass
                 this.handleChangeProduct(this.demandProductClass)
                 this.productIsEncryption = this.product.isEncryption === 1 ? true :false
@@ -359,6 +331,8 @@ export default {
             getCompanyProjectDemand(myData)
             .then(res=>{
                 this.project = res.result
+                // 0只读，1可读写
+                this.notMeFlag = this.project.wr === 0 ? true : false;
                 this.demandProjectClass = this.project.demandClass
                 this.handleChangeProject(this.demandProjectClass)
                 this.projectIsEncryption = this.project.isEncryption === 1 ? true :false
@@ -372,6 +346,8 @@ export default {
             getCompanyOtherDemand(myData)
             .then(res=>{
                 this.other = res.result
+                // 0只读，1可读写
+                this.notMeFlag = this.other.wr === 0 ? true : false;
                 this.demandOtherClass = this.other.demandClass
                 this.handleChangeOther(this.demandOtherClass)
                 this.otherIsEncryption = this.other.isEncryption === 1 ? true :false
@@ -390,7 +366,7 @@ export default {
                 otherDemand: this.product.otherDemand,
                 requiredMoney: this.product.requiredMoney,
                 technologyDemandInfo: this.product.technologyDemandInfo,
-                companyOtherDemandId:this.companyOtherDemandId
+                companyProductDemandId:this.companyProductDemandId
             }
             updateProductDemand(myData)
             .then(res=>{
@@ -542,109 +518,6 @@ export default {
         },
         backToList(){
             this.$router.go(-1)
-        },
-        sureReject(){
-            let myData = {}
-            if(this.$route.query.type === 'product'){
-                myData = {
-                    companyProductDemandId:this.companyProductDemandId,
-                    rejected:this.remarks,
-                    state:'F'
-                }
-                if(!myData.rejected){
-                    this.$message.error("驳回理由必填")
-                    return false
-                }
-                checkCompanyProductDemand(myData)
-                .then(res=>{
-                    this.$message({
-                        type:'warning',
-                        message:'已驳回'
-                    })
-                    this.rejectDialog = false
-                })
-            }else if(this.$route.query.type === 'project'){
-                myData = {
-                    companyProjectDemandId:this.companyProjectDemandId,
-                    rejected:this.remarks,
-                    state:'F'
-                }
-                if(!myData.rejected){
-                    this.$message.error("驳回理由必填")
-                    return false
-                }
-                checkCompanyProjectDemand(myData)
-                .then(res=>{
-                    this.$message({
-                        type:'warning',
-                        message:'已驳回'
-                    })
-                    this.rejectDialog = false
-                })
-                
-            }else if(this.$route.query.type === 'other'){
-                myData = {
-                    companyOtherDemandId:this.companyOtherDemandId,
-                    rejected:this.remarks,
-                    state:'F'
-                }
-                if(!myData.rejected){
-                    this.$message.error("驳回理由必填")
-                    return false
-                }
-                checkCompanyOtherDemand(myData)
-                .then(res=>{
-                    this.$message({
-                        type:'warning',
-                        message:'已驳回'
-                    })
-                    this.rejectDialog = false
-                })
-            }
-        },
-        overSure(){
-            let myData = {}
-            if(this.$route.query.type === 'product'){
-                myData = {
-                    companyProductDemandId:this.companyProductDemandId,
-                    rejected:'',
-                    state:'N'
-                }
-                checkCompanyProductDemand(myData)
-                .then(res=>{
-                    this.$message({
-                        type:'success',
-                        message:'审核通过'
-                    })
-                })
-            }else if(this.$route.query.type === 'project'){
-                myData = {
-                    companyProjectDemandId:this.companyProjectDemandId,
-                    rejected:'',
-                    state:'N'
-                }
-                checkCompanyProjectDemand(myData)
-                .then(res=>{
-                    this.$message({
-                        type:'success',
-                        message:'审核通过'
-                    })
-                })
-                
-            }else if(this.$route.query.type === 'other'){
-                myData = {
-                    companyOtherDemandId:this.companyOtherDemandId,
-                    rejected:'',
-                    state:'N'
-                }
-                checkCompanyOtherDemand(myData)
-                .then(res=>{
-                    this.$message({
-                        type:'success',
-                        message:'审核通过'
-                    })
-                })
-            }
         }
     }
 }

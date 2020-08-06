@@ -167,6 +167,15 @@ export function addProject(data) {
   })
 }
 
+// 修改公司项目
+export function updateProject(data) {
+  return request({
+    url: '/companyProject/updateProject',
+    method: 'post',
+    data
+  })
+}
+
 //删除公司项目
 export function deleteProject(data) {
   return request({

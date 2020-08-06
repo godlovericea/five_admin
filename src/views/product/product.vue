@@ -2,34 +2,40 @@
     <div class="warnWrapper">
         <div class="divider"></div>
         <div class="formBox">
-            <el-form :model="form" class="demo-form-inline" label-width="120px">
+            <el-form :model="form" class="demo-form-inline" label-position="top">
                 <el-form-item label="产品名称">
-                    <el-input size="small" v-model="form.productName" placeholder="请输入产品名称" style="width:400px" autocomplete="off"></el-input>
+                    <el-input size="small" v-model="form.productName" :disabled="notMeFlag" placeholder="请输入产品名称" style="width:400px" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="产品介绍">
-                    <el-input size="small" v-model="form.productIntroduce" type="textarea" placeholder="请输入产品介绍，不超过200字" :rows="4" maxlength="200" style="width:400px" autocomplete="off"></el-input>
+                <el-form-item label="产品介绍(不超过200字)">
+                    <el-input size="small" v-model="form.productIntroduce" :disabled="notMeFlag" type="textarea" placeholder="请输入产品介绍，不超过200字" :rows="4" maxlength="200" style="width:400px" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="产品技术参数">
-                    <el-input size="small" v-model="form.productParameters" type="textarea" placeholder="请输入产品主要参数" :rows="4" style="width:400px" autocomplete="off"></el-input>
+                    <el-input size="small" v-model="form.productParameters" :disabled="notMeFlag" type="textarea" placeholder="请输入产品主要参数" :rows="4" style="width:400px" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="产品销售额">
-                    <el-input size="small" type="number" v-model="form.productSales" placeholder="请输入产品销售额，单位：万元" style="width:400px" autocomplete="off"></el-input>
+                <el-form-item label="产品销售额(单位：万元)">
+                    <el-input size="small" v-model="form.productSales" :disabled="notMeFlag" placeholder="请输入产品销售额，单位：万元"
+                        oninput = "value=value.replace(/[^\d.]/g,'')"
+                        onkeyup="value=value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3')"
+                     style="width:400px" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="产品检索关键字">
-                    <el-input size="small" v-model="form.productKeyword" placeholder="便于检索、产品对接。多个以顿号分割。" style="width:400px" autocomplete="off"></el-input>
+                <el-form-item label="产品检索关键字（根据实际情况填写）">
+                    <el-input size="small" v-model="form.productKeyword" placeholder="关键字一" style="width:200px" autocomplete="off" :disabled="notMeFlag"></el-input>
+                    <el-input size="small" v-model="form.productKeyword" placeholder="关键字二" style="width:200px" autocomplete="off" :disabled="notMeFlag"></el-input>
+                    <el-input size="small" v-model="form.productKeyword" placeholder="关键字三" style="width:200px" autocomplete="off" :disabled="notMeFlag"></el-input>
                 </el-form-item>
                 <el-form-item label="产品图片">
                     <el-upload
                         class="upload-demo"
                         list-type="picture-card"
-                        action="http://120.55.161.93:6012/qiniu/upload"
+                        action="http://5gecomap.com:6012/qiniu/upload"
                         name="file"
                         :file-list="fileList"
                         :before-upload="beforeAvatarUpload"
                         :on-success="handleAvatarSuccess"
                         :on-remove="handleRemove"
                         :on-preview="handlePreview"
-                        :limit="8">
+                        :limit="8"
+                        :disabled="notMeFlag">
                         <div style="height:148px;display:flex;align-items:center;justify-content:center">
                             <i class="el-icon-plus"></i>
                         </div>
@@ -43,12 +49,13 @@
                     <el-upload
                         class="upload-demo"
                         list-type="picture"
-                        action="http://120.55.161.93:6012/qiniu/upload"
+                        action="http://5gecomap.com:6012/qiniu/upload"
                         name="file"
                         :file-list="videofileList"
                         :before-upload="beforeVideoUpload"
                         :on-success="handleVideoSuccess"
-                        :limit="1">
+                        :limit="1"
+                        :disabled="notMeFlag">
                         <el-button size="small" type="primary">点击上传</el-button>
                     </el-upload>
                     <p>可上传1个视频，视频大小不超过100M（支持格式为：mp4）。</p>
@@ -60,33 +67,21 @@
                     <el-input v-model="form.rejected" type="textarea" :rows="6" disabled autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <div v-if="!adminFlag">
-                        <el-button v-if="companyProductId === 0" size="small" type="primary" round style="width:100px" @click="addPostData">提交</el-button>
-                        <el-button v-else size="small" type="primary" style="width:100px" round @click="updatePostData">修改</el-button>
-                    </div>
-                    <div v-if="adminFlag">
-                        <el-button size="small" type="success" round style="width:100px" @click="overSure">通过</el-button>
-                        <el-button size="small" type="danger" round style="width:100px" @click="openReject">驳回</el-button>
-                        <el-button size="small" type="primary" round style="width:100px" @click="backToList">返回列表</el-button>
+                    <div>
+                        <el-button v-if="companyProductId === 0" size="small" type="primary" round style="width:100px" :disabled="notMeFlag" @click="addPostData">提交</el-button>
+                        <el-button v-else size="small" type="primary" style="width:100px" :disabled="notMeFlag" round @click="updatePostData">修改</el-button>
                     </div>
                 </el-form-item>
             </el-form>
         </div>
         <el-dialog title="提示" :visible.sync="centerDialogVisible" width="400px" center :close-on-click-modal="false" custom-class="dialogClass">
             <div style="text-align:center">
-                <p>新增成功！</p>
+                <p>成功！</p>
                 <i class="el-icon-circle-check"></i>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="goProductList">产品列表</el-button>
                 <el-button type="primary" @click="addContinue">继续新增</el-button>
-            </span>
-        </el-dialog>
-        <el-dialog title="驳回理由" :visible.sync="rejectDialog" width="400px" center :close-on-click-modal="false" custom-class="dialogClass">
-            <el-input type="textarea" :rows="6" v-model="remarks" autocomplete="off"></el-input>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="rejectDialog = false">取消</el-button>
-                <el-button type="primary" @click="sureReject">确定</el-button>
             </span>
         </el-dialog>
     </div>    
@@ -122,7 +117,7 @@ export default {
             upTimeStamp:0,
             upFlag:false,
             productImgList:[],
-
+            notMeFlag: false
         }
     },
     mounted(){
@@ -141,6 +136,8 @@ export default {
             .then(res=>{
                 this.fileList = []
                 this.form = res.result
+                // 0只读，1可读写
+                this.notMeFlag = this.form.wr === 0 ? true : false;
                 this.companyProductId = this.form.companyProductId
                 if(res.result.imgList){
                     res.result.imgList.forEach(l=>{
