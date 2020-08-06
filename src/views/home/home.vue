@@ -44,9 +44,13 @@
         <div class="leftBox">
             <div class="leftItemsBox" v-show="collapseFlag">
                 <div class="leftheaderBox">
-                    <p class="headerTitle">企业数量</p>
+                    <p class="headerTitle" style="position: relative;">企业数量</p>
                     <el-tooltip class="item" effect="dark" content="折叠" placement="left">
-                        <img src="@/assets/collapse.png" alt="" class="collapseImg" @click="collapseBar">
+                        <img src="@/assets/collapse.png" alt="" class="collapseImg" @click="collapseBar" style="position: absolute;
+    right: 0;
+    height: 20px;
+    top: 20px;
+    cursor: pointer;">
                     </el-tooltip>
                 </div>
                 <div class="etitle">总数:{{ amount }}家</div>
@@ -54,12 +58,16 @@
             </div>
             <div class="leftItemsBox" v-show="collapseFlag">
                 <div class="leftheaderBox">
-                    <p class="headerTitle">产业规模</p>
+                    <p class="headerTitle" style="position: relative;">产业规模</p>
                     <el-tooltip class="item" effect="dark" content="折叠" placement="left">
-                        <img src="@/assets/collapse.png" alt="" class="collapseImg" @click="collapseBar">
+                        <img src="@/assets/collapse.png" alt="" class="collapseImg" @click="collapseBar" style="position: absolute;
+    right: 0;
+    height: 20px;
+    top: 20px;
+    cursor: pointer;">
                     </el-tooltip>
                 </div>
-                <div class="etitle">总产值：{{ totalValue }}万元</div>
+                <div class="etitle">总产值：{{ totalValue }}亿元</div>
                 <div id="modelll" :style="{height:echartHeight}"></div>
             </div>
             <div v-show="!collapseFlag">
@@ -810,10 +818,10 @@ export default {
                 this.getEnterpriseMode()
                 this.getOutputValue()
                 this.totalValue =
-                    (this.dataValue.downstreamValueSum +
+                    ((this.dataValue.downstreamValueSum +
                         this.dataValue.midstreamValueSum +
                         this.dataValue.upstreamValueSum) /
-                    10000
+                    100000000).toFixed(2)
                 this.amount =
                     this.dataValue.downstreamCount +
                     this.dataValue.midstreamCount +
@@ -952,7 +960,7 @@ export default {
                     axisPointer: {
                         type: "shadow",
                     },
-                    formatter:'{b}:{c}万'
+                    formatter:'{b}:{c}亿'
                 },
                 grid: {
                     top: "15%",
@@ -981,7 +989,7 @@ export default {
                 yAxis: [
                     {
                         type: "value",
-                        name: "产值（万元）",
+                        name: "产值（亿元）",
                         nameTextStyle: {
                             color: "#fff",
                         },
@@ -1098,9 +1106,9 @@ export default {
                     },
                 ],
             }
-            option.series[0].data[0].value = this.dataValue.upstreamValueSum
-            option.series[0].data[1].value = this.dataValue.midstreamValueSum
-            option.series[0].data[2].value = this.dataValue.downstreamValueSum
+            option.series[0].data[0].value = (this.dataValue.upstreamValueSum/100000000).toFixed(2)
+            option.series[0].data[1].value = (this.dataValue.midstreamValueSum/100000000).toFixed(2)
+            option.series[0].data[2].value = (this.dataValue.downstreamValueSum/100000000).toFixed(2)
             myChart.setOption(option)
             window.addEventListener("resize", () => {
                 myChart.resize()

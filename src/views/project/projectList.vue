@@ -13,13 +13,13 @@
                 </template>
             </el-table-column>
             <el-table-column  prop="encryptionCode" label="加密代码" width="180"></el-table-column>
-            <el-table-column label="审核状态" width="180" class-name="checkState">
+            <!-- <el-table-column label="审核状态" width="180" class-name="checkState">
                 <template slot-scope="scope">
                     <span class="over" v-if="scope.row.state == 'N'">通过</span>
                     <span class="fail" v-if="scope.row.state == 'F'">未通过</span>
                     <span class="wait" v-if="scope.row.state == 'W'">待审核</span>
                 </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column  label="操作" width="180">
                 <template slot-scope="scope">
                     <el-button type="text" @click="goDetail(scope.row.companyProjectId,scope.row.companyId)">详情</el-button>

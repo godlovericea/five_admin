@@ -15,16 +15,16 @@
                 </el-form-item>
                 <el-form-item label="项目投资总额">
                     <el-input size="small" v-model="form.projectMoney"
-                    :disabled="notMeFlag"
+                        :disabled="notMeFlag"
                         oninput = "value=value.replace(/[^\d.]/g,'')"
                         onkeyup="value=value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3')"
                         placeholder="请输入项目投资总额，单位：万元" style="width:400px" autocomplete="off">
                     </el-input>
                 </el-form-item>
                 <el-form-item label="项目关键字">
-                    <el-input size="small" v-model="form.projectKeyword" :disabled="notMeFlag" placeholder="关键字一" style="width:200px" autocomplete="off"></el-input>
-                    <el-input size="small" v-model="form.projectKeyword" :disabled="notMeFlag" placeholder="关键字二" style="width:200px" autocomplete="off"></el-input>
-                    <el-input size="small" v-model="form.projectKeyword" :disabled="notMeFlag" placeholder="关键字三" style="width:200px" autocomplete="off"></el-input>
+                    <el-input size="small" v-model="projectKeyword1" :disabled="notMeFlag" placeholder="关键字一" style="width:200px" autocomplete="off"></el-input>
+                    <el-input size="small" v-model="projectKeyword2" :disabled="notMeFlag" placeholder="关键字二" style="width:200px" autocomplete="off"></el-input>
+                    <el-input size="small" v-model="projectKeyword3" :disabled="notMeFlag" placeholder="关键字三" style="width:200px" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="项目启动时间">
                     <el-date-picker v-model="form.projectStart" type="date" :disabled="notMeFlag" placeholder="选择日期" style="width:400px"></el-date-picker>
@@ -108,7 +108,10 @@ export default {
             adminFlag:false,
             rejectDialog:false,
             remarks:'',
-            notMeFlag: false
+            notMeFlag: false,
+            projectKeyword1: '',
+            projectKeyword2: '',
+            projectKeyword3: '',
         }
     },
     mounted(){
@@ -126,6 +129,16 @@ export default {
             getCompanyProject(myData)
             .then(res=>{
                 this.form = res.result
+                let keywordList = []
+                if(this.form.projectKeyword.indexOf('、')){
+                    keywordList = this.form.projectKeyword.split('、')
+                    // console.log(keywordList)
+                    this.projectKeyword1 = keywordList[0]
+                    this.projectKeyword2 = keywordList[1]
+                    this.projectKeyword3 = keywordList[2]
+                } else {
+                    this.projectKeyword1 = this.form.projectKeyword
+                }
                 // 0只读，1可读写
                 this.notMeFlag = this.form.wr === 0 ? true : false;
                 this.companyProjectId = this.form.companyProjectId
@@ -160,7 +173,9 @@ export default {
                     projectStart:this.form.projectStart,
                     projectEnd:this.form.projectEnd,
                     projectIntroduce:this.form.projectIntroduce,
-                    projectKeyword:this.form.projectKeyword,
+                    projectKeyword1:this.projectKeyword1,
+                    projectKeyword2:this.projectKeyword2,
+                    projectKeyword3:this.projectKeyword3,
                     projectName:this.form.projectName,
                     imgList:this.photos,
                     projectMoney:this.form.projectMoney
@@ -169,6 +184,7 @@ export default {
             .then(res=>{
                 if(res.code === 200){
                     this.centerDialogVisible = true
+                    this.getInfo()
                 }else{
                     this.$message.error(res.message)
                 }
@@ -184,7 +200,9 @@ export default {
                     projectStart:this.form.projectStart,
                     projectEnd:this.form.projectEnd,
                     projectIntroduce:this.form.projectIntroduce,
-                    projectKeyword:this.form.projectKeyword,
+                    projectKeyword1:this.projectKeyword1,
+                    projectKeyword2:this.projectKeyword2,
+                    projectKeyword3:this.projectKeyword3,
                     projectName:this.form.projectName,
                     imgList:this.photos,
                     projectMoney:this.form.projectMoney,
@@ -197,6 +215,7 @@ export default {
                         type: 'success',
                         message: '修改成功'
                     })
+                    this.getInfo()
                 }else{
                     this.$message.error(res.message)
                 }

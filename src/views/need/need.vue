@@ -26,7 +26,8 @@
                             <el-input size="small" v-model="product.otherDemand" :disabled="notMeFlag" placeholder="请输入需求名称，不超过20字" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="所需资金" v-if="flag.moneyFlag">
-                            <el-input size="small" type="number" v-model="product.requiredMoney" :disabled="notMeFlag" placeholder="单位：万元" style="width:400px" autocomplete="off"></el-input>
+                            <el-input size="small" oninput = "value=value.replace(/[^\d.]/g,'')"
+                        onkeyup="value=value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3')" v-model="product.requiredMoney" :disabled="notMeFlag" placeholder="单位：万元" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="技术需求简述" v-if="flag.techFlag">
                             <el-input type="textarea" v-model="product.technologyDemandInfo" :disabled="notMeFlag" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px" autocomplete="off"></el-input>
@@ -70,7 +71,8 @@
                             <el-input size="small" v-model="project.otherDemand" :disabled="notMeFlag" placeholder="请输入需求名称，不超过20字" maxlength="20" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="所需资金" v-if="flag.moneyFlag">
-                            <el-input size="small" type="number" v-model="project.requiredMoney" :disabled="notMeFlag" placeholder="单位：万元" style="width:400px" autocomplete="off"></el-input>
+                            <el-input size="small" oninput = "value=value.replace(/[^\d.]/g,'')"
+                        onkeyup="value=value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3')" v-model="project.requiredMoney" :disabled="notMeFlag" placeholder="单位：万元" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="技术需求简述" v-if="flag.techFlag">
                             <el-input type="textarea" v-model="project.technologyDemandInfo" :disabled="notMeFlag" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px" autocomplete="off"></el-input>
@@ -108,7 +110,8 @@
                             <p>保密的需求，仅 自己 和 江苏省工业和信息化厅 可见，该需求将以密文展示</p>
                         </el-form-item>
                         <el-form-item label="所需资金" v-if="flag.moneyFlag">
-                            <el-input size="small" type="number" v-model="other.requiredMoney" :disabled="notMeFlag" placeholder="单位：万元" style="width:400px" autocomplete="off"></el-input>
+                            <el-input size="small" oninput = "value=value.replace(/[^\d.]/g,'')"
+                        onkeyup="value=value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3')" v-model="other.requiredMoney" :disabled="notMeFlag" placeholder="单位：万元" style="width:400px" autocomplete="off"></el-input>
                         </el-form-item>
                         <el-form-item label="技术需求简述" v-if="flag.techFlag">
                             <el-input type="textarea" v-model="other.technologyDemandInfo" :disabled="notMeFlag" placeholder="请填写技术要点，不超过100字" maxlength="100" style="width:400px" autocomplete="off"></el-input>

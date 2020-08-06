@@ -19,9 +19,9 @@
                      style="width:400px" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="产品检索关键字（根据实际情况填写）">
-                    <el-input size="small" v-model="form.productKeyword" placeholder="关键字一" style="width:200px" autocomplete="off" :disabled="notMeFlag"></el-input>
-                    <el-input size="small" v-model="form.productKeyword" placeholder="关键字二" style="width:200px" autocomplete="off" :disabled="notMeFlag"></el-input>
-                    <el-input size="small" v-model="form.productKeyword" placeholder="关键字三" style="width:200px" autocomplete="off" :disabled="notMeFlag"></el-input>
+                    <el-input size="small" v-model="productKeyword1" placeholder="关键字一" style="width:200px" autocomplete="off" :disabled="notMeFlag"></el-input>
+                    <el-input size="small" v-model="productKeyword2" placeholder="关键字二" style="width:200px" autocomplete="off" :disabled="notMeFlag"></el-input>
+                    <el-input size="small" v-model="productKeyword3" placeholder="关键字三" style="width:200px" autocomplete="off" :disabled="notMeFlag"></el-input>
                 </el-form-item>
                 <el-form-item label="产品图片">
                     <el-upload
@@ -95,8 +95,14 @@ export default {
             form:{
                 isRecord:1,
                 operateCom:'',
-                video:''
+                video:'',
+                productKeyword1: '',
+                productKeyword2: '',
+                productKeyword3: '',
             },
+            productKeyword1: '',
+            productKeyword2: '',
+            productKeyword3: '',
             photos:[],
             uploadData:{
                 token:'',
@@ -136,6 +142,16 @@ export default {
             .then(res=>{
                 this.fileList = []
                 this.form = res.result
+                let keywordList = []
+                if(this.form.productKeyword.indexOf('、')){
+                    keywordList = this.form.productKeyword.split('、')
+                    // console.log(keywordList)
+                    this.productKeyword1 = keywordList[0]
+                    this.productKeyword2 = keywordList[1]
+                    this.productKeyword3 = keywordList[2]
+                } else {
+                    this.productKeyword1 = this.form.productKeyword
+                }
                 // 0只读，1可读写
                 this.notMeFlag = this.form.wr === 0 ? true : false;
                 this.companyProductId = this.form.companyProductId
@@ -174,7 +190,9 @@ export default {
                     productName:this.form.productName,
                     productIntroduce:this.form.productIntroduce,
                     productParameters:this.form.productParameters,
-                    productKeyword:this.form.productKeyword,
+                    productKeyword1:this.productKeyword1,
+                    productKeyword2:this.productKeyword2,
+                    productKeyword3:this.productKeyword3,
                     productVideo:this.form.productVideo,
                     imgList:this.photos,
                     productSales:this.form.productSales
@@ -212,7 +230,9 @@ export default {
                     productName:this.form.productName,
                     productIntroduce:this.form.productIntroduce,
                     productParameters:this.form.productParameters,
-                    productKeyword:this.form.productKeyword,
+                    productKeyword1:this.productKeyword1,
+                    productKeyword2:this.productKeyword2,
+                    productKeyword3:this.productKeyword3,
                     productVideo:this.form.productVideo,
                     imgList:imgList,
                     productSales:this.form.productSales
