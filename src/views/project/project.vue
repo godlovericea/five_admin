@@ -184,7 +184,6 @@ export default {
             .then(res=>{
                 if(res.code === 200){
                     this.centerDialogVisible = true
-                    this.getInfo()
                 }else{
                     this.$message.error(res.message)
                 }
