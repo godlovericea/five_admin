@@ -123,6 +123,16 @@
     font-size: 12px;
     overflow: hidden;
 }
+.comDetail{
+    color: #cccccc;
+    /* max-height: 40px; */
+    margin: 0;
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap; 
+    width: 100%; 
+}
 .btnBox{
     cursor: pointer;
 }

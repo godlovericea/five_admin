@@ -67,7 +67,7 @@
     cursor: pointer;">
                     </el-tooltip>
                 </div>
-                <div class="etitle">总产值：{{ totalValue }}亿元</div>
+                <div class="etitle">总产值：{{ totalValue }}万元</div>
                 <div id="modelll" :style="{height:echartHeight}"></div>
             </div>
             <div v-show="!collapseFlag">
@@ -120,6 +120,7 @@
                         >
                             <div class="cardContent">
                                 <p class="cardTitle">{{ item.productName }}</p>
+                                <p class="comDetail">{{item.comName}}</p>
                                 <p class="cardDetail">
                                     {{ item.productIntroduce }}
                                 </p>
@@ -146,6 +147,7 @@
                                     <p class="cardTitle">
                                         {{ item.projectName }}
                                     </p>
+                                    <p class="comDetail">{{item.comName}}</p>
                                     <p class="cardDetail">
                                         {{ item.projectIntroduce }}
                                     </p>
@@ -163,6 +165,7 @@
                                     <p class="cardTitle">
                                         {{ item.projectName }}
                                     </p>
+                                    <p class="comDetail">{{item.comName}}</p>
                                     <p class="cardDetail">
                                         加密：{{ item.encryptionCode }}
                                     </p>
@@ -173,6 +176,7 @@
                                     <p class="cardTitle">
                                         {{ item.projectName }}
                                     </p>
+                                    <p class="comDetail">{{item.comName}}</p>
                                     <p class="cardDetail">
                                         {{ item.projectIntroduce }}
                                     </p>
@@ -197,6 +201,7 @@
                                     class="cardContent"
                                     v-if="item.isEncryption === 0"
                                 >
+                                <p class="comDetail">{{item.comName}}</p>
                                     <p class="cardTitle">
                                         {{ item.demandName }}
                                     </p>
@@ -238,9 +243,11 @@
                                     class="cardContent"
                                     v-if="item.isEncryption === 1"
                                 >
+                                 <p class="comDetail">{{item.comName}}</p>
                                     <p class="cardTitle">
                                         {{ item.demandName }}
                                     </p>
+                                   
                                     <span v-if="item.type === 1"
                                         >主营产品需求</span
                                     >
@@ -277,9 +284,11 @@
                                     <p class="cardTitle">
                                         {{ item.demandName }}
                                     </p>
+                                    <p class="comDetail">{{item.comName}}</p>
                                     <p class="cardDetail">
                                         {{ item.demandInfo }}
                                     </p>
+                                    
                                     <span v-if="item.type === 1"
                                         >主营产品需求</span
                                     >
@@ -324,6 +333,7 @@
                 <p class="dialogTitle">{{ sceanData.title }}</p>
                 <i class="el-icon-close" @click="closeDialog"></i>
             </div>
+            <p class="stepsTitle">{{sceanData.comName}}</p>
             <div class="divider"></div>
             <div class="sceanBox">
                 <p class="stepsTitle">① 描述:</p>
@@ -341,8 +351,11 @@
                         </el-image>
                     </div>
                     <p class="stepsTitle">③ 视频介绍:</p>
-                    <div class="stepsContent">
+                    <div class="stepsContent" v-if="videoUrl">
                         <video class="myVideo" :src="videoUrl" controls></video>
+                    </div>
+                    <div class="stepsContent" v-if="!videoUrl">
+                        <p style="color:#ffffff">该企业暂未上传视频</p>
                     </div>
                 </div>
             </div>
@@ -818,10 +831,9 @@ export default {
                 this.getEnterpriseMode()
                 this.getOutputValue()
                 this.totalValue =
-                    ((this.dataValue.downstreamValueSum +
+                    Math.floor((this.dataValue.downstreamValueSum +
                         this.dataValue.midstreamValueSum +
-                        this.dataValue.upstreamValueSum) /
-                    100000000).toFixed(2)
+                        this.dataValue.upstreamValueSum)/10000)
                 this.amount =
                     this.dataValue.downstreamCount +
                     this.dataValue.midstreamCount +
@@ -960,7 +972,7 @@ export default {
                     axisPointer: {
                         type: "shadow",
                     },
-                    formatter:'{b}:{c}亿'
+                    formatter:'{b}:{c}万'
                 },
                 grid: {
                     top: "15%",
@@ -989,7 +1001,7 @@ export default {
                 yAxis: [
                     {
                         type: "value",
-                        name: "产值（亿元）",
+                        name: "产值（万元）",
                         nameTextStyle: {
                             color: "#fff",
                         },
@@ -1106,9 +1118,9 @@ export default {
                     },
                 ],
             }
-            option.series[0].data[0].value = (this.dataValue.upstreamValueSum/100000000).toFixed(2)
-            option.series[0].data[1].value = (this.dataValue.midstreamValueSum/100000000).toFixed(2)
-            option.series[0].data[2].value = (this.dataValue.downstreamValueSum/100000000).toFixed(2)
+            option.series[0].data[0].value = (this.dataValue.upstreamValueSum/10000).toFixed(2)
+            option.series[0].data[1].value = (this.dataValue.midstreamValueSum/10000).toFixed(2)
+            option.series[0].data[2].value = (this.dataValue.downstreamValueSum/10000).toFixed(2)
             myChart.setOption(option)
             window.addEventListener("resize", () => {
                 myChart.resize()
@@ -1653,7 +1665,7 @@ export default {
                     this.sceanData = res.result
                     this.sceanData.title = res.result.productName
                     this.sceanData.info = res.result.productIntroduce
-
+                    this.videoUrl = res.result.productVideo
                     this.srcList = []
                     if (res.result.imgList.length > 0) {
                         res.result.imgList.forEach((l) => {
