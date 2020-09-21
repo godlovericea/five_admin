@@ -107,7 +107,6 @@
           name="compassword"
           tabindex="3"
           autocomplete="off"
-          @keyup.enter.native="handleLogin"
         />
         <span class="show-pwd" @click="showcomfirmPwd">
           <svg-icon :icon-class="compasswordType === 'password' ? 'eye' : 'eye-open'" />
@@ -117,12 +116,21 @@
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleRegister('loginForm')">注册</el-button>
       <div class="regBox">
         <span style="font-size:14px;color:#ffffff">已有账号，点击</span>
-        <el-button :loading="loading" type="text" style="font-size:14px" @click.native.prevent="handleLogin">登录</el-button>
+        <el-button :loading="loading" type="text" style="font-size:14px" @click="handleLogin">登录</el-button>
       </div>
       <div class="downloadClass">
         <a href="https://www.google.cn/chrome/thank-you.html?statcb=0&installdataindex=empty&defaultbrowser=0" target="_blank">推荐使用Chrome浏览器</a>
       </div>
     </el-form>
+    <el-dialog title="提示" :visible.sync="centerDialogVisible" width="400px" center :close-on-click-modal="false" custom-class="dialogClass">
+        <div style="text-align:center">
+            <p>注册成功！</p>
+            <i class="el-icon-circle-check"></i>
+        </div>
+        <span slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="handleLogin">去登录</el-button>
+        </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -149,6 +157,7 @@ export default {
         }
     }
     return {
+      centerDialogVisible: false,
       loginForm: {
         comName:'',
         comType:null,
@@ -232,9 +241,7 @@ export default {
                 register(myData)
                 .then(res=>{
                   if(res.code === 200){
-                      this.$router.push({
-                            path:'/'
-                        })
+                      this.centerDialogVisible = true
                   }else{
                       this.$message.error(res.message)
                   }

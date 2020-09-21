@@ -67,7 +67,7 @@
     cursor: pointer;">
                     </el-tooltip>
                 </div>
-                <div class="etitle">总产值：{{ totalValue }}万元</div>
+                <div class="etitle">总产值：{{ totalValue }}亿元</div>
                 <div id="modelll" :style="{height:echartHeight}"></div>
             </div>
             <div v-show="!collapseFlag">
@@ -650,7 +650,7 @@ export default {
             searchEnterprise: "",
             enterprise: {},
             officeList: [],
-            totalValue: 581.95,
+            totalValue: null,
             amount: 0,
             activeName: "产品",
             CompanyProducts: [],
@@ -972,7 +972,7 @@ export default {
                     axisPointer: {
                         type: "shadow",
                     },
-                    formatter:'{b}:{c}万'
+                    formatter:'{b}:{c}亿'
                 },
                 grid: {
                     top: "15%",
@@ -1001,7 +1001,7 @@ export default {
                 yAxis: [
                     {
                         type: "value",
-                        name: "产值（万元）",
+                        name: "产值（亿元）",
                         nameTextStyle: {
                             color: "#fff",
                         },
