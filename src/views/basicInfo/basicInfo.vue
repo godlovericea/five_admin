@@ -140,6 +140,7 @@
             placeholder="请输入注册资金（万元）"
             style="width:400px"
             oninput = "value=value.replace(/[^\d.]/g,'')"
+            onkeyup="value=value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3')"
             autocomplete="off"
             maxlength="100"
             :disabled="notMeFlag"
