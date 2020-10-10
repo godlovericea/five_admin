@@ -799,7 +799,7 @@ export default {
             this.map = new mapboxgl.Map({
                 container: "map",
                 // style: "http://106.15.47.224:8688/styles/newblue/style.json",
-                style: "mapbox://styles/zplinze/ck2wvh2pa05ip1cr8supcaivg",
+                style: "http://47.101.52.252:8080/styles/newblue/style.json",
                 center: [119.8526, 32.910144],
                 zoom: 7.5,
                 pitch: 60,

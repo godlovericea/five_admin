@@ -330,7 +330,7 @@
               >修改</el-button
             >
           </div>
-          <div v-if="adminFlag">
+          <div v-if="adminFlag && !visitorFlag">
             <el-button
               size="small"
               type="success"
@@ -640,13 +640,13 @@ export default {
       dialogVisible: false,
       licenseVisible: false,
       licenseImageUrl: "",
-      adminFlag: false,
       rejectDialog: false,
       remarks: "",
       removeFlag: false,
       licenseRemoveFlag: false,
       otherFlag: false,
-      notMeFlag: false
+      notMeFlag: false,
+      visitorFlag: false
     };
   },
   mounted() {
@@ -656,6 +656,7 @@ export default {
     getInfo() {
       let isAdmin = JSON.parse(sessionStorage.getItem("user")).isAdmin;
       this.adminFlag = isAdmin === 1 ? true : false;
+      this.visitorFlag = isAdmin === 2 ? true : false;
       let companyId = 0;
       if (this.$route.query.id) {
         companyId = this.$route.query.id;

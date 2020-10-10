@@ -59,7 +59,7 @@ export default {
       if(sessionStorage.getItem("user")){
          let user =JSON.parse(sessionStorage.getItem("user"))
          this.userName = user.loginName
-         if(user.isAdmin === 1){
+         if(user.isAdmin === 1 || user.isAdmin === 2){
            this.adminFlag = true
          }else{
            this.adminFlag = false
