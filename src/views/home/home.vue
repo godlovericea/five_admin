@@ -1,7 +1,7 @@
 <template>
     <div id="map">
         <div class="headerBox">
-            <img src="@/assets/images/logo.png" alt="" />
+            <img src="@/assets/images/logo.png" alt="" class="logopng"/>
             <p class="title">全省5G产业生态在线系统</p>
         </div>
         <div class="switchBox">
@@ -1800,6 +1800,9 @@ export default {
     display: flex;
     justify-content: flex-start;
     align-items: center;
+}
+.logopng{
+    height: 60px;
 }
 .switchBox {
     position: absolute;
