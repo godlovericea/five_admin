@@ -297,6 +297,18 @@
             :disabled="notMeFlag"
           ></el-input>
         </el-form-item>
+        <el-form-item label="建议和意见">
+          <el-input
+            type="textarea"
+            :rows="6"
+            v-model="form.difficultSuggest"
+            placeholder="请输入您的建议和意见，不超过200字"
+            style="width:400px"
+            autocomplete="off"
+            maxlength="200"
+            :disabled="notMeFlag"
+          ></el-input>
+        </el-form-item>
         <el-form-item label="审核意见">
           <el-input
             type="textarea"
@@ -725,7 +737,8 @@ export default {
         staffnum: parseInt(this.form.staffnum),
         startdate: this.form.startdate,
         stockCode: this.form.stockCode,
-        upcoroper: this.form.upcoroper
+        upcoroper: this.form.upcoroper,
+        difficultSuggest:this.form.difficultSuggest
       };
       addBaseInfo(myData).then(res => {
         if (res.code === 200) {
@@ -770,7 +783,8 @@ export default {
         staffnum: parseInt(this.form.staffnum),
         startdate: this.form.startdate,
         stockCode: this.form.stockCode,
-        upcoroper: this.form.upcoroper
+        upcoroper: this.form.upcoroper,
+        difficultSuggest:this.form.difficultSuggest
       };
       updateBaseInfo(myData).then(res => {
         if (res.code === 200) {
