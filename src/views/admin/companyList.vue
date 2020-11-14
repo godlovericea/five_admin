@@ -12,8 +12,11 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" size="small" @click="getData">查询</el-button>
-                    <el-button type="info" size="small" @click="resetData">重置</el-button>
+                  <el-button type="primary" size="small" @click="getData">查询</el-button>
+                  <el-button type="info" size="small" @click="resetData">重置</el-button>
+                  <el-button type="primary" size="small" @click="downUrl('http://5gecomap.com:6012/excel/excelCompanyList')">导出企业清单</el-button>
+                  <el-button type="primary" size="small" @click="downUrl('http://5gecomap.com:6012/excel/excelCompanyProductList')">导出企业产品</el-button>
+                  <el-button type="primary" size="small" @click="downUrl('http://5gecomap.com:6012/excel/excelCompanyProjectList')">导出企业项目</el-button>
                 </el-form-item>
             </el-form>
         </div>
@@ -69,7 +72,7 @@
 </template>
 
 <script>
-import {listCompany,updateCompanyAdmin,deleteCompany} from '@/api/collect'
+import {listCompany,updateCompanyAdmin,deleteCompany } from '@/api/collect'
 export default {
     data(){
         return{
@@ -217,6 +220,9 @@ export default {
             .then(res=>{
                 this.getData()
             })
+        },
+        downUrl(url) {
+          location.href = url
         },
         handleSizeChange(val){
             this.pageSize = val
