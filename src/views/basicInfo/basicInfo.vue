@@ -238,11 +238,11 @@
             :disabled="notMeFlag"
           ></el-input>
         </el-form-item>
-        <el-form-item label="2019年营收(万元)">
+        <el-form-item label="2019年公司营收(万元)">
           <el-input
             size="small"
             v-model="form.lastincome"
-            placeholder="请输入2019年营业收入，单位：万元"
+            placeholder="请输入2019年公司营业收入，单位：万元"
             style="width:400px"
             oninput = "value=value.replace(/[^\d.]/g,'')"
             onkeyup="value=value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3')"
