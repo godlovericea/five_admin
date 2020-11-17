@@ -384,6 +384,7 @@
                                 <p>法人：{{ item.opername }}</p>
                                 <p>注册资金：{{ item.registcapi }}</p>
                                 <p>地址：{{ item.address }}</p>
+                                <!-- <p>成立日期：{{ item.startdate }}</p> -->
                                 <p>成立日期：{{ moment(item.startdate).format('YYYY-MM-DD') }}</p>
                                 <p>简介：{{ item.info }}</p>
                                 <p>企业性质：
@@ -524,8 +525,10 @@ import {
 } from "@/api/home"
 
 export default {
+    components:{ moment },
     data() {
         return {
+            moment,
             centerDialogVisible: false,
             map: "", //地图实例
             switchMap: false,
