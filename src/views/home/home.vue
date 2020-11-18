@@ -384,7 +384,8 @@
                                 <p>法人：{{ item.opername }}</p>
                                 <p>注册资金：{{ item.registcapi }}</p>
                                 <p>地址：{{ item.address }}</p>
-                                <p>成立日期：{{ item.startdate }}</p>
+                                <!-- <p>成立日期：{{ item.startdate }}</p> -->
+                                <p>成立日期：{{ moment(item.startdate).format('YYYY-MM-DD') }}</p>
                                 <p>简介：{{ item.info }}</p>
                                 <p>企业性质：
                                     <span v-if="item.nature == 1">国有企业</span>
@@ -401,9 +402,8 @@
                                         >{{ item.websiteAddress }}</a
                                     >
                                 </p>
-                                <p>员工数：{{ item.staffnum }}</p>
-                                <p>2019营收：{{ item.lastincome }}万元</p>
-                                <p>5G相关营收：{{ item.oldincome }}万元</p>
+                                <p>2019年公司营收：{{ item.lastincome }}万元</p>
+                                <p>2019年5G相关营收：{{ item.oldincome }}万元</p>
                                 <p>股票代码：{{ item.stockCode }}</p>
                                 <p>员工数：{{ item.staffnum }}</p>
                                 <p>联系人：{{ item.concatperson }}</p>
@@ -509,6 +509,7 @@
 import mapboxgl from "mapbox-gl"
 import echarts from "echarts"
 import axios from "axios"
+import moment from 'moment'
 // import enterpriseAll from "../fiveData/enterpriseAll.json"
 // import enterprise from "../fiveData/enterprise.json"
 import jiangsusheng from "@/assets/cityJson/江苏省.json"
@@ -524,8 +525,10 @@ import {
 } from "@/api/home"
 
 export default {
+    components:{ moment },
     data() {
         return {
+            moment,
             centerDialogVisible: false,
             map: "", //地图实例
             switchMap: false,
