@@ -251,7 +251,7 @@
             :disabled="notMeFlag"
           ></el-input>
         </el-form-item>
-        <el-form-item label="2019年5G相关业务收入">
+        <el-form-item label="2019年5G相关业务收入(万元)">
           <el-input
             size="small"
             v-model="form.oldincome"
